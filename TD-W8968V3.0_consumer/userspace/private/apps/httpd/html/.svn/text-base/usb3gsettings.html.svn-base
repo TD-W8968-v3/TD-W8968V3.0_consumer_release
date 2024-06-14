@@ -1,0 +1,60 @@
+<html>
+<head>
+<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+<link rel="stylesheet" href='stylemain.css' type='text/css'>
+<link rel="stylesheet" href='colors.css' type='text/css'>	
+<script  language="javascript" src="util.js"></script>
+<script language="javascript">
+
+var progress = 0;
+
+function isInProgress() 
+{
+	if ( progress == 0 )  
+	{
+		progress = 1;
+		return true;
+	}
+	alert('Upload software is in progress. Please wait for a minute.');
+	return false;
+}
+var tpNewWin; 
+function openWindow()	
+{
+	if(tpNewWin) 
+		tpNewWin.close();
+
+	tpNewWin = window.open("http://"  + "www.tp-link.com", "", "" );
+}
+</script>
+</head>
+
+<body>
+	<form method='post' ENCTYPE='multipart/form-data' action='usb3gsettings.cgi' onSubmit='return isInProgress();'>
+	<table>
+		<tr><td class='h1'>3G USB Modem Settings File</td></tr>
+		<tr><td class='blue'></td></tr>
+	</table>
+	<table>
+		<tr>
+			<td class=item>Settings File Name:</td>
+			<td><input type='file' name='filename'></td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td>
+				<span class="T" id="t_info">Please Note: If you restore the Device's factory setting, the bin file will be lost.
+				In the event that you do lose the bin file, you will need to re-upload it, or download our latest firmware from </span>
+				<a href="#" onclick="openWindow();"><span id="website">www.tp-link.com</span></a>
+				<span id="t_info2">. The updated firmware will be installed into your 3G Device and restore all of its functions.</span>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr><td class=blue></td></tr>
+		<tr><td><center><input type='submit' value='Upload Settings'></center></td></tr>
+	</table>
+	</form>
+</body>
+</html>

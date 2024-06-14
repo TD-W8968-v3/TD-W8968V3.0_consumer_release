@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/contrib/pppgetpass
+END
+pppgetpass.sh
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/contrib/pppgetpass/pppgetpass.sh
+END
+pppgetpass.vt.c
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/contrib/pppgetpass/pppgetpass.vt.c
+END
+Makefile.linux
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/contrib/pppgetpass/Makefile.linux
+END
+pppgetpass.gtk.c
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/contrib/pppgetpass/pppgetpass.gtk.c
+END
+pppgetpass.8
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/contrib/pppgetpass/pppgetpass.8
+END

@@ -1,0 +1,808 @@
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+    <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var state = '<%ejGet(sntpRefresh)%>';
+var wlIsTimeSet = '<%ejGet(wlIsTimeSet)%>';        //for wireless schedule
+function numfix(num) {
+	return (num < 10 ? '0' : '') + num;
+}
+var ntpDate = '<%ejGetOther(sysInfo, dateTime)%>';
+var d = new Date(ntpDate);
+var ntp_date = d.getFullYear() + '/' + numfix(d.getMonth()+1) + '/' + numfix(d.getDate());
+var ntp_time = numfix(d.getHours()) + ':' + numfix(d.getMinutes()) + ':' + numfix(d.getSeconds());
+var refresh = 0;
+var jumpBack = 0;
+/*EJ_PLACEHOLDER*/
+
+if ( state == '1' ) {
+   var loc = 'sntpcfg.cgi?sntpRefresh=0';
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+var months = new Array();
+months[0] = 'Jan';
+months[1] = 'Feb';
+months[2] = 'Mar';
+months[3] = 'Apr';
+months[4] = 'May';
+months[5] = 'Jun';
+months[6] = 'Jul';
+months[7] = 'Aug';
+months[8] = 'Sep';
+months[9] = 'Oct';
+months[10] = 'Nov';
+months[11] = 'Dec';
+
+var days = new Array();
+days[0] = 'Sun';
+days[1] = 'Mon';
+days[2] = 'Tue';
+days[3] = 'Wed';
+days[4] = 'Thu';
+days[5] = 'Fri';
+days[6] = 'Sat';
+
+var ntpServers = new Array();
+
+ntpServers[0] = 'clock.fmt.he.net';
+ntpServers[1] = 'clock.nyc.he.net';
+ntpServers[2] = 'clock.sjc.he.net';
+ntpServers[3] = 'clock.via.net';
+ntpServers[4] = 'ntp1.tummy.com';
+ntpServers[5] = 'time.cachenetworks.com';
+ntpServers[6] = 'time.nist.gov';
+
+var timeZones = new Array();
+
+timeZones[0] = '(GMT-12:00) International Date Line West';
+timeZones[1] = '(GMT-11:00) Midway Island, Samoa';
+timeZones[2] = '(GMT-10:00) Hawaii';
+timeZones[3] = '(GMT-09:00) Alaska';
+timeZones[4] = '(GMT-08:00) Pacific Time, Tijuana';
+timeZones[5] = '(GMT-07:00) Arizona, Mazatlan';
+timeZones[6] = '(GMT-07:00) Chihuahua, La Paz';
+timeZones[7] = '(GMT-07:00) Mountain Time';
+timeZones[8] = '(GMT-06:00) Central America';
+timeZones[9] = '(GMT-06:00) Central Time';
+timeZones[10] = '(GMT-06:00) Guadalajara, Mexico City, Monterrey';
+timeZones[11] = '(GMT-06:00) Saskatchewan';
+timeZones[12] = '(GMT-05:00) Bogota, Lima, Quito';
+timeZones[13] = '(GMT-05:00) Eastern Time';
+timeZones[14] = '(GMT-05:00) Indiana';
+timeZones[15] = '(GMT-04:00) Atlantic Time';
+timeZones[16] = '(GMT-04:00) Caracas, La Paz';
+timeZones[17] = '(GMT-04:00) Santiago';
+timeZones[18] = '(GMT-03:30) Newfoundland';
+timeZones[19] = '(GMT-03:00) Brasilia';
+timeZones[20] = '(GMT-03:00) Buenos Aires, Georgetown';
+timeZones[21] = '(GMT-03:00) Greenland';
+timeZones[22] = '(GMT-02:00) Mid-Atlantic';
+timeZones[23] = '(GMT-01:00) Azores';
+timeZones[24] = '(GMT-01:00) Cape Verde Is.';
+timeZones[25] = '(GMT-00:00) Casablanca, Monrovia';
+timeZones[26] = '(GMT-00:00) Greenwich Mean Time: Dublin, Edinburgh, Lisbon, London';
+timeZones[27] = '(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna';
+timeZones[28] = '(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague';
+timeZones[29] = '(GMT+01:00) Brussels, Copenhagen, Madrid, Paris';
+timeZones[30] = '(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb';
+timeZones[31] = '(GMT+01:00) West Central Africa';
+timeZones[32] = '(GMT+02:00) Athens, Istanbul, Minsk';
+timeZones[33] = '(GMT+02:00) Bucharest';
+timeZones[34] = '(GMT+02:00) Cairo';
+timeZones[35] = '(GMT+02:00) Harare, Pretoria';
+timeZones[36] = '(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius';
+timeZones[37] = '(GMT+02:00) Jerusalem';
+timeZones[38] = '(GMT+03:00) Baghdad';
+timeZones[39] = '(GMT+03:00) Kuwait, Riyadh';
+timeZones[40] = '(GMT+03:00) Moscow, St. Petersburg, Volgograd';
+timeZones[41] = '(GMT+03:00) Nairobi';
+timeZones[42] = '(GMT+03:30) Tehran';
+timeZones[43] = '(GMT+04:00) Abu Dhabi, Muscat';
+timeZones[44] = '(GMT+04:00) Baku, Tbilisi, Yerevan';
+timeZones[45] = '(GMT+04:30) Kabul';
+timeZones[46] = '(GMT+05:00) Ekaterinburg';
+timeZones[47] = '(GMT+05:00) Islamabad, Karachi, Tashkent';
+timeZones[48] = '(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi';
+timeZones[49] = '(GMT+05:45) Kathmandu';
+timeZones[50] = '(GMT+06:00) Almaty, Novosibirsk';
+timeZones[51] = '(GMT+06:00) Astana, Dhaka';
+timeZones[52] = '(GMT+06:00) Sri Jayawardenepura';
+timeZones[53] = '(GMT+06:30) Rangoon';
+timeZones[54] = '(GMT+07:00) Bangkok, Hanoi, Jakarta';
+timeZones[55] = '(GMT+07:00) Krasnoyarsk';
+timeZones[56] = '(GMT+08:00) Beijing, Chongquing, Hong Kong, Urumqi';
+timeZones[57] = '(GMT+08:00) Irkutsk, Ulaan Bataar';
+timeZones[58] = '(GMT+08:00) Kuala Lumpur, Singapore';
+timeZones[59] = '(GMT+08:00) Perth';
+timeZones[60] = '(GMT+08:00) Taipei';
+timeZones[61] = '(GMT+09:00) Osaka, Sapporo, Tokyo';
+timeZones[62] = '(GMT+09:00) Seoul';
+timeZones[63] = '(GMT+09:00) Yakutsk';
+timeZones[64] = '(GMT+09:30) Adelaide';
+timeZones[65] = '(GMT+09:30) Darwin';
+timeZones[66] = '(GMT+10:00) Brisbane';
+timeZones[67] = '(GMT+10:00) Canberra, Melbourne, Sydney';
+timeZones[68] = '(GMT+10:00) Guam, Port Moresby';
+timeZones[69] = '(GMT+10:00) Hobart';
+timeZones[70] = '(GMT+10:00) Vladivostok';
+timeZones[71] = '(GMT+11:00) Magadan';
+timeZones[72] = '(GMT+11:00) Solomon Is., New Caledonia';
+timeZones[73] = '(GMT+12:00) Auckland, Wellington';
+timeZones[74] = '(GMT+12:00) Fiji, Kamchatka, Marshall Is.';
+
+function getTimeZoneIndex(timeZoneName) {
+  var i = 0, ret = 4;  // default to Pacific time
+
+  for ( var i = 0; i < timeZones.length; i++ ) {
+    if ( timeZones[i].search(timeZoneName) != -1 )
+      break;
+  }
+
+  if ( i < timeZones.length )
+    ret = i;
+
+  return ret;
+}
+
+function getTimeZoneName(idx) {
+  var str = timeZones[idx];
+  var ret = '';
+
+  ret = str.substr(12);
+
+  return ret;
+}
+
+function getTimeZoneOffset(idx) {
+  var str = timeZones[idx];
+  var ret = '';
+
+  if ( idx != 25 && idx != 26 )
+    ret = str.substr(4, 6);
+
+  return ret;
+}
+
+function writeTimeZoneList() {
+  for( var i = 0; i < timeZones.length; i++ )
+    document.writeln("<option value=" + getTimeZoneOffset(i) + ">" + timeZones[i] + "</option>");
+}
+/******************************************/
+function isValidDate(date)
+{
+    var strDate = date.split('/');
+	var lagreMonth = "1.01.3.03.5.05.7.07.8.08.10.12";
+	if ( strDate.length == 3)
+	{
+		if (( strDate[0] >= 1970 && strDate[0] <= 2037)
+		&& (strDate[1] >= 1 && strDate[1] <= 12))
+		{
+			if ( strDate[1] == 2)
+			{
+				if( strDate[0]%4 == 0)/*lagreYear*/
+				{
+					if(strDate[2] >= 0 && strDate[2] <= 29)
+						return true;
+				}
+				else
+				{
+					if(strDate[2] >= 0 && strDate[2] <= 28)
+						return true;
+				}
+			}
+			else if ( lagreMonth.indexOf(strDate[1]) == -1)
+			{
+				if(strDate[2] >= 0 && strDate[2] <= 30)
+					return true;
+			}
+			else
+			{
+				if(strDate[2] >= 0 && strDate[2] <= 31)
+					return true;
+			}
+		}
+
+	}
+	return false;
+}
+
+function isValidTime(time)
+{
+	var strTime = time.split(':');
+	if ( strTime.length == 3)
+	{
+		if (( strTime[0] >= 0 && strTime[0] <= 23)
+		&& (strTime[1] >= 0 && strTime[1] <= 59)
+		&& (strTime[2] >= 0 && strTime[2] <= 59))
+			return true;
+	}
+	return false;
+}
+/******************************************/
+function pcDateOrTime(flag) {
+	var pcDate = new Date();
+	with( document.forms[0] ) {
+		var date;
+		var Hours,Minutes,Seconds;
+		Hours = numfix(pcDate.getHours());
+		Minutes = numfix(pcDate.getMinutes());
+		Seconds = numfix(pcDate.getSeconds());
+		date = days[pcDate.getDay()] + " " + months[pcDate.getMonth()] + " " + pcDate.getDate();
+		date = date + " " + Hours + ":" + Minutes + ":" + Seconds;
+		date = date + " " + pcDate.getFullYear();
+		document.getElementById('pcDates').innerHTML = date;
+		
+		dates.value = ntp_date;
+		times.value = ntp_time;
+		refresh = 2;
+		//document.getElementById('timeZoneWarn').innerHTML = "&nbsp;";
+	/*	
+		//Set Date(Y/M/D)&Time(H:M:S)
+		if (flag == 0)//Initial date&time
+		{
+			dates.value = ntp_date;
+			times.value = ntp_time;
+		}
+		else if (usePC.checked == true)//Auto config
+		{
+			var date,time;
+			var Months,Dates,Hours,Minutes,Seconds;
+			Months = numfix(pcDate.getMonth() + 1);
+			Dates = numfix(pcDate.getDate());
+			Hours = numfix(pcDate.getHours());
+			Minutes = numfix(pcDate.getMinutes());
+			Seconds = numfix(pcDate.getSeconds());
+			date = pcDate.getFullYear() + "/" + Months + "/" + Dates;
+			time = Hours + ":" + Minutes + ":" + Seconds;
+			dates.value = date;
+			times.value = time;
+			refresh = 1;
+			var strTimeZoneWarn = "PC's TimeZone offset is about GMT";
+			var zone = new Array();
+			if (pcDate.getTimezoneOffset() < 0)
+			{
+				strTimeZoneWarn = strTimeZoneWarn + "+";
+				zone[0] = parseInt((0-pcDate.getTimezoneOffset())/60);
+				zone[1] = (0-pcDate.getTimezoneOffset())%60;
+				zone[0] = (zone[0]<10)?"0"+zone[0]:zone[0];
+				zone[1] = (zone[1]==0)?"00":zone[1];
+				strTimeZoneWarn = strTimeZoneWarn + zone[0] + ":" + zone[1];
+			}
+			else if(pcDate.getTimezoneOffset() > 0)
+			{
+				alert("test");
+				strTimeZoneWarn = strTimeZoneWarn + "-";
+				zone[0] = parseInt(pcDate.getTimezoneOffset()/60);
+				zone[1] = (0-pcDate.getTimezoneOffset())%60;
+				zone[0] = (zone[0]<10)?"0"+zone[0]:zone[0];
+				zone[1] = (zone[1]==0)?"00":zone[1];
+				strTimeZoneWarn = strTimeZoneWarn + zone[0] + ":" + zone[1];
+			}
+			else
+			{
+				strTimeZoneWarn = strTimeZoneWarn + " Time";
+			}
+			
+			document.getElementById("timeZoneWarn").innerHTML = strTimeZoneWarn;
+		}
+		else if ((flag == 1) && (refresh == 1))// else important, it indicates flag is affected by usePC.checked
+		{
+			dates.value = ntp_date;
+			times.value = ntp_time;
+			refresh = 2;
+			document.getElementById("timeZoneWarn").innerHTML = "&nbsp;";
+		}
+	}
+	window.setTimeout("pcDateOrTime(1)",500);
+	*/
+	}
+}
+/*
+function usePCChange()
+{
+	with( document.forms[0] ) {
+		if( usePC.checked == true)
+		{
+			dates.disabled = true;
+			times.disabled = true;
+			nousePC.checked = 0;
+		}
+		else
+		{
+			dates.disabled = false;
+			times.disabled = false;
+			nousePC.checked = 1;
+		}
+	}
+}
+
+function nousePCChange()
+{
+	with( document.forms[0] ) {
+		if( nousePC.checked == true)
+		{
+			dates.disabled = false;
+			times.disabled = false;
+			usePC.checked = 0;
+		}
+		else
+		{
+			dates.disabled = true;
+			times.disabled = true;
+			usePC.checked = 1;
+		}
+	}
+}
+
+function useChangeInput(flag)
+{
+	with( document.forms[0] ) {
+		usePC.checked = false;
+		if ( flag == 0)//Date
+		{
+			if (!isValidDate(dates.value))
+			{
+				alert("Wrong Date!");
+				dates.value = ntp_date;
+			}
+		}
+		else if ( flag == 1)//Time
+		{
+			if (!isValidTime(times.value))
+			{
+				alert("Wrong Time!");
+				times.value = ntp_time;
+			}
+		}
+	}
+}
+*/
+function ntpChange(optionlist,textbox) {
+  if( optionlist[optionlist.selectedIndex].value == "Other" )
+	textbox.style.display = 'block';
+  else {
+    textbox.value = "";
+	textbox.style.display = 'none';
+  }
+}
+function btnSync()
+{
+	var pcDate = new Date(new Date().getTime() + 1000);
+	with( document.forms[0] ) {
+		var date,time;
+		var Months,Dates,Hours,Minutes,Seconds;
+		Months = numfix(pcDate.getMonth() + 1);
+		Dates = numfix(pcDate.getDate());
+		Hours = numfix(pcDate.getHours());
+		Minutes = numfix(pcDate.getMinutes());
+		Seconds = numfix(pcDate.getSeconds());
+		date = pcDate.getFullYear() + "/" + Months + "/" + Dates;
+		time = Hours + ":" + Minutes + ":" + Seconds;
+		dates.value = date;
+		times.value = time;
+		refresh = 1;
+		var strTimeZoneWarn = "PC's TimeZone offset is about GMT";
+		var zone = new Array();
+		if (pcDate.getTimezoneOffset() < 0)
+		{
+			strTimeZoneWarn = strTimeZoneWarn + "+";
+			zone[0] = parseInt((0-pcDate.getTimezoneOffset())/60);
+			zone[1] = (0-pcDate.getTimezoneOffset())%60;
+			zone[0] = (zone[0]<10)?"0"+zone[0]:zone[0];
+			zone[1] = (zone[1]==0)?"00":zone[1];
+			strTimeZoneWarn = strTimeZoneWarn + zone[0] + ":" + zone[1];
+		}
+		else if(pcDate.getTimezoneOffset() > 0)
+		{
+			//alert("test");
+			strTimeZoneWarn = strTimeZoneWarn + "-";
+			zone[0] = parseInt(pcDate.getTimezoneOffset()/60);
+			zone[1] = (0-pcDate.getTimezoneOffset())%60;
+			zone[0] = (zone[0]<10)?"0"+zone[0]:zone[0];
+			zone[1] = (zone[1]==0)?"00":zone[1];
+			strTimeZoneWarn = strTimeZoneWarn + zone[0] + ":" + zone[1];
+		}
+		else
+		{
+			strTimeZoneWarn = strTimeZoneWarn + " Time";
+		}
+	}
+	//WIRELESS_SCHEDULE
+	wlIsTimeSet = 1;                //for wireless schedule
+	//
+	btnApply();
+	
+}
+function btnApply() {
+  	
+  var loc;
+  if (jumpBack == 1) //jump back to wlschedule.html 
+	loc = 'sntp_cfg.cgi?ntp_enabled=';
+  else
+	loc = 'sntpcfg.cgi?ntp_enabled=';
+
+  with( document.forms[0] ) {
+    if( ntpEnabled.checked ) {
+      loc += '1&ntpServer1=';
+      if( ntpServer1.selectedIndex == ntpServers.length ) {
+        if( ntpServerOther1.value.length == 0 ) { // == Other
+          alert('First time server is other, but Other field is blank');
+          return;
+        } else {
+          loc += ntpServerOther1.value;
+        }
+      } else {
+        loc += ntpServer1[ntpServer1.selectedIndex].value;
+      }
+
+      loc += '&ntpServer2=';
+      if( ntpServer2.selectedIndex == ntpServers.length+1 ) {
+        if( ntpServerOther2.value.length == 0 ) { // == Other
+          alert('Second time server is other, but Other field is blank');
+          return;
+        } else {
+          loc += ntpServerOther2.value;
+        }
+      } else {
+        if( ntpServer2.selectedIndex > 0 )
+          loc += ntpServer2[ntpServer2.selectedIndex].value;
+      }
+
+      loc += '&ntpServer3=';
+      if( ntpServer3.selectedIndex == ntpServers.length+1 ) {
+        if( ntpServerOther3.value.length == 0 ) { // == Other
+          alert('Third time server is other, but Other field is blank');
+          return;
+        } else {
+          loc += ntpServerOther3.value;
+        }
+      } else {
+        if( ntpServer3.selectedIndex > 0 )
+          loc += ntpServer3[ntpServer3.selectedIndex].value;
+      }
+      loc += '&ntpServer4=';
+      if( ntpServer4.selectedIndex == ntpServers.length+1 ) {
+        if( ntpServerOther4.value.length == 0 ) { // == Other
+          alert('Fourth time server is other, but Other field is blank');
+          return;
+        } else {
+          loc += ntpServerOther4.value;
+        }
+      } else {
+        if( ntpServer4.selectedIndex > 0 )
+          loc += ntpServer4[ntpServer4.selectedIndex].value;
+      }
+      loc += '&ntpServer5=';
+      if( ntpServer5.selectedIndex == ntpServers.length+1 ) {
+        if( ntpServerOther5.value.length == 0 ) { // == Other
+          alert('Fifth time server is other, but Other field is blank');
+          return;
+        } else {
+          loc += ntpServerOther5.value;
+        }
+      } else {
+        if( ntpServer5.selectedIndex > 0 )
+          loc += ntpServer5[ntpServer5.selectedIndex].value;
+      }
+
+      loc += '&timezone_offset=' + cboTimeZone[cboTimeZone.selectedIndex].value;
+      loc += '&timezone=' + getTimeZoneName(cboTimeZone.selectedIndex);
+
+      loc += '&use_dst=0';
+    } else {
+      loc += '0';
+    }
+	loc += ( '&sysDate=' + dates.value.replace(/\//g,'.') + '-' + times.value );
+	if (dates.value.replace(/\//g,'.') != '1970.01.01') //added by jy
+	  wlIsTimeSet = 1;
+  }
+  loc += '&wlIsTimeSet=' + wlIsTimeSet;    //for wireless schedule
+  loc += '&sessionKey=' + sessionKey;
+  var code = 'location="' + loc + '"';
+
+  eval(code);
+}
+
+function frmLoad() {
+  var i = 0;
+
+  var ntp1 = "<%ejGet(ntpServer1)%>";
+  var ntp2 = "<%ejGet(ntpServer2)%>";
+  var ntp3 = "<%ejGet(ntpServer3)%>";
+  var ntp4 = "<%ejGet(ntpServer4)%>";
+  var ntp5 = "<%ejGet(ntpServer5)%>";
+  var ntp_enabled = "<%ejGet(ntp_enabled)%>";
+  var tz_name = "<%ejGet(timezone)%>";
+
+  with (document.forms[0]) {
+	if (!isValidDate(ntp_date))
+		ntp_date = "2000/01/01";
+	if (!isValidTime(ntp_time))
+		ntp_time = "00:00:00";
+	
+	dates.value = ntp_date;
+	times.value = ntp_time;
+    //nousePC.checked = 1;
+	//document.getElementById("timeZoneWarn").innerHTML = "HelloWorld";
+	if( ntp_enabled == "1" ) {
+      ntpEnabled.checked = true;
+    } else {
+      ntpEnabled.checked = false;
+    }
+
+    if( ntp1.length ) {
+      for( i = 0; i < ntpServers.length; i++ ) {
+        if( ntp1 == ntpServers[i] ) {
+          ntpServer1.selectedIndex = i;
+          break;
+        }
+      }
+      if( i == ntpServers.length ) {
+        ntpServer1.selectedIndex = i; // Set to 'Other'
+        ntpServerOther1.value = ntp1;
+      }
+    }
+    ntpChange(ntpServer1,ntpServerOther1);
+
+    if( ntp2.length ) {
+      for( i = 0; i < ntpServers.length; i++ ) {
+        if( ntp2 == ntpServers[i] ) {
+          ntpServer2.selectedIndex = i+1;
+          break;
+        }
+      }
+      if( i == ntpServers.length ) {
+        ntpServer2.selectedIndex = i+1; // Set to 'Other'
+        ntpServerOther2.value = ntp2;
+      }
+    }
+    ntpChange(ntpServer2,ntpServerOther2);
+
+    if( ntp3.length ) {
+      for( i = 0; i < ntpServers.length; i++ ) {
+        if( ntp3 == ntpServers[i] ) {
+          ntpServer3.selectedIndex = i+1;
+          break;
+        }
+      }
+      if( i == ntpServers.length ) {
+        ntpServer3.selectedIndex = i+1; // Set to 'Other'
+        ntpServerOther3.value = ntp3;
+      }
+    }
+    ntpChange(ntpServer3,ntpServerOther3);
+
+    if( ntp4.length ) {
+      for( i = 0; i < ntpServers.length; i++ ) {
+        if( ntp4 == ntpServers[i] ) {
+          ntpServer4.selectedIndex = i+1;
+          break;
+        }
+      }
+      if( i == ntpServers.length ) {
+        ntpServer4.selectedIndex = i+1; // Set to 'Other'
+        ntpServerOther4.value = ntp4;
+      }
+    }
+    ntpChange(ntpServer4,ntpServerOther4);
+
+    if( ntp5.length ) {
+      for( i = 0; i < ntpServers.length; i++ ) {
+        if( ntp5 == ntpServers[i] ) {
+          ntpServer5.selectedIndex = i+1;
+          break;
+        }
+      }
+      if( i == ntpServers.length ) {
+        ntpServer5.selectedIndex = i+1; // Set to 'Other'
+        ntpServerOther5.value = ntp5;
+      }
+    }
+    ntpChange(ntpServer5,ntpServerOther5);
+
+    cboTimeZone.selectedIndex = getTimeZoneIndex(tz_name);
+
+    ntpEnblChange();
+  }
+}
+function style_display_on()
+{
+	if (window.ActiveXObject)
+	{ // IE
+		return "block";
+	}
+	else if (window.XMLHttpRequest)
+	{ // Mozilla, Safari,...
+		return "table-row";
+	}
+}
+function hideNtpConfig(hide) {
+  var status = style_display_on();
+
+  if(hide)
+    status = 'none';
+
+  if( document.getElementById )
+    document.getElementById('ntpConfig').style.display = status;
+  else
+    if(!document.layers)
+      document.all.ntpConfig.style.display = status;
+}
+
+function ntpEnblChange() {
+  if( document.forms[0].ntpEnabled.checked )
+    hideNtpConfig(0);
+  else
+    hideNtpConfig(1);
+}
+
+function writeNtpList(needed) {
+  if(!needed)
+    document.writeln("<option value=None>None</option>");
+  for( var i = 0; i < ntpServers.length; i++ )
+    document.writeln("<option value=" + ntpServers[i] + ">" + ntpServers[i] + "</option>");
+  document.writeln("<option value=Other>Other</option>");
+}
+
+// done hiding -->
+    </script>
+
+  </head>
+<body onload='frmLoad()'>
+    <center>
+        <form>
+		<table>
+                <tr>
+                    <td class="h1">
+                        Time settings
+                    </td>
+                </tr>
+                <tr>
+                    <td class="blue">
+                    </td>
+                </tr>
+				</table>
+				<table>
+                <tr>
+                    <td class="text">
+                        This page allows you to the modem's time configuration.
+                    </td>
+                </tr>
+				</table>
+				<table>
+				<tr><td>
+				<tr>
+					<td class="item">Date/Time : </td>
+					<td><B><script language="javascript"><!-- hide
+						document.write(ntpDate);
+					// done hiding --></script></B></td>
+				</tr>
+				<tr>
+					<td class="item">Date/Time on your PC : </td>
+					<td><label id='pcDates'></label></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><input type='button' class="buttonL" value="Synchronize with PC" onClick='btnSync()'></td>
+				</tr>
+						</td></tr>
+						</table>
+						<table>
+				<tr><td class="text">Setup Adsl Modem Router's Date/Time</td></tr>
+				</table>
+				<script language="javascript">
+				/*<table>
+				<tr>
+					<td>
+						<input type='radio' id='usePC' name='usePC' onclick='usePCChange()'>
+						Synchronize with your PC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	
+						<input type='radio' id='nousePC' name='nousePC' onclick='nousePCChange()'>
+						&nbsp;Manual
+					</td>
+				</tr>
+				</table>*/
+				</script>
+				<table>
+				<tr>
+					<td class="item">Date&nbsp;(Y/M/D)&nbsp;:</td>
+					<td><input class='text' name='dates' onchange='useChangeInput(0)'></td>
+				</tr>
+				<tr>
+					<td class="item">Time&nbsp;(H:M:S)&nbsp;:</td>
+					<td><input type='text' name='times' onchange='useChangeInput(1)'></td>
+				</tr>
+				<script language="javascript">pcDateOrTime(0);</script>
+			</table>
+				<table>
+                <tr>
+                    <td>
+                        <input type='checkbox' id='ntpEnabled' name='ntpEnabled' onclick='ntpEnblChange()'>
+                        Automatically synchronize with Internet time servers
+                    </td>
+                </tr>
+				
+			<tr id='ntpConfig'><td>
+          <table border="0" cellpadding="0" cellspacing="0" style="width: 100%">
+            <tr>
+              <td nowrap width='30%' class="Item" style="height: 24px">First NTP time server:</td>
+              <td width='30%' style="height: 24px">
+              	<select name='ntpServer1' size="1" style="width: 100%" onChange='ntpChange(this.form.ntpServer1,this.form.ntpServerOther1)'>
+              	<script language="javascript">writeNtpList(true);</script>
+              	</select>
+              </td>
+              <td style="height: 24px">&nbsp;</td>
+              <td width="40%" align="left" style="height: 24px"><input type='text' name='ntpServerOther1' style="width: 65%"></td>
+            </tr>
+            <tr>
+              <td nowrap width='30%' class="Item" style="height: 24px">Second NTP time server:</td>
+              <td width='30%' style="height: 24px">
+              	<select name='ntpServer2' size="1" style="width: 100%" onChange='ntpChange(this.form.ntpServer2,this.form.ntpServerOther2)'>
+				<script language="javascript">writeNtpList(false);</script>
+				</select>
+              </td>
+              <td style="height: 24px">&nbsp;</td>
+              <td width="40%" align="left" style="height: 24px"><input type='text' name='ntpServerOther2' style="width: 65%"></td>
+            </tr>
+            <tr>
+              <td nowrap width='30%' class="Item" style="height: 24px">Third NTP time server:</td>
+              <td width='30%' style="height: 24px">
+              	<select name='ntpServer3' size="1" style="width: 100%" onChange='ntpChange(this.form.ntpServer3,this.form.ntpServerOther3)'>
+				<script language="javascript">writeNtpList(false);</script>
+				</select>
+              </td>
+              <td style="height: 24px">&nbsp;</td>
+              <td width="40%" align="left" style="height: 24px"><input type='text' name='ntpServerOther3' style="width: 65%"></td>
+            </tr>
+            <tr>
+              <td nowrap width='30%' class="Item" style="height: 24px">Fourth NTP time server:</td>
+              <td width='30%' style="height: 24px">
+              	<select name='ntpServer4' size="1" style="width: 100%" onChange='ntpChange(this.form.ntpServer4,this.form.ntpServerOther4)'>
+				<script language="javascript">writeNtpList(false);</script>
+				</select>
+              </td>
+              <td style="height: 24px">&nbsp;</td>
+              <td width="40%" align="left" style="height: 24px"><input type='text' name='ntpServerOther4' style="width: 65%"></td>
+            </tr>
+            <tr>
+              <td nowrap width='30%' class="Item" style="height: 24px">Fifth NTP time server:</td>
+              <td width='30%' style="height: 24px">
+              	<select name='ntpServer5' size="1" style="width: 100%" onChange='ntpChange(this.form.ntpServer5,this.form.ntpServerOther5)'>
+				<script language="javascript">writeNtpList(false);</script>
+				</select>
+              </td>
+              <td style="height: 24px">&nbsp;</td>
+              <td width="40%" align="left" style="height: 24px"><input type='text' name='ntpServerOther5' style="width: 65%"></td>
+            </tr>
+            <tr>
+              <td nowrap class="Item" style="height: 22px; width: 30%;">Time zone offset:</td>
+              <td colspan="3" style="height: 22px; width: 30%"><select name='cboTimeZone' size="1" style="width: 80%">
+                    <script language="javascript">
+                      writeTimeZoneList();
+                    </script>
+                  </select>
+              </td>
+              </tr>
+			  <tr><td></td><td><FONT color='red'><label id='timeZoneWarn'>&nbsp;</label></FONT></td>
+			  </tr>
+          </table>
+        </td></tr></table>
+		<table>
+			<tr><td class="blue"></td></tr>
+			</table>
+        	<tr><td align="center" style="height: 24px">
+        		<center><p align="center"><input type='button' class="buttonL" value="Save/Apply" onClick='btnApply()'></p></center>
+        </td></tr>
+        </center>
+        </form>
+    </center>
+</body>
+</html>

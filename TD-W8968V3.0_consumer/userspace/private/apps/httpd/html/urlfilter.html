@@ -1,0 +1,155 @@
+<html>
+<head>
+	<meta http-equiv="Pragma" content="no-cache">
+	<link rel="stylesheet" href="stylemain.css" type="text/css">
+	<link rel="stylesheet" href="colors.css" type="text/css">
+	<script language="javascript" src="util.js"></script>
+	<script language="javascript"><!-- hide
+/*EJ_PLACEHOLDER*/
+if (entryList === undefined) {
+	var sessionKey = '123456789';
+	var MAX_ENTRY = 100;
+	var listType = 'Include';
+	var entryList = [
+		[1,1,'192.168.1.10','192.168.1.20',80,'www.baidu.com,www.qq.com'],
+		[2,0,'192.168.1.10','',80,'www.google.com']
+	];
+}
+
+function modeClick(listType) {
+	var listType = radioCheck(document.forms[0].listtype);
+	go('urlfilter.cmd?action=save&listtype='+listType, sessionKey);
+}
+
+function getEntry(i) {
+	return entryList[i][0];
+}
+
+function getSelects() {
+	var sel = document.forms[0].sel;
+	return sel.length === undefined ? new Array(sel) : sel;
+}
+
+var glbAllSelected = false;
+function selectAllClick() {
+	var sel = getSelects();
+	glbAllSelected = !glbAllSelected;
+	var i = sel.length; while (--i >= 0) {
+		sel[i].checked = glbAllSelected;
+	}
+}
+
+function enableClick(i, enable) {
+	go('urlfilter.cmd?action=enable&entry='+getEntry(i) + '&enable='+enable, sessionKey);
+}
+
+function removeClick() {
+	var lst = getSelected();
+	if (lst) go('urlfilter.cmd?action=remove_url&rmLst='+lst, sessionKey);
+}
+
+function editClick(i) {
+	go('urlfilter.cmd?action=edit&entry='+getEntry(i), sessionKey);
+}
+
+function addClick() {
+	go('url_add.html');
+}
+
+function getSelected() {
+	var sel = getSelects();
+	var lst = new Array();
+	for (var i = 0; i < sel.length; i++) {
+		if (sel[i].checked) lst.push(getEntry(i));
+	}
+	return lst.join(' ');
+}
+
+function enableAllClick() {
+	if (entryList.length > 0)
+		go('urlfilter.cmd?action=enable&entry=&enable=1', sessionKey);
+}
+
+var glbUrlCount = 0;
+function genEntriesTable() {
+	var html = '', v, urls;
+	for (var i = 0; i < entryList.length; i++) {
+		v = entryList[i];
+		html += '<tr>\n\t<td>';
+		if (v[2]) {
+			html += v[2];
+			if (v[3]) html += '-' + v[3];
+		} else {
+			html += '&nbsp;';
+		}
+		html += '</td>\n\t<td>' + v[4];
+		urls = v[5].split(',');
+		glbUrlCount += urls.length;
+		html += '</td>\n\t<td>' + urls.join('<br/>') + '</td>\n\t';
+		if (v[1] == 1) {
+			html += '<td class="greenText">Enabled</td>\n\t<td align="center"><input type="button" ';
+			html += 'onClick="enableClick(' + i + ',0)" value="Disable"></td>\n\t';
+		} else {
+			html += '<td class="redText">Disabled</td>\n\t<td align="center"><input type="button" ';
+			html += 'onClick="enableClick(' + i + ',1)" value="Enable"></td>\n\t';
+		}
+		html += '<td align="center"><input type="button" onClick="editClick(' + i + ')" value="Edit">';
+		html += '</td>\n\t<td align="center"><input type="checkbox" name="sel"></td>\n</tr>\n';
+	}
+	document.write(html);
+}
+	// done hiding --></script>
+</head>
+
+<body>
+<center><form><table>
+	<tr><td class="h1">URL Filter</td></tr>
+	<tr><td class="blue"></td></tr>
+	<tr><td>
+		Please select the list type first then configure the list entries.
+		A maximum <script type="text/javascript"><!-- hide
+			document.write(MAX_ENTRY);
+		// done hiding --></script> urls can be configured.
+	</td></tr>
+	<tr><td>&nbsp;</td></tr>
+	<tr><td><table border="0" cellpadding="4" cellspacing="0" style="width:100%">
+		<tr>
+		<td class="item">URL List Type:</td>
+		<td>
+			<input type="radio" name="listtype" value="Disable" onClick="modeClick()" checked>Disable
+			&nbsp;&nbsp;<input type="radio" name="listtype" value="Include" onClick="modeClick()">Allow
+			&nbsp;&nbsp;<input type="radio" name="listtype" value="Exclude" onClick="modeClick()">Deny</td>
+			<script type="text/javascript"><!-- hide
+				radioCheck(document.forms[0].listtype, listType);
+			// done hiding --></script>
+		</tr>
+	</table></td></tr>
+	<tr><td><table border="1" cellpadding="4" cellspacing="0">
+		<tr align="center">
+			<td class="hd">LAN IP</td>
+			<td class="hd">Port</td>
+			<td class="hd">Address</td>
+			<td class="hd">Status</td>
+			<td class="hd">Enable/Disable</td>
+			<td class="hd">Edit</td>
+			<td class="hd">Remove</td>
+		</tr>
+		<script type="text/javascript"><!-- hide
+			genEntriesTable();
+		// done hiding --></script>
+	</table></td></tr>
+
+	<tr><td class="blue"></td></tr>
+	<tr><td><center>
+		<script type="text/javascript"><!-- hide
+		if (glbUrlCount < MAX_ENTRY) {
+			document.write('<input type="button" onClick="addClick()" value="Add">');
+		}
+		// done hiding --></script>
+		<input type="button" onClick="enableAllClick()" value="Enable All">
+		<input type="button" onClick="selectAllClick()" value="Select All">
+		<input type="button" onClick="removeClick()" value="Remove">
+	</center></td></tr>
+</table></form></center>
+</body>
+</html>

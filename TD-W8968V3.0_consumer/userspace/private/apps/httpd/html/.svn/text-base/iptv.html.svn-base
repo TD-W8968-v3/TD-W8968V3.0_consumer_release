@@ -1,0 +1,340 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+<script language="javascript">
+
+var sessionKey = '<%ejGetOther(sessionKey)%>';
+var entry = [<%ejGetOther(memInfo, dslIptvCfg)%>]; // [iptvenb,lanavaible,lanportsel,pvi,pci]
+//var entry = [0,13,1,8,81]; // [iptvenb,lanavaible,lanportsel,pvi,pci]
+var avaLans = entry[1];
+var TCEntry = [<%ejGetOther(memInfo, tcConfig)%>]; // [enb,dsl,up,down,enbIptvTc,iptvUpMin,iptvUpMax,iptvDownMin,iptvDownMax]
+//var TCEntry = [0,1,0,0,0,0,0,0,0];
+var tcRuleBW = [<%ejGetOther(memInfo, tcRuleBWSum)%>];
+var tcRuleBWUp  = tcRuleBW[0];
+var tcRuleBWDown  = tcRuleBW[1];
+
+var lanCount = 3;
+
+
+function lanPortInit(obj,ports)
+{
+		for (var i = 1; i <= lanCount; i++)
+		{
+			if(ports & (1<<(i-1)))
+			{
+				obj.innerHTML += "<input type='radio' name = 'iptvPort' id='lan"+i+"'"+" /><span id='span_lan"+i+"'>"+"LAN" + i+"</span>";
+			}
+			else
+			{
+				obj.innerHTML += "<input type='radio' name = 'iptvPort' disabled='true' id='lan"+i+"'"+" /><span id='span_lan"+i+"'>"+"LAN" + i+"</span>";
+			}
+		}
+}
+
+function jumpToBW()
+{
+	var loc = 'fromIptvJumpToBW.cmd?';
+	var code = 'location="' + loc + '"';
+	eval(code);
+	//go('trafficcontrol.html');
+}
+
+function enableClick()
+{	
+	
+	var enableIPTV = document.getElementById("enableIPTV");
+
+	var vpi = document.getElementById("vpi");
+	var vci = document.getElementById("vci");
+	var turn = function(bool) 
+	{
+			for(var i = 1; i <= lanCount; i++)
+			{
+				if(avaLans & (1<<(i-1)))
+				{
+					var lanId = 'lan' + i;
+					var lan = document.getElementById(lanId);
+					lan.disabled = bool;
+				}
+				
+			}
+			vpi.disabled = bool;
+			vci.disabled = bool;
+	}
+	
+	with ( document.forms[0] ) 
+	{
+		if (enableIPTV.checked) 
+		{
+			turn(false);
+			if (TCEntry[0] == 0)
+			{
+				enableIptvTC.disabled = true;
+			}
+			else
+			{
+				enableIptvTC.disabled = false;
+			}
+			upstreammin.disabled = false;
+			upstreammax.disabled = false;
+			downstreammin.disabled = false;
+			downstreammax.disabled = false;
+		}
+		else 
+		{
+			turn(true);
+			enableIptvTC.disabled = true;
+			upstreammin.disabled = true;
+			upstreammax.disabled = true;
+			downstreammin.disabled = true;
+			downstreammax.disabled = true;
+		}	
+		
+	}
+	
+}
+
+function enableIptvTCClick()
+{
+
+	with ( document.forms[0] ) { 
+	if (enableIptvTC.checked ){
+		showhide("titleId", 1);
+	}
+	else{
+		showhide("titleId", 0);		
+	}	
+  }
+}
+
+function frmLoad() {
+	with ( document.forms[0] ) 
+	{
+	var portsAva = document.getElementById("portsAva");
+		enableIPTV.checked = entry[0];
+		lanPortInit(portsAva, entry[1]);
+		iptvPort[entry[2]-1].checked = true;
+		vpi_n.value = entry[3];
+		vci_n.value = entry[4];
+		
+		enableIptvTC.checked = TCEntry[4];
+		upstreammin.value = TCEntry[5];
+		upstreammax.value = TCEntry[6];
+		downstreammin.value = TCEntry[7];
+		downstreammax.value = TCEntry[8];
+		
+		if (TCEntry[0] == 0){
+			enableIptvTC.disabled = true;
+			enableIptvTC.checked = false;
+			showhide("BWEnblWarning", 1);
+		}
+		else
+		{
+			showhide("BWEnblWarning", 0);
+		}
+		
+	}
+	enableClick();
+	enableIptvTCClick();
+}
+
+function btnApply()
+{
+	var loc = 'iptv.cmd?';
+	var enableIPTV = document.getElementById("enableIPTV");
+	var vpi = document.getElementById("vpi");
+	var vci = document.getElementById("vci");
+	
+	if(enableIPTV.checked)
+	{
+		//var lans = [lan1,lan2,lan3,lan4];
+		loc += 'iptvEn=1';
+		var i;
+		for(i = 1; i <= lanCount; i++)
+		{
+			var lanId = 'lan' + i;
+			var lan = document.getElementById(lanId);
+			if(lan.checked)
+				break;
+		}
+		loc += '&lanSel=' + i;
+		if(vpi.value >255 || vpi.value <0)
+		{
+			alert("Invalide VPI value");
+			return;
+		}
+		loc += '&vpi=' + vpi.value;
+		if(vci.value >65535 || vci.value <1)
+		{
+			alert("Invalide VCI value");
+			return;
+		}
+		loc += '&vci=' + vci.value;
+		
+	with ( document.forms[0] ) 
+	{
+		if(enableIptvTC.checked == true)
+		{
+		//带宽数值合法性检�?
+		if (Number(downstreammin.value) < 0 || Number(upstreammin.value) < 0)
+		{
+			alert("The rate should be a positive value!");
+			return;
+		}
+		if (Number(downstreammin.value) > Number(downstreammax.value))
+		{
+			alert("The min rate of downstream should be less than the max rate!");
+			return;
+		}
+		if (Number(upstreammin.value) > Number(upstreammax.value))
+		{
+			alert("The min rate of upstream should be less than the max rate!");
+			return;
+		}
+		
+		if(Number(downstreammin.value) > TCEntry[3] - tcRuleBWDown)
+		{
+			alert("Sum of min downstream bandwidth is greater than total.");
+			return;
+		}
+		
+		if(Number(upstreammin.value) > TCEntry[2] - tcRuleBWUp)
+		{
+			alert("Sum of min upstream bandwidth is greater than total.");
+			return;
+		}
+		
+		if (Number(upstreammax.value) > Number(TCEntry[2]))
+		{
+			alert("Max upstream is greater than total.");
+			return;
+		}
+		
+		if ((Number(downstreammax.value) > Number(TCEntry[3])))
+		{
+			alert("Max downstream is greater than total.");
+			return;
+		}
+		
+		
+			loc += '&enableIptvTC=1';
+			loc += '&iptvUpMin=' + upstreammin.value;
+			loc += '&iptvUpMax=' + upstreammax.value;
+			loc += '&iptvDownMin=' + downstreammin.value;
+			loc += '&iptvDownMax=' + downstreammax.value;
+		}
+		else
+		{
+			loc += '&enableIptvTC=0';
+			//loc += 'upMin' 
+		}
+	}
+	
+	}
+	else
+	{
+		loc += 'iptvEn=0';
+		loc += '&enableIptvTC=0';
+	}
+	
+	go(loc, sessionKey);
+}
+
+</script>
+</head>
+ <body onLoad='frmLoad()'>
+      <center>
+	  <form>
+      <table>
+      		<tr><td class="h1">IPTV Settings</td></tr>
+      		<tr><td class="blue"></td></tr>	
+	  </table>
+<table border="0">
+			
+<tr><td>
+<p><input type="checkbox" name="enableIPTV" id="enableIPTV" onclick="enableClick()"><span  id="t_iptv_tip_enable">Enable IPTV</span></p>
+<p ></p>
+</td></tr>
+<tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>
+<table border="0" cellpadding="4" cellspacing="0" style="width:100%">
+			<tr>
+				<td colspan=3>Please select the LAN port for IPTV connection and connect the set-top box (STB) to that port.</td>
+			</tr>
+			<tr>
+				<td><p><span id="portsAva"></span></p></td>
+			</tr>
+			<tr>
+				<td colspan=3>
+					<p id="t_iptv_tip3">Please set PVC parameters for IPTV connection.</p>
+				</td>
+			</tr>
+			<tr>
+				<td class="item" style="width:30%">VPI:</td>
+				<td style="width:70%"><input type="text" class="text" id="vpi" name='vpi_n'size="5" maxlength="3" />(0-255)</td>
+			</tr>
+			<tr>
+				<td class="item" style="width:30%">VCI:</td>
+				<td style="width:70%"><input type="text" class="text" id="vci" name='vci_n'size="5" maxlength="5" />(1-65535)</td>
+			</tr>
+			
+			<tr id="iptvEn">
+			<td >Enable IPTV Bandwidth Guarantee
+				<input type="checkbox" name="enableIptvTC" onclick="enableIptvTCClick()">
+				
+			</td>
+			<td id='BWEnblWarning'>Device's Bandwidth Control Function is disabled, Click <A HREF="javascript:jumpToBW()">here</A> to enable it.</td>
+			</tr>
+			
+			
+			
+</table>
+
+<div id="titleId">
+	<table border="0" style="width:100%">
+				<tr>
+					<td>&nbsp;</td>
+					<td>	
+					<b>Min Rate(Kbps)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Max Rate(Kbps)</b></td>
+				</tr>
+				<tr>
+				<td style="width:30%" class="item2"> <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Upstream:</b></td>
+                  <td style="width:70%">
+                          <input type='text' name='upstreammin' size='8' maxlength='8'>
+						  &nbsp;&nbsp;&nbsp;
+						  <input type='text' name='upstreammax' size='8' maxlength='8'>
+                  </td>		
+				</tr>
+				<tr>
+				<td style="width:30%" class="item2"> <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Downstream:</b></td>
+                  <td style="width:70%">
+                          <input type='text' name='downstreammin' size='8' maxlength='8'>
+						  &nbsp;&nbsp;&nbsp;
+						  <input type='text' name='downstreammax' size='8' maxlength='8'>
+                  </td>		
+				</tr>
+    </table>
+</div>
+
+	</td>
+</tr>
+
+</table>
+
+<div id="divApply"> 
+		   <table>
+           <tr><td class="blue"></td></tr>	          
+		   <tr> <td>        
+		   <center><input type='button' onClick='btnApply()' value='Save/Apply'></center>
+		   </tr> </td>
+           </table>
+</div>
+		</form>
+     </center>
+   </body>
+</html>

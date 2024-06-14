@@ -1,0 +1,291 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var enblIP6 = '<%ejGetOther(sysInfo, enblIPv6)%>';
+var editRtRoute = '<%ejGetOther(memInfo, editRtRoute)%>'.split('|');
+//var editRtRoute = '4|1|192.168.1.0/24|192.168.1.1|br0|0'.split('|');
+var isEdit = (editRtRoute.length == 6);
+
+function hideNextHopInfo(hide) {
+   var status = 'block';
+
+   if ( hide == 1 )
+      status = 'none';
+
+   if (document.getElementById)
+   {  // DOM3 = IE5, NS6
+        document.getElementById('nexthop').style.display = status;
+   }
+   else 
+   {
+      if (document.layers == false) // IE4
+         document.all.nexthop.style.display = status;
+   }
+}
+
+function changeSelectNextHop(OnPageLoad) 
+{
+   with ( document.forms[0] ) 
+   {
+      var idx = dstWanIf.selectedIndex;
+      var ifc = dstWanIf.options[idx].value;
+
+      if ( ifc.indexOf('ppp') == -1 ) 
+      {
+         hideNextHopInfo(0);
+      }
+      else
+      {
+         hideNextHopInfo(1);
+      }
+   }
+}
+
+function changeSelect(OnPageLoad) 
+{
+   with ( document.forms[0] ) {
+      if (getSelect(ipver) == '4') {
+         showhide('wanIf',  1);
+         showhide('wanIf6', 0);
+      }
+      else {
+         showhide('wanIf',  0);
+         showhide('wanIf6', 1);
+      }
+   }
+}
+
+function btnApply() {
+   var loc = 'rtroutecfg.cmd?action=add';
+   if (isEdit) loc += '&edit=' + editRtRoute[0] + '|' + editRtRoute[1];
+   with ( document.forms[0] ) {
+      var ifc;
+      var ipv = ipver.options[ipver.selectedIndex].value;
+
+      if (ipv == '4')
+         ifc = dstWanIf.options[dstWanIf.selectedIndex].value;
+      else
+         ifc = dstWanIf6.options[dstWanIf6.selectedIndex].value;
+
+      loc += '&ipver=' + ipv;
+
+      var ip = dstAddr.value;
+      if (ip == '') {
+         alert('Need to specify destination IP Address.');
+         return;
+      }
+      ip = ip.split('/');
+      if (ip.length != 2) {
+         alert('Destination address "' + dstAddr.value + '" shall have network prefix length.');
+         return;
+      }         
+	  ip[1] = parseInt(ip[1]);
+      if (ipv == '4') {
+         if (isValidIpAddressForStRoute(ip[0]) == false ) {
+            alert('Destination address "' + ip[0] + '" is invalid IPv4 address.');
+            return;
+         } else if (ip[1] <= 0 || ip[1] > 32) {
+            alert('Prefix length ' + ip[1] + ' is invalid for IPv4 address.');
+            return;
+         }
+      }
+      else {
+         if (isValidIpAddress6(ip[0]) == false ) {
+            alert('Destination address "' + ip[0] + '" is invalid IPv6 address.');
+            return;
+         } else if (ip[1] <= 0 || ip[1] > 128) {
+            alert('Prefix length ' + ip[1] + ' is invalid for IPv6 address.');
+            return;
+         }
+      }
+      loc += '&dstAddr=' + dstAddr.value;
+
+      if (ifc != '') {
+         // if chosen interface is IPOE but does not specify static IP address then display error
+         if ( ifc.indexOf('ppp') == -1 ) {
+            if (((ipver.options[ipver.selectedIndex].value == '4') && (isValidIpAddress(dstGtwy.value) == false)) ||
+                ((ipver.options[ipver.selectedIndex].value == '6') && (isValidIpAddress6(dstGtwy.value) == false)) ) {
+                  alert('Gateway IP address should be correctly configured if IP based interface (IPoE, IPoA) is selected.');
+                  return;
+            }
+         }
+         loc += '&dstWanIf=' + ifc;
+      }
+      else {
+         if (dstGtwy.value == '') {
+            alert('Need to specify either "Gateway IP Address" or "Interface".');
+            return;
+         }
+         else if (dstGtwy.value.toLowerCase().indexOf("fe80") == 0) {
+            alert('Interface should be selected since gateway IPv6 address is link local.');
+            return;
+         }
+      }
+      if (ifc.indexOf('ppp') == -1 && dstGtwy.value != '') {
+         if (dstGtwy.value.indexOf('/') != -1) {
+            alert('Default gateway "' + dstGtwy.value + '" shall not have network prefix length.');
+            return;
+         }         
+         if (ipv == '4') {
+            if (isValidIpAddress(dstGtwy.value) == false ) {
+               alert('Default gateway "' + dstGtwy.value + '" is invalid IPv4 address.');
+               return;
+            }
+         }
+         else {
+            if (isValidIpAddress6(dstGtwy.value) == false ) {
+               alert('Default gateway "' + dstGtwy.value + '" is invalid IPv6 address.');
+               return;
+            }
+         }
+         loc += '&dstGtwy=' + dstGtwy.value;
+      }
+      if(metric.value != '')
+      {
+         loc += '&metric=' + metric.value;
+      }
+   }
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function frmLoad() {
+	with (document.forms[0]) {
+		ipver.value = '4';
+		if (isEdit) {
+			ipver.value = editRtRoute[0];
+			dstAddr.value = editRtRoute[2];
+			dstGtwy.value = editRtRoute[3];
+			var wanIf = dstWanIf;
+			if (editRtRoute[0] == 6) { //IPv6
+				wanIf = dstWanIf6;
+			}
+			var i = wanIf.options.length;
+			while (--i >= 0) {
+				if (wanIf.options[i].value == editRtRoute[4]) {
+					wanIf.selectedIndex = i;
+					break;
+				}
+			}
+			if (editRtRoute[5] >= 0) {
+				metric.value = editRtRoute[5];
+			}
+			changeSelectNextHop();
+		}
+		changeSelect();
+	}
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onload="frmLoad()">
+      <center>
+         <form>
+		 <table>
+				<tr><td class=h1 colspan=2>Routing -- Static Route <script language="javascript"><!-- hide
+				document.write(isEdit ? 'Edit' : 'Add');
+			// done hiding --></script></td></tr>
+			<tr><td class=blue colspan=2></td></tr>
+				<tr><td colspan=2>Enter the destination network address, subnet mask, gateway AND/OR available 
+            WAN interface then click "Save/Apply" to <script language="javascript"><!-- hide
+				document.write(isEdit ? 'edit' : 'add');
+			// done hiding --></script> the entry to the routing table.</td></tr>
+			<tr><td colspan=2>&nbsp;</td></tr>
+
+               <tr>
+			   	<td width='290' class='item'>IP Version:</td>
+				<td><select name='ipver' size='1' onChange='changeSelect(0)' class='list'>
+					<option value='4'>IPv4
+               <script language="javascript">
+<!-- hide 
+{
+                  if (enblIP6 == '1')
+                     document.writeln("      <option value='6'>IPv6");
+}
+// done hiding -->
+               </script>
+               </select></td></tr>
+               <tr>
+                  <td class='item'>Destination IP address/prefix length:</td>
+                  <td><input type='text' name='dstAddr'></td>
+               </tr>
+            </table>
+            <div id='wanIf'><table border="0">
+               <tr>
+                  <td width='290' class='item'>Interface:</td>
+                  <td><select name='dstWanIf' onChange='changeSelectNextHop(1)' class='list'>
+				  	<option value=''>&nbsp;
+<script language="javascript">
+<!-- hide
+{
+   var intf = '<%ejGetOther(wanInterfaceInfo, route)%>';
+   intf = intf ? intf.split('|') : Array();
+   for ( var i = 0; i < intf.length; i++ ) {
+      var names = intf[i].split('/');
+      if (names.length > 1) {
+         document.write("  <option value='" + names[1] + "'>");
+         document.writeln(intf[i]);
+      }
+   } 
+}
+// done hiding -->
+</script>
+				  	<option value='br0'> LAN/br0
+                     </select></td>
+               </tr>
+            </table></div>
+            <div id='wanIf6'><table border="0">
+               <tr>
+                  <td width='290' class='item'>Interface:</td>
+                  <td><select name='dstWanIf6' class='list'>
+				  	<option value=''>&nbsp;
+<script language="javascript">
+<!-- hide
+{
+   var intf = '<%ejGetOther(wanInterfaceInfo, route6)%>';
+   intf = intf ? intf.split('|') : Array();
+   for ( var i = 0; i < intf.length; i++ ) {
+      var names = intf[i].split('/');
+      if (names.length > 1) {
+         document.write("  <option value='" + names[1] + "'>");
+         document.writeln(intf[i]);
+      }
+   } 
+}
+// done hiding -->
+</script>
+				  	<option value='br0'> LAN/br0
+               </tr>
+            </table></div>
+           
+            <div id='nexthop'><table>
+               <tr>
+                  <td class='item'>Gateway IP Address:</td>
+                  <td><input type='text' name='dstGtwy'></td>
+               </tr>
+               </table>
+            </div>
+            <table>
+				<tr><td colspan=2>(optional: metric number should be greater than or equal to zero)</td></tr>
+            <tr>
+               <td class='item'>Metric:</td>
+               <td><input type='text' name='metric'></td>
+            </tr>
+				<tr><td class=blue colspan=2></td></tr>
+                <tr><td colspan =2>
+
+            <center>
+               <input type='button' onClick='btnApply()' value='Save/Apply' class='buttonL'>
+            </center>
+        </td></tr></table>
+         </form>
+      </center>
+   </body>
+</html>

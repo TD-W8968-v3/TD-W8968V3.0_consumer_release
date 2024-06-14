@@ -1,0 +1,296 @@
+<html>
+<head>
+	<meta http-equiv="Pragma" content="no-cache">
+	<link rel="stylesheet" href="stylemain.css" type="text/css">
+	<link rel="stylesheet" href="colors.css" type="text/css">
+	<title>Device Info</title>
+	<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript">
+
+var buildUsb3G = '<%ejGetOther(sysInfo, buildUsb3G)%>';
+var sysMode = '<%ejGetOther(sysInfo, sysMode)%>';	
+
+var enblRadvdaemon = '<%ejGetOther(enblRadvd, all)%>';
+var enblDhcps = '<%ejGetOther(enblDhcp6s, all)%>';
+
+function refresh()
+{
+	var loc = 'info.html';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function genWanInfo() {
+	//ifname|gwip|status|uptime|wanip|submask|pvc|type|mac
+	//ATM WAN|atm0(8/35)|atm0.1|IPoE|Connected|10.0.0.124|255.255.255.0||0Day(s) 00:00:00|02:10:18:01:00:04
+	var info = '<%ejGetOther(sysInfo, dfltWanInfo)%>'.split('|');
+	var waninfo6 = '<%ejGetOther(sysInfo, dfltWanIPv6Info)%>'.split('|');
+
+	if (info.length < 10) {
+		var html = '<tr><td><table border="1" cellpadding="3" cellspacing="0" style="width:100%">';
+		html += "<tr>\n\t<td class=\"item\">Notice:</td>\n\t<td class=\"dataStyle\">" + "There is no Route Interface.</td>\n</tr>\n";
+		//document.writeln("<tr><td><center>No Default Gateway WAN interface is activated. Click <A href=\"wancfg.cmd?action=view\">here</A> to view all WAN interface's status.</center></td></tr>");
+		//Click <A href=\"wancfg.cmd?action=view\">here</A> to view all WAN interface's status.
+		html += "<tr>\n\t<td class=\"item\">Shortcut:</td>\n\t<td class=\"dataStyle\">";
+		html += "Click <A href=\"quicksetupview.cmd\">here</A> to do Quick Setup.<br>\n\t";
+		html += "Click <A href=\"wancfg.cmd?action=view\">here</A> to view all WAN interface's status and troubleshooting information.</td></tr>";
+		html += "</table></td></tr>";
+		document.write(html);
+		return;
+	}
+
+	var html = '<tr><td><table border="1" cellpadding="3" cellspacing="0" style="width:100%">';
+	if((info[5] == '(null)') || (info[5] == '0.0.0.0') || (info[5] == '') || (info[4] != 'Connected'))
+	{
+		html += '<tr>\n\t<td rowspan=6 class="item3" id="IPv4">IPv4</td>';
+	}
+	else
+	{
+		if(info[9] &&((info[3] == "PPPoE") || (info[3] == "PPPoA")))
+		{
+			html += '<tr>\n\t<td rowspan=11 class="item3" id="IPv4">IPv4</td>';
+		}
+		else if((info[3] == "PPPoE") || (info[3] == "PPPoA"))
+		{
+			html += '<tr>\n\t<td rowspan=10 class="item3" id="IPv4">IPv4</td>';
+		}
+		else if(info[9])
+		{
+			html += '<tr>\n\t<td rowspan=10 class="item3" id="IPv4">IPv4</td>';
+		}
+	}
+	
+	/* simple status here, check waninfo.html to get detail */
+	html += '<td class="item4">Status:</td>\n\t';
+	if (info[4] == 'Connected')
+		html += '<td class="greenColor">UP</td>\n</tr>\n';
+	else
+		html += '<td class="redColor">Down</td>\n</tr>\n';
+
+	html += '<tr>\n\t<td class="item4">WAN Type:</td>\n\t<td class="dataStyle">';
+	html += (info[0] ? info[0] : '&nbsp;') + '</td>\n</tr>\n';
+	html += '<tr>\n\t<td class="item4">Layer2 Interface:</td>\n\t<td class="dataStyle">';
+	html += (info[1] ? info[1] : '&nbsp;') + '</td>\n</tr>\n';
+	
+	html += '<tr>\n\t<td class="item4">Connection Type:</td>\n\t<td class="dataStyle">';
+	html += (info[3] ? info[3] : '&nbsp;') + '</td>\n</tr>\n';
+	
+
+	if ((info[5] == '(null)') || (info[5] == '0.0.0.0') || (info[5] == '') || (info[4] != 'Connected'))
+	{
+		html += '<tr>\n\t<td class="item4">WAN IP Address:</td>\n\t<td class="dataStyle">';
+		html += '0.0.0.0</td>\n</tr>\n';
+	}
+	else
+	{
+		if (info[9])
+		{
+			html += '<tr>\n\t<td class="item4">MAC Address:</td>\n\t<td class="dataStyle">';
+			html += info[9] + '</td>\n</tr>\n';
+		}
+		html += '<tr>\n\t<td class="item4">WAN IP Address:</td>\n\t<td class="dataStyle">';
+		html += (info[5] + '</td>\n</tr>\n');
+		html += '<tr>\n\t<td class="item4">Subnet Mask:</td>\n\t<td class="dataStyle">';
+		html += (info[6] ? info[6] : '255.255.255.255') + '</td>\n</tr>\n';
+		
+		html += '<tr>\n\t<td class="item4">Default Gateway:</td>\n\t<td class="dataStyle">';
+		html += (info[7] ? info[7] : info[2]) + '</td>\n</tr>\n';
+		html += '<tr>\n\t<td class="item4">DNS Server (Primary, Secondary):</td>\n\t<td class="dataStyle">';
+		html += '<%ejGetOther(sysInfo, dns1)%>, <%ejGetOther(sysInfo, dns2)%></td>\n</tr>\n';
+		if((info[3] == "PPPoE") || (info[3] == "PPPoA"))
+		{
+			html += '<tr>\n\t<td class="item4">Internet Up Time:</td>\n\t<td class="dataStyle">';
+			html += info[8] + '</td>\n</tr>\n';
+		}
+	}
+	html += "<tr>\n\t<td class=\"item4\">Shortcut:</td>\n\t<td class=\"dataStyle\">";
+	html += "Click <A href=\"wancfg.cmd?action=view\">here</A> to view all WAN interface's status and troubleshooting information.</td></tr>";
+	html += "</table></td></tr>";
+	/*added by xieping*/
+	html += '<tr><td>&nbsp</td></tr>';
+	if(waninfo6[9] == "enable")
+	{
+		html += '<tr><td><table border="1" cellpadding="3" cellspacing="0" style="width:100%">';
+		if((waninfo6[5] == '(null)') || (waninfo6[5] == '0.0.0.0') || (waninfo6[5] == '') || (waninfo6[4] != 'Connected'))
+		{
+			 html += '<tr>\n\t<td rowspan=6 class="item3">IPv6</td>';
+		}
+		else
+		{
+			if(waninfo6[10] &&((waninfo6[3] == "PPPoE") || (waninfo6[3] == "PPPoA")))
+			{
+				html += '<tr>\n\t<td rowspan=10 class="item3">IPv6</td>';
+			} 
+			else if((waninfo6[3] == "PPPoE") || (waninfo6[3] == "PPPoA"))
+			{
+				html += '<tr>\n\t<td rowspan=9 class="item3">IPv6</td>';
+			}
+			else if(waninfo6[10])
+			{
+				html += '<tr>\n\t<td rowspan=9 class="item3">IPv6</td>';
+			}
+		}
+		/* simple status here, check waninfo.html to get detail */
+		html += '<td class="item4">Status:</td>\n\t';
+		if (waninfo6[4] == 'Connected')
+			html += '<td class="greenColor">UP</td>\n</tr>\n';
+		else
+			html += '<td class="redColor">Down</td>\n</tr>\n';
+
+		html += '<tr>\n\t<td class="item4">WAN Type:</td>\n\t<td class="dataStyle">';
+		html += (waninfo6[0] ? waninfo6[0] : '&nbsp;') + '</td>\n</tr>\n';
+		html += '<tr>\n\t<td class="item4">Layer2 Interface:</td>\n\t<td class="dataStyle">';
+		html += (waninfo6[1] ? waninfo6[1] : '&nbsp;') + '</td>\n</tr>\n';
+		
+		html += '<tr>\n\t<td class="item4">Connection Type:</td>\n\t<td class="dataStyle">';
+		html += (waninfo6[3] ? waninfo6[3] : '&nbsp;') + '</td>\n</tr>\n';
+		
+
+		if ((waninfo6[5] == '(null)') || (waninfo6[5] == '0.0.0.0') || (waninfo6[5] == '') || (waninfo6[4] != 'Connected'))
+		{
+			html += '<tr>\n\t<td class="item4">WAN IP Address:</td>\n\t<td class="dataStyle">';
+			html += '0.0.0.0</td>\n</tr>\n';
+		}
+		else
+		{
+			if (waninfo6[10])
+			{
+				html += '<tr>\n\t<td class="item4">MAC Address:</td>\n\t<td class="dataStyle">';
+				html += waninfo6[10] + '</td>\n</tr>\n';
+			}
+			html += '<tr>\n\t<td class="item4">WAN IP Address:</td>\n\t<td class="dataStyle">';
+			html += (waninfo6[5] + '</td>\n</tr>\n');
+			//html += '<tr>\n\t<td class="item2">Subnet Mask:</td>\n\t<td class="dataStyle">';
+			//html += (waninfo6[6] ? waninfo6[6] : '255.255.255.255') + '</td>\n</tr>\n';
+			html += '<tr>\n\t<td class="item4">Default Gateway:</td>\n\t<td class="dataStyle">';
+			html += (waninfo6[6] ? waninfo6[6] : waninfo6[2]) + '</td>\n</tr>\n';
+			html += '<tr>\n\t<td class="item4">DNS Server (Primary, Secondary):</td>\n\t<td class="dataStyle">';
+			html += (waninfo6[7] ? waninfo6[7] : waninfo6[2]) + '</td>\n</tr>\n';
+			if((waninfo6[3] == "PPPoE") || (waninfo6[3] == "PPPoA"))
+			{
+				html += '<tr>\n\t<td class="item4">Internet Up Time:</td>\n\t<td class="dataStyle">';
+				html += waninfo6[8] + '</td>\n</tr>\n';
+			}
+		}
+		//html += "<tr>\n\t<td class=\"item2\">Shortcut:</td>\n\t<td class=\"dataStyle\">";
+		//html += "Click <A href=\"wancfg.cmd?action=view\">here</A> to view all WAN interface's status and troubleshooting information.</td></tr></table></td></tr>";
+		html += "</table></td></tr>";
+	}
+	document.write(html);
+}
+function showDslState()
+{
+	var state = '<%ejGetOther(sysInfo, lineState)%>';
+	var html;
+	if ("Activation" == state)
+	{
+		html = '<td class=\"yellowColor\"><b>' + state + '</b></td>';
+	}
+	else if ("Showtime" == state)
+	{
+		html = '<td class=\"greenColor\">' + state + '</td>';
+	}
+	else
+	{
+		html = '<td class=\"redColor\">' + state + '</td>';
+	}
+	document.write(html);
+}
+function doLoad()
+{
+	setTimeout("refresh()", 10 * 1000);
+}
+</script>
+</head>
+<body onLoad="doLoad()">
+<center><form><table>
+	<tr><td class="h1">Device Info</td></tr>
+	<tr><td class="blue"></td></tr>
+	<tr><td class="h3">Version Info</td></tr>
+	<tr><td><table border="1" cellpadding="3" cellspacing="0" style="width:100%">
+		<tr>
+			<td class="item">Firmware Version:</td>
+			<td class="dataStyle"><%ejGet(sysVersion)%></td>
+		</tr>
+		<tr>
+			<td class="item">Hardware Version:</td>
+			<td class="dataStyle"><%ejGet(hardwareVersion)%></td>
+		</tr>
+		<tr>
+			<td class="item">System Running Time:</td>
+			<td class="dataStyle"><%ejGetOther(sysInfo, uptimeString)%></td>
+		</tr>
+	</table></td></tr>
+	<tr><td class="blue"></td></tr>
+	<tr><td class="h3">LAN Info</td></tr>
+	<tr><td><table border="1" cellpadding="3" cellspacing="0" style="width:100%">
+		<tr>
+			<td rowspan=2 class="item3" id="IPv4">IPv4</td>		
+			<td class="item4">LAN IP Address:</td>
+			<td class="dataStyle"><%ejGetOther(sysInfo, lanAddr)%></td>
+		</tr>
+		<tr>
+			<td class="item4">LAN MAC Address:</td>
+			<td class="dataStyle"><%ejGetOther(sysInfo, lanMAC)%></td>
+		</tr>
+	</table></td></tr>
+	<tr><td><table border="1" cellpadding="3" cellspacing="0" style="width:100%">
+		<tr>
+			<td rowspan=2 class="item3" id="IPv6">IPv6</td>
+			<td class="item4">IPV6 Address/Prefix Length:</td>
+			<td class="dataStyle"><%ejGetOther(sysInfo, lanIpv6Addr)%></td>
+		</tr>
+		<tr>
+			<td class="item4">Auto Configuration:</td>
+             <script language="javascript">                   
+             <!-- hide                    
+             {  var ac = '';
+             	if(enblRadvdaemon == '1' && enblDhcps == '1')
+					ac += 'RADVD&DHCPv6';
+				else if(enblRadvdaemon == '1')
+					ac += 'RADVD';
+				else if(enblDhcps == '1')
+					ac += 'DHCPv6';
+				else
+					ac += 'NULL';
+					
+             	document.writeln("<td class='dataStyle'>");
+				document.writeln(ac);
+				document.writeln('</td>');
+
+			 }
+              // done hiding -->                   
+			 </script>
+		</tr>
+	</table></td></tr>
+			<script type="text/javascript">
+	if(buildUsb3G == '1' && sysMode != '0')
+	{
+
+	}
+	else
+	{
+		document.writeln("<tr><td class=\"blue\"></td></tr>");
+		document.writeln("<tr><td class=\"h3\">ADSL Info</td></tr>");
+		document.writeln("<tr><td><table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" style=\"width:100%\">");
+		document.writeln("<tr><td class=\"item\">Line State:</td>");
+			showDslState();
+		document.writeln("</tr>");
+		document.writeln("<tr><td class=\"item\">Line Rate - Upstream (Kbps):</td>");
+		document.writeln("<td class=\"dataStyle\"><%ejGetOther(lineRate, 0, 0)%></td></tr>");
+		document.writeln("<tr><td class=\"item\">Line Rate - Downstream (Kbps):</td>");
+		document.writeln("<td class=\"dataStyle\"><%ejGetOther(lineRate, 1, 0)%></td></tr>");
+		document.writeln("</table></td></tr>");
+	}
+			</script>
+	<tr><td class="blue"></td></tr>
+	<tr><td class="h3">Internet Info</td></tr>
+	<!--<tr><td>Click <A href="wancfg.cmd?action=view">here</A> to view all WAN interface¡¯s status and troubleshooting information.</td></tr>-->
+	<tr><td><table border="0" cellpadding="3" cellspacing="0" style="width:100%">
+		<script type="text/javascript"><!-- hide
+			genWanInfo();
+		// done hiding --></script>
+	</table></td></tr>
+	<tr><td class="blue"></td></tr>
+</table></form></center>
+</body>
+</html>

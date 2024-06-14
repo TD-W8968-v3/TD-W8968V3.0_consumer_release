@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/sunos4
+END
+Makedefs
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/sunos4/Makedefs
+END
+ppp.INSTALL
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/sunos4/ppp.INSTALL
+END
+ppp_ahdlc_vdcmd.c
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/sunos4/ppp_ahdlc_vdcmd.c
+END
+if_ppp_vdcmd.c
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/sunos4/if_ppp_vdcmd.c
+END
+ppp_comp_vdcmd.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/sunos4/ppp_comp_vdcmd.c
+END
+ppp_vdcmd.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/sunos4/ppp_vdcmd.c
+END
+Makefile.top
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/sunos4/Makefile.top
+END

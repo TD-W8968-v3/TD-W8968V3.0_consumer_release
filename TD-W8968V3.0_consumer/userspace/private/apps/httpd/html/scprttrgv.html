@@ -1,0 +1,321 @@
+<html>
+<head>
+	<meta http-equiv="Pragma" content="no-cache">
+	<link rel="stylesheet" href="stylemain.css" type="text/css">
+	<link rel="stylesheet" href="colors.css" type="text/css">
+	<script src="util.js" type="text/javascript"></script>
+<script type="text/javascript"><!-- hide
+
+/*EJ_PLACEHOLDER*/
+if (prtTrgInfo === undefined) {
+	var sessionKey = '123456789';
+	var MAX_ENTRY = 32;
+	var prtTrgInfo = [
+		['Test','TCP',1234,2345,'UDP',3456,4567,'atm0.1',1,1],
+		['Test','TCP or UDP',4000,4000,'TCP',4000,4000,'atm0.1',0,2]
+	]
+}
+
+var glbAllSelected = false;
+var glbCurVrtSrv;
+var usedPorts = new Array(21,69,80,161,162,517,518,1720,1723,6667);
+var PT_MAX_EXPECTED = 1000;
+var PT_MAX_PORTS = 1000;
+
+function getPrtTrg(i) {
+	var info = prtTrgInfo[i];
+	// info = 'atm0.1|1';
+	return info[7] + '|' + info[9];
+}
+
+function enableClick(i, enable) {
+	go('scprttrg.cmd?action=enable&prttrg='+getPrtTrg(i) + '&enable='+enable, sessionKey);
+}
+
+function editClick(i) {
+	with ( document.forms[0] ) {
+		glbCurPrtTrg = getPrtTrg(i);
+		var info = prtTrgInfo[i];
+		dstWanIf.value = info[7];
+		appName.value = info[0];
+		if (info[1] == 'TCP') {
+			tProto.selectedIndex = 1;
+		} else if (info[1] == 'UDP') {
+			tProto.selectedIndex = 2;
+		} else {
+			tProto.selectedIndex = 0;
+		}
+		tStart.value = info[2];
+		tEnd.value = info[3];
+		if (info[4] == 'TCP') {
+			oProto.selectedIndex = 1;
+		} else if (info[4] == 'UDP') {
+			oProto.selectedIndex = 2;
+		} else {
+			oProto.selectedIndex = 0;
+		}
+		oStart.value = info[5];
+		oEnd.value = info[6];
+	}
+	showhide_tr('info', 3, 0);
+	showhide_tr('edit', 3, 1);
+}
+
+function cancelClick() {
+	showhide_tr('edit', 3, 0);
+	showhide_tr('info', 3, 1);
+}
+
+function applyClick() {
+	var loc = 'scprttrg.cmd?action=edit&prttrg=' + glbCurPrtTrg;
+	with ( document.forms[0] ) {
+		var val = stripStr(appName.value), ps, pe;
+		if (val == '') {
+			alert('Require application name.');
+			appName.focus();
+			return;
+		}
+		loc += '&appName=' + encodeUrl(val);
+		loc += '&tProto=' + tProto.value;
+		ps = tStart.value;
+		pe = tEnd.value;
+		if (!isValidPort(ps)) {
+			alert('Triggering port start "' + ps + '" is invalid.');
+			tStart.focus();
+			return;
+		}
+		if (!isValidPort(pe)) {
+			alert('Triggering port end "' + pe + '" is invalid.');
+			tEnd.focus();
+			return;
+		}
+		ps = parseInt(ps);
+		pe = parseInt(pe);
+		if (ps > pe) {
+			alert('Triggering port range [' + ps + '-' + pe + '] is invalid.');
+			tStart.focus();
+			return;
+		}
+		if (pe - ps + 1 > PT_MAX_PORTS) {
+			alert('Too many trigger ports(total should less than ' + PT_MAX_PORTS + ')');
+			tStart.focus();
+			return;
+		}
+		var i = usedPorts.length;
+		while (--i >= 0) {
+			if (ps <= usedPorts[i] && usedPorts[i] <= pe) {
+				alert('Error: port ' + usedPorts[i] + ' has been used by other module!');
+				tStart.focus();
+				return;
+			}
+		}
+		loc += '&tStart=' + ps;
+		loc += '&tEnd=' + pe;
+		loc += '&oProto=' + oProto.value;
+		ps = oStart.value;
+		pe = oEnd.value;
+		if (!isValidPort(ps)) {
+			alert('Open port start "' + ps + '" is invalid.');
+			oStart.focus();
+			return;
+		}
+		if (!isValidPort(pe)) {
+			alert('Open port end "' + pe + '" is invalid.');
+			oEnd.focus();
+			return;
+		}
+		ps = parseInt(ps);
+		pe = parseInt(pe);
+		if (ps > pe) {
+			alert('Open port range [' + ps + '-' + pe + '] is invalid.');
+			oStart.focus();
+			return;
+		}
+		if (pe - ps + 1 > PT_MAX_EXPECTED) {
+			alert('Too many open ports(each should less than ' + PT_MAX_EXPECTED + ')');
+			tStart.focus();
+			return;
+		}
+		loc += '&oStart=' + ps;
+		loc += '&oEnd=' + pe;
+	}
+	go(loc, sessionKey);
+}
+
+function addClick() {
+   go('scprttrg.html');
+}
+
+function selectAllClick() {
+	var rml = document.forms[0].rml;
+	if (!(rml.length > 0)) {
+		rml = new Array(rml);
+	}
+	glbAllSelected = !glbAllSelected;
+	var i = rml.length;
+	while (--i >= 0) {
+		rml[i].checked = glbAllSelected;
+	}
+}
+
+function enableAllClick() {
+	if (prtTrgInfo.length > 0)
+		go('scprttrg.cmd?action=enable&prttrg=all&enable=1', sessionKey);
+}
+
+function removeClick() {
+	var rml = document.forms[0].rml;
+	if (!(rml.length > 0)) {
+		rml = new Array(rml);
+	}
+	var lst = new Array();
+	for (var i = 0; i < rml.length; i++) {
+		if (rml[i].checked) {
+			lst.push(getPrtTrg(i));
+		}
+	}
+	if (lst.length == 0) return;
+	go('scprttrg.cmd?action=remove&rmLst='+lst.join(','), sessionKey);
+}
+
+function genEntriesTable() {
+	var html = '', info;
+	for (var i = 0; i < prtTrgInfo.length; i++) {
+		info = prtTrgInfo[i];
+		html += '<tr>\n\t<td>' + info[0];
+		if (info[1] == 'TCP' || info[1] == 'UDP') {
+			html += '</td>\n\t<td>' + info[1];
+		} else {
+			html += '</td>\n\t<td>TCP/UDP';
+		}
+		html += '</td>\n\t<td>' + info[2];
+		html += '</td>\n\t<td>' + info[3];
+		if (info[4] == 'TCP' || info[4] == 'UDP') {
+			html += '</td>\n\t<td>' + info[4];
+		} else {
+			html += '</td>\n\t<td>TCP/UDP';
+		}
+		html += '</td>\n\t<td>' + info[5];
+		html += '</td>\n\t<td>' + info[6];
+		html += '</td>\n\t<td>' + info[7] + '</td>\n\t';
+		if (info[8] == '1') {
+			html += '<td class="greenText">Enabled</td>\n\t<td align="center"><input type="button" ';
+			html += 'onClick="enableClick(' + i + ',0)" value="Disable"></td>\n\t';
+		} else {
+			html += '<td class="redText">Disabled</td>\n\t<td align="center"><input type="button" ';
+			html += 'onClick="enableClick(' + i + ',1)" value="Enable"></td>\n\t';
+		}
+		html += '<td align="center"><input type="button" onClick="editClick(' + i + ')" value="Edit">';
+		html += '</td>\n\t<td align="center"><input type="checkbox" name="rml"></td>\n</tr>\n';
+	}
+	document.write(html);
+}
+
+// done hiding --></script>
+</head>
+
+<body>
+<center><form><table>
+	<tr><td class="h1">NAT -- Port Triggering Setup</td></tr>
+	<tr><td class="blue"></td></tr>
+	<tr><td>
+		Some applications require that specific ports in the Router's firewall be opened for access by the remote parties. Port Trigger dynamically opens up the 'Open Ports' in the firewall when an application on the LAN initiates a TCP/UDP connection to a remote party using the 'Triggering Ports'.<br/>
+		The Router allows the remote party from the WAN side to establish new connections back to the application on the LAN side using the 'Open Ports'.
+		A maximum <script type="text/javascript"><!-- hide
+			document.write(MAX_ENTRY);
+		// done hiding --></script> entries can beconfigured.
+	</td></tr>
+	<tr><td>&nbsp;</td></tr>
+
+	<tr id="info"><td><table border="1" cellpadding="4" cellspacing="0" style="width:100%">
+		<tr align="center">
+			<td class="hd" rowspan="3">Application Name</td>
+			<td class="hd" colspan="3">Trigger</td>
+			<td class="hd" colspan="3">Open</td>
+			<td class="hd" rowspan="3">WAN Interface</td>
+			<td class="hd" rowspan="3">Status</td>
+			<td class="hd" rowspan="3">Enable/Disable</td>		
+			<td class="hd" rowspan="3">Edit</td>
+			<td class="hd" rowspan="3">Remove</td>
+		</tr>
+		<tr align="center">
+			<td class="hd" rowspan="2">Protocol</td>
+			<td class="hd" colspan="2">Port Range</td>
+			<td class="hd" rowspan="2">Protocol</td>
+			<td class="hd" colspan="2">Port Range</td>
+		</tr>
+		<tr align="center">
+			<td class="hd">Start</td>
+			<td class="hd">End</td>
+			<td class="hd">Start</td>
+			<td class="hd">End</td>
+		</tr>
+		<script type="text/javascript"><!-- hide
+			genEntriesTable();
+		// done hiding --></script>
+	</table></td></tr>
+	<tr><td class="blue"></td></tr>
+	<tr><td><center>
+		<script type="text/javascript"><!-- hide
+		if (prtTrgInfo.length < MAX_ENTRY) {
+			document.write('<input type="button" onClick="addClick()" value="Add">');
+		}
+		// done hiding --></script>
+		<input type="button" onClick="enableAllClick()" value="Enable All">
+		<input type="button" onClick="selectAllClick()" value="Select All">
+		<input type="button" onClick="removeClick()" value="Remove">
+	</center></td></tr>
+
+	<tr id="edit"><td><table border="0">
+		<tr>
+			<td class="item">WAN Interface:</td>
+			<td><input type="text" name="dstWanIf" disabled="true"></td>
+		</tr>
+		<tr>
+			<td class="item">Application Name:</td>
+			<td><input type="text" name="appName"></td>
+		</tr>
+		<tr>
+			<td class="item">Trigger Protocol:</td>
+			<td><select name="tProto">
+				<option value="0">TCP/UDP</option>
+				<option value="1">TCP</option>
+				<option value="2">UDP</option>
+			</select></td>
+		</tr>
+		<tr>
+			<td class="item">Trigger Port Start:</td>
+			<td><input type="text" name="tStart"></td>
+		</tr>
+		<tr>
+			<td class="item">Trigger Port End:</td>
+			<td><input type="text" name="tEnd"></td>
+		</tr>
+		<tr>
+			<td class="item">Open Protocol:</td>
+			<td><select name="oProto">
+				<option value="0">TCP/UDP</option>
+				<option value="1">TCP</option>
+				<option value="2">UDP</option>
+			</select></td>
+		</tr>
+		<tr>
+			<td class="item">Open Port Start:</td>
+			<td><input type="text" name="oStart"></td>
+		</tr>
+		<tr>
+			<td class="item">Open Port End:</td>
+			<td><input type="text" name="oEnd"></td>
+		</tr>
+	</table></td></tr>
+	<tr><td class="blue"></td></tr>
+	<tr><td><center>
+		<input type="button" onClick="cancelClick()" value="Cancel">
+		<input type="button" onClick="applyClick()" value="Save/Apply">
+	</center></td></tr>
+	<script type="text/javascript"><!-- hide
+		showhide_tr('edit', 3, 0);
+	// done hiding --></script>
+</table></form></center>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<html>
+<head>
+<link rel=stylesheet href='stylemain.css' type='text/css'>
+<link rel=stylesheet href='colors.css' type='text/css'>
+<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+<title></title>
+<script language='javascript'>
+/*EJ_PLACEHOLDER*/
+if (sessionKey === undefined)
+{
+	var sessionKey = '123456789';
+	var settingStr = [
+		'123|123',
+		'456|456',
+	];
+	var status = '-1';
+}
+
+function btnAdd()
+{ 
+    var loc = 'usb3gsettings.html';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+function btnRemove(setting_id)
+{
+	var loc = 'usb3g.cmd?action=remove';
+	loc += '&removeid='+setting_id;
+	loc += '&sessionKey='+sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+function btnBack()
+{
+	var loc = 'usb3g.cmd?action=viewcfg';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+function btnBackToUpload()
+{
+	var loc = 'usb3g.cmd?action=viewsettings';
+	loc += '&sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+function frameLoad()
+{
+	var message = [
+		"Success to upload config file.",
+		"Image uploading failed. The system is out of memory. ",
+		"Image uploading failed. No image file was selected.",
+		"Image uploading failed. The selected file contains an illegal image.",
+		"Fatal error during image uploading.",
+	];
+	
+	if(status == '-1')
+	{
+		document.getElementById('before_upload').style.display = '';
+		document.getElementById('after_upload').style.display = 'none';
+	}
+	else
+	{
+		if(status == '0')
+		{
+			document.getElementById('head_line').innerHTML = 'Settings Upload Successful';
+		}
+		else
+		{
+			document.getElementById('head_line').innerHTML = 'Settings Upload Failed';
+		}
+		document.getElementById('before_upload').style.display = 'none';
+		document.getElementById('after_upload').style.display = '';
+		document.getElementById('upload_message').innerHTML = "<br>" + message[status];
+	}
+}
+</script>
+</head>
+<body onload='frameLoad()'>
+<center>
+<form>
+	<div id='before_upload'>
+		<table>
+			<tr><td class='h1'>3G USB Modem Settings</td></tr>
+			<tr><td><br>Modem settings are shown below</td></tr>
+			<tr><td class=blue></td></tr>
+		</table>
+		<table border='1' cellpadding='4' cellspacing='0' width='500px'>
+			<tr align='center'>
+			    <td class='hd'>ID</td>
+			    <td class='hd'>Vendor</td>
+			    <td class='hd'>Model</td>
+			    <td class='hd'>Delete</td>
+		    </tr>
+		    
+		<script language="javascript">
+		for(var idx = 0; idx < settingStr.length; idx++)
+		{
+			var settingEntry = settingStr[idx];
+			var settingParam = settingEntry.split('|');
+			id = idx + 1;
+			var settingDes = "<tr><td>"+ id + "</td><td>" + settingParam[0] + "</td><td>" 
+				+ settingParam[1] + "</td><td><center><input type='button' value='Delete' onclick='btnRemove(" + id + ")'></center></td></tr>";
+			document.writeln(settingDes);
+		}
+		</script>
+
+	    </table>
+	    <table><tr><td class='blue'></td></tr></table>
+	    <table>
+	        <tr><td><center><input type='button' value='Add' onclick='btnAdd()'>&nbsp;&nbsp;
+	        <input type='button' value='Back' onclick='btnBack()'>&nbsp;&nbsp;
+	        <input type='button' value='Delete All' onclick='btnRemove(0)'></center></td></tr>
+	    </table>
+   	</div>
+
+   	<div id='after_upload'>
+	   	<table>
+			<tr><td class='h1' id='head_line'></td></tr>
+			<tr><td class='blue'></td></tr>
+			<tr><td id='upload_message'></td></tr>
+			<tr><td class=blue></td></tr>
+		</table>
+		<table><tr><td></td><center><input type='button' value='Back' onclick='btnBackToUpload()'></center></tr></table>
+	</div>
+</form>
+</center>
+</body>
+</html>
+

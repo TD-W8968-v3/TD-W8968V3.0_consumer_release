@@ -1,0 +1,13 @@
+#! /bin/sh
+
+PATH=/sbin:/bin
+export PATH
+
+mount -t proc proc /proc
+/bin/mount -a
+
+mount -t usbfs usbfs /proc/bus/usb/
+mkdir /var/run
+mkdir -m 0777 -p /var/3G
+
+#/sbin/inetd

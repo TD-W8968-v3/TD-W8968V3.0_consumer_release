@@ -1,0 +1,1085 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+  <link rel="stylesheet" href="stylemain.css" type="text/css">
+  <link rel="stylesheet" href="colors.css" type="text/css">
+  <meta http-equiv="Pragma" content="no-cache">
+  <title> IPSec Settings</title>
+   <script language="javascript" src="util.js"></script>
+   <script language="javascript">
+<!-- hide
+
+var ipsConnNameList = '<%ejGet(ipsConnNameList)%>';
+ipsConnNameList = ipsConnNameList ? ipsConnNameList.split('\x01') : new Array();
+var ipsConnName = '<%ejGet(ipsConnName)%>';
+var ipsRemoteGWAddr = '<%ejGet(ipsRemoteGWAddr)%>';
+var ipsRealRemoteGWIP = '<%ejGet(ipsRealRemoteGWIP)%>';
+var ipsLocalIPMode = '<%ejGet(ipsLocalIPMode)%>';
+var ipsLocalIP = '<%ejGet(ipsLocalIP)%>';
+var ipsLocalMask = '<%ejGet(ipsLocalMask)%>'; 
+var ipsLocalRangeLo = '<%ejGet(ipsLocalRangeLo)%>';
+var ipsLocalRangeHi = '<%ejGet(ipsLocalRangeHi)%>'; 
+var ipsRemoteIPMode = '<%ejGet(ipsRemoteIPMode)%>';
+var ipsRemoteIP = '<%ejGet(ipsRemoteIP)%>'; 
+var ipsRemoteMask = '<%ejGet(ipsRemoteMask)%>';
+var ipsRemoteRangeLo = '<%ejGet(ipsRemoteRangeLo)%>'; 
+var ipsRemoteRangeHi = '<%ejGet(ipsRemoteRangeHi)%>';
+var ipsKeyExM = '<%ejGet(ipsKeyExM)%>';
+var ipsAuthM = '<%ejGet(ipsAuthM)%>';
+var ipsPSK = '<%ejGet(ipsPSK)%>';
+var ipsCertificateName = '<%ejGet(ipsCertificateName)%>';
+var ipsPerfectFSEn = '<%ejGet(ipsPerfectFSEn)%>';
+var ipsManualEncryptionAlgo = '<%ejGet(ipsManualEncryptionAlgo)%>';
+var ipsManualEncryptionKey = '<%ejGet(ipsManualEncryptionKey)%>';
+var ipsManualAuthAlgo = '<%ejGet(ipsManualAuthAlgo)%>';
+var ipsManualAuthKey = '<%ejGet(ipsManualAuthKey)%>';
+var ipsSPI = '<%ejGet(ipsSPI)%>';
+var ipsPh1Mode = '<%ejGet(ipsPh1Mode)%>';
+var ipsPh1MyIdType = '<%ejGet(ipsPh1MyIdType)%>';
+var ipsPh1MyId = '<%ejGet(ipsPh1MyId)%>';
+var ipsPh1PeerIdType = '<%ejGet(ipsPh1PeerIdType)%>';
+var ipsPh1PeerId = '<%ejGet(ipsPh1PeerId)%>';
+var ipsPh1EncryptionAlgo = '<%ejGet(ipsPh1EncryptionAlgo)%>';
+var ipsPh1IntegrityAlgo = '<%ejGet(ipsPh1IntegrityAlgo)%>';
+var ipsPh1DHGroup = '<%ejGet(ipsPh1DHGroup)%>';
+var ipsPh1KeyTime = '<%ejGet(ipsPh1KeyTime)%>';
+var ipsPh2EncryptionAlgo = '<%ejGet(ipsPh2EncryptionAlgo)%>';
+var ipsPh2IntegrityAlgo = '<%ejGet(ipsPh2IntegrityAlgo)%>';
+var ipsPh2DHGroup = '<%ejGet(ipsPh2DHGroup)%>';
+var ipsPh2KeyTime = '<%ejGet(ipsPh2KeyTime)%>';
+
+var serviceId = '<%ejGet(serviceId)%>'; /* added by yanglei, 2012-1-13, 1 if edit */
+
+var showAdv = 0;
+var myFqdnTmp = ipsPh1MyId;
+var peerFqdnTmp = ipsPh1PeerId;
+var lanips = '<%ejGetOther(sysInfo, lanips)%>'; 
+
+function checkSameLanIP(subnetIp, subnetMask)
+{
+	var netid;
+	if( lanips != "No_LanIps")
+	{
+		netid = lanips.split('|');
+		for (i = 0 ;i< netid.length ; i++)
+		{
+			netip = netid[i].split('*');
+			var tIp, tMask;
+			tIp = 0;
+			tMask = 0;
+			for (j = 0; j < 4; j++)
+			{
+				num1 = parseInt(((subnetIp).split('.'))[j]);
+				num2 = parseInt(((subnetMask).split('.'))[j]);
+				if (j == 0)
+				{
+					tIp += (num1*256*256*256);
+					tMask += (num2*256*256*256);
+				}
+				if (j == 1)
+				{
+					tIp += (num1*256*256);
+					tMask += (num2*256*256);
+				}
+				if (j == 2)
+				{
+					tIp += (num1*256);
+					tMask += (num2*256);
+				}
+				if (j == 3)
+				{
+					tIp += (num1);
+					tMask += (num2);
+				}
+			}
+			if (4294967295 == tMask)
+			{
+				if ((parseInt(netip[0]) & parseInt(netip[1])) == (parseInt(tIp) & parseInt(netip[1])))
+				{
+					return true;
+				}
+			}
+			else
+			{
+				if (((parseInt(netip[0]) & parseInt(tMask)) == (parseInt(tIp) & parseInt(tMask)))
+					|| ((parseInt(netip[0]) & parseInt(netip[1])) == (parseInt(tIp) & parseInt(netip[1]))))
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+function showhide(element, sh)
+{
+    var status;
+    if (sh == 1) {
+        status = "block";
+    }
+    else {
+        status = "none"
+    }
+        
+	if (document.getElementById)
+	{
+		// standard
+		document.getElementById(element).style.display = status;
+	}
+	else if (document.all)
+	{
+		// old IE
+		document.all[element].style.display = status;
+	}
+	else if (document.layers)
+	{
+		// Netscape 4
+		document.layers[element].display = status;
+	}
+}
+
+function setSelect(item, value)
+{
+	for (i=0; i<item.options.length; i++) {
+        if (item.options[i].value == value) {
+        	item.selectedIndex = i;
+        	break;
+        }
+    }
+}
+
+function submitText(item, name)
+{
+	return '&' + name + '=' + item.value;
+}
+
+function getSelect(item)
+{
+	var idx;
+	if (item.options.length > 0) {
+	    idx = item.selectedIndex;
+	    return item.options[idx].value;
+	}
+	else {
+		return '';
+    }
+}
+
+function submitSelect(item, name)
+{
+	return '&' + name + '=' + getSelect(item);
+}
+
+function loadCertList()
+{
+   with ( document.forms[0] ) {
+<%ejGet(ipsCertList)%>
+   }
+}
+function localIPModeChange() {
+   with ( document.forms[0] ) {
+      var mode = localIPMode[localIPMode.selectedIndex].value;
+      switch ( mode ) {
+      case "subnet":
+        showhide("IP11", 1);
+        showhide("IP12", 1);
+        break; 
+      case "single":
+        showhide("IP11", 1);
+        showhide("IP12", 0);
+        break;
+      default:
+    }
+  }
+}
+
+function remoteIPModeChange() {
+   with ( document.forms[0] ) {
+      var mode = remoteIPMode[remoteIPMode.selectedIndex].value;
+      switch ( mode ) {
+      case "subnet":
+        showhide("IP21", 1);
+        showhide("IP22", 1);
+        break; 
+      case "single":
+        showhide("IP21", 1);
+        showhide("IP22", 0);
+        break;
+      default:
+    }
+  }
+}
+
+function keyauthChange() {
+   with ( document.forms[0] ) {
+      var keymode = keyExM[keyExM.selectedIndex].value;
+      var authmode = authM[authM.selectedIndex].value;
+      switch (keymode) {
+      case "auto":
+        showhide("AutoKeyEx", 1);
+        showhide("ManualKey", 0);
+        switch (authmode) {
+        case "pre_shared_key":
+          showhide("PSK", 1);
+          showhide("Certificate", 0);
+          break;
+        case "certificate":
+          showhide("PSK", 0);
+          showhide("Certificate", 1);
+          break;        
+        default:       
+        }
+        break; 
+      case "manual":
+        showhide("AutoKeyEx", 0);
+        showhide("ManualKey", 1);
+        showhide("PSK", 0);
+        showhide("Certificate", 0);
+		showAdv = 0;
+		showhideAdv(showAdv);
+        break;
+      default:
+      }
+  }
+}
+
+function switchAdv() {
+   with ( document.forms[0] ) {
+     showAdv = !showAdv;
+     showhideAdv(showAdv);
+   }
+}
+
+function showhideAdv(show) {
+   with ( document.forms[0] ) {
+     showhide("adv", show);
+     if (show) {
+	 advSWButton.value = "Hide Advanced Settings";
+     }
+     else {
+ 	 advSWButton.value = "Show Advanced Settings";
+     }
+     showAdv = show;
+   }
+}
+
+function validateConnName(value) {
+	value = stripStr(value);
+	if (value == '') {
+		alert('You must specify an IPSec Connection Name!');
+		return false;
+	}
+	if (serviceId == 1) {	/* edit */
+		return ipsConnName;
+	}
+	var i = ipsConnNameList.length;
+	while (--i >= 0) {
+		if (ipsConnNameList[i] == value) {
+			alert('IPSec Connection Name "' + value + '" has been used!');
+			return false;
+		}
+	}
+	return value;
+}
+
+function changeMyIdType() {
+	with ( document.forms[0] ) {
+	  var idtype = getSelect(ph1MyIdType);
+	  var myIdInputObj = document.getElementById('myIdInput');
+
+      switch (idtype) {
+      case "address":
+		myFqdnTmp = ph1MyId.value;
+		myIdInputObj.disabled = true;
+		myIdInputObj.value = '';
+		break;
+      case "fqdn":
+		myIdInputObj.disabled = false;
+		myIdInputObj.value = 'www.example.com';
+		if (myFqdnTmp != '')
+		{
+			myIdInputObj.value = myFqdnTmp;
+		}
+                if (getSelect(ph1Mode) == "main")
+		{
+			alert("The 'Mode' should be set to 'Aggressive'");
+			var tmp = "aggressive";
+			setSelect(ph1Mode, tmp);
+		}	
+	  	break;
+	  default:
+	    break;
+      }
+  }
+}
+
+function changePeerIdType()  {
+	with ( document.forms[0] ) {
+	  var idtype = getSelect(ph1PeerIdType);
+      switch (idtype) {
+      case "address":
+		peerFqdnTmp = ph1PeerId.value;
+		ph1PeerId.disabled = true;
+		ph1PeerId.value = '';
+		break;
+	  case "fqdn":
+		ph1PeerId.disabled = false;
+		ph1PeerId.value = "www.example.com";
+		if (peerFqdnTmp != '')
+		{
+			ph1PeerId.value = peerFqdnTmp;
+		}
+      if (getSelect(ph1Mode) == "main")
+		{
+			alert("The 'Mode' should be set to 'Aggressive'");
+			var tmp = "aggressive";
+			setSelect(ph1Mode, tmp);
+		}
+	  	break;
+	  default:
+	   break;
+     }
+  }
+}
+
+function changePh1Mode() {
+	with ( document.forms[0] ) {
+		if (((getSelect(ph1MyIdType) == "fqdn") || (getSelect(ph1PeerIdType) == "fqdn")) && (getSelect(ph1Mode) == "main"))
+		{
+			alert("The 'Mode' should be set to 'Aggressive'");
+			var tmp = "aggressive";
+			setSelect(ph1Mode, tmp);
+      } 
+   } 
+}
+
+function changePFS() {
+	with ( document.forms[0] ) {
+		if (perfectFSEn[perfectFSEn.selectedIndex].value == "enable")
+		{
+		   document.getElementById("ph2DHGroupTr").style.display = "table-row";
+		}
+		else
+		{
+			document.getElementById("ph2DHGroupTr").style.display = "none";
+		}
+	}
+}
+
+function checkGWType(ip) {
+	with ( document.forms[0] ) {
+		var idx = 0;
+		/* First dot */
+		var dot = ip.indexOf('.', idx);
+		if (dot == -1)
+		{
+			return "fqdn";
+		}
+		var tmp = parseInt(ip.substring(idx, dot), 10);
+		if (tmp < 0 || tmp > 255)
+		{
+			return "fqdn";
+		}
+		idx = dot + 1;
+		/* Second dot */
+		dot = ip.indexOf('.', idx);
+		if (dot == -1)
+		{
+			return "fqdn";
+		}
+		tmp = parseInt(ip.substring(idx, dot), 10);
+		if (tmp < 0 || tmp > 255)
+		{
+			return "fqdn";
+		}		
+		idx = dot + 1;
+		/* third dot */
+		dot = ip.indexOf('.', idx);
+		if (dot == -1)
+		{
+			return "fqdn";
+		}
+		tmp = parseInt(ip.substring(idx, dot), 10);
+		if (tmp < 0 || tmp > 255)
+		{
+			return "fqdn";
+		}
+		idx = dot + 1;
+		if (dot == -1 || dot > ip.length)
+		{
+			return "fqdn";
+		}
+		tmp = parseInt(ip.substring(idx, ip.length), 10);
+		if (tmp < 0 || tmp > 255)
+		{
+			return "fqdn";
+		}
+		return "address";
+  }	
+}
+
+function checkLifeTime(phase)
+{
+	with ( document.forms[0] ) {
+		var ph1LifeTime = document.getElementById("ph1KeyTimeID");
+		var ph2LifeTime = document.getElementById("ph2KeyTimeID");
+		var re = /^[0-9]*[1-9][0-9]*$/;
+		
+		if (phase == "phase1")
+		{
+			if (ph1LifeTime.value.search(re) == -1)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		if (phase == "phase2")
+		{
+			if (ph2LifeTime.value.search(re) == -1)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+	}
+}
+
+function checkSPI()
+{
+	with ( document.forms[0] ) {
+		var re = /^[0-9a-fA-F]{3,8}$/;
+		var dec = parseInt(spi.value, 16);
+		var hexStr = dec.toString(16);
+		
+		if (spi.value.search(re) == -1)
+		{
+			return false;
+		}
+		if ((dec < 256) || (dec > 4294967295))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+}
+
+//////////////////////////
+
+function formLoad()
+{
+	loadCertList();
+	with ( document.forms[0] ) {
+		if (serviceId == 1) {	/* edit */
+			connName.disabled = true;
+		} else {
+			var bakConnName = ipsConnName;
+			var count = 1;
+			var i = ipsConnNameList.length;
+			while (--i >= 0) {
+				if (ipsConnNameList[i] == ipsConnName) {
+					ipsConnName = bakConnName + '(' + (++count) + ')';
+					i = ipsConnNameList.length;
+		}
+			}
+		}
+		connName.value = ipsConnName;
+		remoteGWAddr.value = ipsRemoteGWAddr;
+		setSelect(localIPMode, ipsLocalIPMode);
+		localIP.value = ipsLocalIP; 
+		localMask.value = ipsLocalMask;
+		setSelect(remoteIPMode, ipsRemoteIPMode);
+		remoteIP.value = ipsRemoteIP;
+		remoteMask.value = ipsRemoteMask;
+		setSelect(keyExM, ipsKeyExM);
+		setSelect(authM, ipsAuthM);
+		psk.value = ipsPSK;
+		setSelect(certificateName, ipsCertificateName);
+		perfectFSEn.value = ipsPerfectFSEn;
+		setSelect(manualEncryptionAlgo, ipsManualEncryptionAlgo);
+		manualEncryptionKey.value = ipsManualEncryptionKey;
+		setSelect(manualAuthAlgo, ipsManualAuthAlgo)
+		manualAuthKey.value = ipsManualAuthKey;
+		spi.value = ipsSPI;
+		setSelect(ph1Mode, ipsPh1Mode);
+	        if (ipsPh1MyIdType == 'address' || ipsPh1MyIdType == '')
+		{
+			ph1MyId.disabled = true;
+		}
+		else
+		{
+			ph1MyId.disabled = false;
+		}
+		setSelect(ph1MyIdType, ipsPh1MyIdType);
+		ph1MyId.value = ipsPh1MyId;
+		if (ipsPh1PeerIdType == 'address' || ipsPh1PeerIdType == '')
+		{
+			ph1PeerId.disabled = true;
+		}
+		else
+		{
+			ph1PeerId.disabled = false;
+		}
+		setSelect(ph1PeerIdType, ipsPh1PeerIdType);
+		ph1PeerId.value = ipsPh1PeerId;	
+		setSelect(ph1EncryptionAlgo, ipsPh1EncryptionAlgo);
+		setSelect(ph1IntegrityAlgo, ipsPh1IntegrityAlgo);
+		setSelect(ph1DHGroup, ipsPh1DHGroup);
+		ph1KeyTime.value = ipsPh1KeyTime;
+		setSelect(ph2EncryptionAlgo, ipsPh2EncryptionAlgo);
+		setSelect(ph2IntegrityAlgo, ipsPh2IntegrityAlgo);
+		setSelect(ph2DHGroup, ipsPh2DHGroup);
+		ph2KeyTime.value = ipsPh2KeyTime;
+	}
+	
+    localIPModeChange();
+    remoteIPModeChange();
+    keyauthChange();
+    showhideAdv(showAdv);
+	changePFS();
+    
+}
+
+function applyClick() {
+	var loc = 'ipsec.cmd?action=add';
+	with ( document.forms[0] ) {
+		/* yanglei, 2012-1-16 */
+		var value = validateConnName(connName.value);
+		if (!value) {
+			connName.focus();
+			return;
+		}
+		if ( isValidNameWSpace(value) == false ) {
+			alert('Invalid connection name "' + value + '".');
+			return;
+		}
+		loc += '&ipsConnName=' + value;
+
+      if (remoteGWAddr.value.length < 1)
+		{
+			alert("The remote gateway address can't be empty!");
+			return;
+		} 
+		loc += '&ipsRealRemoteGWIP=' + ipsRealRemoteGWIP;
+		loc += submitText(remoteGWAddr, 'ipsRemoteGWAddr');
+
+		if ( getSelect(localIPMode) == "subnet" )
+		{
+	  		if ( isValidSubnetMask(localMask.value) == false || localMask.value == '255.255.255.255') 
+      		{
+			alert('Local Subnet Mask "' + localMask.value + '" is invalid.');
+			return;
+		}
+
+	  		if ( isValidSubnetMaskForStRoute(localMask.value, localIP.value) == false) 
+	  		{
+	  			//alert('Local IP Address or Subnet Mask are invalid.');
+         		return;
+      		}
+			if (checkSameLanIP(localIP.value, localMask.value) == false)
+			{
+				alert("Local IP Address should be in the same subnet with LAN IP address.");
+				return;
+			}
+		}
+		else
+		{
+			if ( isValidIpAddress(localIP.value) == false )
+			{
+				alert('Local IP Address "' + localIP.value + '" is invalid.');
+				return;
+			}
+			if (checkSameLanIP(localIP.value, "255.255.255.255") == false)
+			{
+				alert("Local IP Address should be in the same subnet with LAN IP address.");
+				return;
+			}
+		}
+		loc += submitSelect(localIPMode, 'ipsLocalIPMode');
+		loc += submitText(localIP, 'ipsLocalIP');
+		if ( getSelect(localIPMode) == "subnet") {
+			loc += submitText(localMask, 'ipsLocalMask');
+		}
+		if ( getSelect(remoteIPMode) == "subnet" )
+		{
+
+	  		if ( isValidSubnetMask(remoteMask.value) == false || remoteMask.value == '255.255.255.255') 
+      		{
+			alert('Remote Subnet Mask "' + remoteMask.value + '" is invalid.');
+			return;
+		}
+
+	  		if ( isValidSubnetMaskForStRoute(remoteMask.value, remoteIP.value) == false) 
+	  		{
+	  			//alert('Remote IP Address or Subnet Mask are invalid.');
+         		return;
+      		}
+			if (checkSameLanIP(remoteIP.value, remoteMask.value) == true)
+			{
+				alert("Remote IP Address shouldn't be in the same subnet with LAN IP address.");
+				return;
+			}
+		}
+		else
+		{
+			if ( isValidIpAddress(remoteIP.value) == false )
+			{
+				alert('Remote IP Address "' + remoteIP.value + '" is invalid.');
+				return;
+			}
+			if (checkSameLanIP(remoteIP.value, "255.255.255.255") == true)
+			{
+				alert("Remote IP Address shouldn't be in the same subnet with LAN IP address.");
+				return;
+			}
+		}
+      loc += submitSelect(remoteIPMode, 'ipsRemoteIPMode');
+		loc += submitText(remoteIP, 'ipsRemoteIP');
+		if ( getSelect(remoteIPMode) == "subnet") {
+			loc += submitText(remoteMask, 'ipsRemoteMask');
+		}
+		loc += submitSelect(keyExM, 'ipsKeyExM');
+		if ( getSelect(keyExM) == "auto" ) {
+         loc += submitSelect(authM, 'ipsAuthM');
+			if ((psk.value).length == 0)
+			{
+				alert('The Pre-Shared Key should not be empty!');
+				return;
+			}
+			loc = loc + '&ipsPSK=' + encodeUrl(psk.value);
+			loc += submitSelect(perfectFSEn, 'ipsPerfectFSEn');
+         	val = parseInt(ph1KeyTime.value);
+         if (  isNaN(val) == true || val < 0 || (checkLifeTime("phase1") == false)) {
+         	  alert('Phase 1 Key Life Time isn\'t a positive integer, please check and correct!!');
+         	   showhideAdv(1);
+         	   return;
+         	}
+         	val = parseInt(ph2KeyTime.value);
+         if (  isNaN(val) == true || val < 0 || (checkLifeTime("phase2") == false)) {
+         	  alert('Phase 2 Key Life Time isn\'t a positive integer, please check and correct!!');
+         	   showhideAdv(1);
+         	   return;
+         	}
+         	if ( getSelect(authM) == "certificate") {
+         	   if ( certificateName.options.length == 0) {
+         	       alert('No certificate avaiable for authentication. Use Certificate menu to add certificates or choose another autentication method.');
+         	       return;
+         	   }
+         	}
+			loc += submitSelect(ph1Mode, 'ipsPh1Mode');
+			if (getSelect(ph1MyIdType) == "address")
+			{
+				loc += submitSelect(ph1MyIdType, 'ipsPh1MyIdType');
+			}
+			else
+			{
+				if (ph1MyId.value.length < 1)
+				{
+					alert("My Identifier can't be empty!");
+					return;
+				}
+				loc += submitSelect(ph1MyIdType, 'ipsPh1MyIdType');
+				loc += submitText(ph1MyId, 'ipsPh1MyId');
+			}
+			if (getSelect(ph1PeerIdType) == "address")
+			{
+				loc += submitSelect(ph1PeerIdType, 'ipsPh1PeerIdType');
+			}
+			else
+			{
+				if (ph1PeerId.value.length < 1)
+				{
+					alert("Peer's Identifier can't be empty!");
+					return;
+				}
+				loc += submitSelect(ph1PeerIdType, 'ipsPh1PeerIdType');
+				loc += submitText(ph1PeerId, 'ipsPh1PeerId');
+			}
+			if (((getSelect(ph1MyIdType) == "fqdn") || (getSelect(ph1PeerIdType) == "fqdn")) && (getSelect(ph1Mode) == "main"))
+			{
+				alert("The identifier is set to 'fqdn', then the mode should be set to main!");
+				return;
+			}
+			loc += submitSelect(ph1EncryptionAlgo, 'ipsPh1EncryptionAlgo');
+			loc += submitSelect(ph1IntegrityAlgo, 'ipsPh1IntegrityAlgo');
+			loc += submitSelect(ph1DHGroup, 'ipsPh1DHGroup');
+			loc += submitText(ph1KeyTime, 'ipsPh1KeyTime');
+			loc += submitSelect(ph2EncryptionAlgo, 'ipsPh2EncryptionAlgo');
+			loc += submitSelect(ph2IntegrityAlgo, 'ipsPh2IntegrityAlgo');
+			loc += submitSelect(ph2DHGroup, 'ipsPh2DHGroup');
+			loc += submitText(ph2KeyTime, 'ipsPh2KeyTime');
+		}
+		if ( getSelect(keyExM) == "manual" ) {
+			var ekeys;
+			if ( getSelect(manualEncryptionAlgo) == "des-cbc") {
+				ekeys = 16;
+			}
+			else if ( getSelect(manualEncryptionAlgo) == "3des-cbc") {
+				ekeys = 48;
+			}
+			else {
+				ekeys = -1;
+			}
+			if ( ekeys != -1 && isValidHexKey(manualEncryptionKey.value, ekeys) == false) {
+				alert('Invalid Manual Encryption Key.');
+				return;
+			}
+			if (getSelect(manualEncryptionAlgo) == "aes-cbc")
+			{
+				if ((manualEncryptionKey.value.length == 32) || (manualEncryptionKey.value.length ==  48) || (manualEncryptionKey.value.length == 64))
+				{
+					;
+				}
+				else
+				{
+					alert("The manual encryption key is AES, then it's length must be 32, 48 or 64!!");
+					return;
+				}
+				if (isValidHexKey(manualEncryptionKey.value, manualEncryptionKey.value.length) == false)
+				{
+					alert('Invalid Manual Encryption Key, digit Hex only.');
+					return;
+				}
+			}
+
+			var akeys;
+			if ( getSelect(manualAuthAlgo) == "hmac-md5") {
+				akeys = 32;
+			}
+			else if ( getSelect(manualAuthAlgo) == "hmac-sha1") {
+				akeys = 40;
+			}
+			else {
+				akeys = -1;
+			}
+			if ( akeys != -1 && isValidHexKey(manualAuthKey.value, akeys) == false) {
+				alert('Invalid Manual Authentication Key.');
+				return;
+			}
+		loc += submitSelect(manualEncryptionAlgo, 'ipsManualEncryptionAlgo');
+		loc += submitText(manualEncryptionKey, 'ipsManualEncryptionKey');
+		loc += submitSelect(manualAuthAlgo, 'ipsManualAuthAlgo');
+		loc += submitText(manualAuthKey, 'ipsManualAuthKey');
+			if (checkSPI() == false)
+			{
+				alert("The SPI value is invalid! Please input a valid one according to the rule!");
+				return;
+			}
+		loc += submitText(spi, 'ipsSPI');
+		}
+	}
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+// done hiding -->
+</script>
+  
+</head>
+
+<body onLoad="formLoad()">
+<center>
+<form>
+   <table>
+      <tr><td class=h1 colspan=2>IPSec Settings</td></tr>
+      <tr><td class=blue colspan=2></td></tr>
+      <tr><td colspan=2>&nbsp;</td></tr>
+   </table>
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td class=item style="width: 38%"> IPSec Connection Name:</td>
+      <td> <input name="connName" size="20" maxlength="35" type="text"> </td>
+    </tr>
+    <tr>
+      <td class=item>Remote IPSec Gateway Address(URL/IPv4):</td>
+      <td align="left"><input name="remoteGWAddr" size="20" maxlength="60" type="text"></td>
+    </tr>
+  </table>
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr><td colspan=2>&nbsp;</td></tr>
+    <tr>
+      <td class=item style="width: 38%"> Tunnel access from local IP addresses:</td>
+      <td >
+      <select name="localIPMode" onChange="localIPModeChange();" class=list>
+        <option value="subnet">Subnet</option>
+        <option value="single">Single Address</option>
+      </select>
+    </td></tr>
+  </table>
+
+  <div id = "IP11">
+	<table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+          <td class=item style="width: 38%">IP Address for VPN:</td>
+        <td> <input name="localIP" type="text"> </td>
+    </tr>
+   </table></div>
+  <div id = "IP12">
+	<table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td class=item style="width: 38%">IP Subnetmask:</td>
+        <td> <input name="localMask" type="text"> </td> 
+      </tr>
+   </table></div>
+
+   <table border="0" cellpadding="0" cellspacing="0">
+      <tr><td colspan=2>&nbsp;</td></tr>
+      <tr>
+        <td class=item style="width: 38%">Tunnel access from remote IP addresses:</td>
+        <td >
+        <select name="remoteIPMode" onChange="remoteIPModeChange();" class=list>
+        <option value="subnet" selected>Subnet</option>
+        <option value="single">Single Address</option>
+        </select>
+        </td>
+      </tr>
+   </table>
+
+   <div id = "IP21"><table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td class=item style="width: 38%">IP Address for VPN:</td>
+        <td> <input name="remoteIP" type="text"> </td>
+    </tr>
+   </table></div>
+   <div id = "IP22">
+     <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td class=item style="width: 38%">IP Subnetmask:</td>
+        <td> <input name="remoteMask" type="text"> </td>
+      </tr>
+    </table></div>
+    <table border="0" cellpadding="0" cellspacing="0">
+     <tr><td colspan=2>&nbsp;</td></tr>
+     <tr> 
+         <td class=item style="width: 38%">Key Exchange Method:</td>
+         <td><select name="keyExM" onChange="keyauthChange();" class=listSmall>
+            <option value="auto">Auto(IKE)</option>
+            <option value="manual">Manual</option>
+          </select>
+        </td>
+     </tr> 
+     </table>
+    <div id="AutoKeyEx">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td class=item style="width: 38%">Authentication Method:</td>
+        <td>
+          <select name="authM" onChange="keyauthChange();" class=list>
+            <option value="pre_shared_key">Pre-Shared Key</option>
+            <!--<option value="certificate">Certificate (X.509)</option>-->
+          </select>
+        </td>
+      </tr>
+    </table> 
+
+    <div id="PSK">
+      <table border="0" cellpadding="0" cellspacing="0">
+       <tr>
+        <td class=item style="width: 38%">Pre-Shared Key:</td>
+        <td> <input name="psk" maxlength="15" type="text"></td>
+      </tr>
+    </table></div>
+    <div id="Certificate">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class=item style="width: 38%">Certificates:</td>
+          <td><select name="certificateName" class=listSmall>
+          </select></td>
+        </tr>
+      </table></div>
+     <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td class=item style="width: 38%">Perfect Forward Secrecy:</td>
+        <td> 
+          <select name="perfectFSEn" class=listSmall onChange="changePFS();">
+            <option value="enable">Enable</option>
+            <option value="disable">Disable</option>
+          </select>
+        </td>
+     </tr> 
+
+     <tr><td colspan=2>&nbsp;</td></tr>
+     <tr>
+       <td class=item>Advanced IKE Settings:</td>
+       <td><input name="advSWButton" type="button" value="Show Advanced Settings" onClick="switchAdv();" ></td>
+     </tr>
+    </table></div>
+    <div id="ManualKey"> 
+       <table border="0" cellpadding="0" cellspacing="0">
+       <tr>
+        <td class=item style="width: 38%">Encryption Algorithm:</td>
+        <td>
+          <select name="manualEncryptionAlgo" class=list>
+          <option value="des-cbc">DES</option>
+          <option value="3des-cbc" selected>3DES</option>
+          <option value="aes-cbc">AES(aes-cbc)</option>
+        </select>
+        </td>
+      </tr>
+      <tr>
+        <td class=item>Encryption Key:</td>
+        <td> <input name="manualEncryptionKey", size = "40" maxlength = "50">  DES: 16 digit Hex, 3DES: 48 digit Hex <br></td>
+      </tr>
+      <tr>
+       <td class=item>Authentication Algorithm:</td>
+       <td>
+         <select name="manualAuthAlgo" class=listSmall>
+           <option value="hmac-md5">MD5</option>
+           <option value="hmac-sha1">SHA1</option>
+         </select>
+       </td>
+     </tr>
+      <tr>
+        <td class=item>Authentication Key:</td>
+        <td> <input name="manualAuthKey" size="50" maxlength = "50"> MD5: 32 digit Hex, SHA1: 40 digit Hex </td>
+      </tr>
+      <tr>
+        <td class=item>SPI:</td>
+        <td> <input name="spi" size="8" maxlength = "8"> Hex 100-FFFFFFFF</td>
+      </tr>      
+    </table></div>
+    <div id = "adv">
+    <table border="0" cellpadding="0" cellspacing="0">
+     <tr>
+       <td class=h3 colspan=2>Phase 1</td>
+     </tr>
+     <tr>
+       <td class=item style="width: 38%">Mode:</td>
+       <td>
+         <select name="ph1Mode" class=list onChange="changePh1Mode();">
+           <option value="main">Main</option>
+           <option value="aggressive">Aggressive</option>
+         </select>
+       </td>
+       </tr>
+       <td class=item style="width: 38%">My Identifier Type:</td>
+       <td>
+         <select name="ph1MyIdType" onChange="changeMyIdType();">
+           <option value="address">Local Wan IP</option>
+           <option value="fqdn">FQDN</option>
+         </select>
+       </td>
+     </tr>
+	 <tr>
+        <td class=item style="width: 38%">My Identifier:</td>
+        <td> <input name="ph1MyId" id="myIdInput" maxlength = "35"></td>
+     </tr>
+	 <tr>
+       <td class=item style="width: 38%">Remote Identifier Type:</td>
+       <td>
+         <select name="ph1PeerIdType" onChange="changePeerIdType();">
+           <option value="address">Remote Wan IP</option>
+           <option value="fqdn">FQDN</option>
+         </select>
+       </td>
+     </tr>
+	 <tr>
+        <td class=item style="width: 38%">Remote Identifier:</td>
+        <td> <input name="ph1PeerId" id="PeerIdInput" maxlength = "35"></td>
+     </tr>
+       <tr>
+        <td class=item>Encryption Algorithm:</td>
+        <td>
+          <select name="ph1EncryptionAlgo" class=list>
+          <option value="des">DES</option>
+          <option value="3des" selected>3DES</option>
+          <option value="aes128">AES - 128</option>
+          <option value="aes192">AES - 192</option>
+          <option value="aes256">AES - 256</option>          
+        </select>
+        </td>
+      </tr>
+      <tr>
+       <td class=item>Integrity Algorithm:</td>
+       <td>
+         <select name="ph1IntegrityAlgo" class=listSmall>
+           <option value="md5">MD5</option>
+           <option value="sha1">SHA1</option>
+         </select>
+       </td>
+       <tr>
+       <td class=item>Select Diffie-Hellman Group for Key Exchange:</td>
+       <td>
+         <select name="ph1DHGroup" class=listSmall>
+           <option value="modp768">768bit</option>
+           <option value="modp1024">1024bit</option>
+           <option value="modp1536">1536bit</option>
+           <option value="modp2048">2048bit</option>
+           <option value="modp3072">3072bit</option>
+           <option value="modp4096">4096bit</option>
+           <option value="modp6144">6144bit</option>
+           <!--<option value="modp8192">8192bit</option>-->
+         </select>
+       </td>
+      </tr>
+      <tr>
+        <td class=item>Key Life Time:</td>
+        <td> <input name="ph1KeyTime" id="ph1KeyTimeID" maxlength="9"> &nbsp Seconds </td>
+      </tr>
+     <tr><td>&nbsp;</td></tr>
+     <tr>
+       <td class=h3 colspan=2> Phase 2</td>
+     </tr>
+     <tr>
+        <td class=item>Encryption Algorithm:</td>
+        <td>
+          <select name="ph2EncryptionAlgo" class=listSmall>
+          <option value="des">DES</option>
+          <option value="3des" selected >3DES</option>
+          <option value="aes128">AES - 128</option>
+          <option value="aes192">AES - 192</option>
+          <option value="aes256">AES - 256</option>
+        </select>
+        </td>
+      </tr>
+      <tr>
+       <td class=item>Integrity Algorithm:</td>
+       <td>
+         <select name="ph2IntegrityAlgo" class=listSmall>
+           <option value="hmac_md5">MD5</option>
+           <option value="hmac_sha1">SHA1</option>
+         </select>
+       </td>
+      </tr>
+      <tr id='ph2DHGroupTr'>
+      <td class=item>Select Diffie-Hellman Group for Key Exchange:</td>
+       <td>
+         <select name="ph2DHGroup" class=listSmall>
+           <option value="modp768">768bit</option>
+           <option value="modp1024">1024bit</option>
+           <option value="modp1536">1536bit</option>
+           <option value="modp2048">2048bit</option>
+           <option value="modp3072">3072bit</option>
+           <option value="modp4096">4096bit</option>
+           <option value="modp6144">6144bit</option>
+           <!--<option value="modp8192">8192bit</option>-->
+         </select>
+       </td>
+      </tr>
+      <tr>
+        <td class=item>Key Life Time:</td>
+        <td> <input name="ph2KeyTime" id="ph2KeyTimeID" maxlength="9"> &nbsp Seconds </td>
+      </tr>
+   </table>
+  </div>
+  <table>
+    <tr><td class=blue colspan=2</td></tr>
+  </table>
+     <center>
+    <input value="Save/Apply" type="button" class="buttonL" onClick="applyClick();" > 
+     </center>
+</form>
+</center>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<html>
+  <head>
+    <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+    <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+
+function ddnsChange() {
+  with ( document.forms[0] ) {
+    var ddns = ddnsMode[ddnsMode.selectedIndex].value;
+
+    switch( ddns ) {
+    case "dyndns":
+      hideDDNSInfo( 0 );
+      hideTZOInfo( 1 );
+      hideDynDNSInfo( 0 );
+	  hideNOIPInfo( 1 );
+      break;
+    case "tzo":
+      hideDDNSInfo( 0 );
+      hideTZOInfo( 0 );
+      hideDynDNSInfo( 1 );
+	  hideNOIPInfo( 1 );
+	  break;
+	case "noip":
+	  hideDDNSInfo( 0 );
+      hideTZOInfo( 1 );
+      hideDynDNSInfo( 1 );
+	  hideNOIPInfo( 0 );
+      break;
+    }
+  }
+}
+
+function hideDDNSInfo(hide) {
+  var status = 'block';
+  if ( hide == 1 )
+    status = 'none';
+  if (document.getElementById) // DOM3 = IE5, NS6
+    document.getElementById('ddnsInfo').style.display = status;
+  else {
+    if (document.layers) { // NS4
+      with ( document.forms[0] ) {
+        if ( hide == 1 ) {
+          ddnsHostname.value = '';
+        } else {
+          ddnsHostname.value = 'Hostname';
+        }
+      }
+    } else {
+      document.all.ddnsInfo.style.display = status;
+    }
+  }
+}
+
+function hideDynDNSInfo(hide) {
+  var status = 'block';
+  if ( hide == 1 )
+    status = 'none';
+  if (document.getElementById) // DOM3 = IE5, NS6
+    document.getElementById('dyndnsInfo').style.display = status;
+  else {
+    if (document.layers) { // NS4
+      with ( document.forms[0] ) {
+        if ( hide == 1 ) {
+          dyndnsHostname.value = '';
+        } else {
+          dyndnsHostname.value = 'Hostname';
+        }
+      }
+    } else {
+      document.all.dyndnsInfo.style.display = status;
+    }
+  }
+}
+
+function hideTZOInfo(hide) {
+  var status = 'block';
+  if ( hide == 1 )
+    status = 'none';
+  if (document.getElementById) // DOM3 = IE5, NS6
+    document.getElementById('tzoInfo').style.display = status;
+  else {
+    if (document.layers) { // NS4
+      with ( document.forms[0] ) {
+        if ( hide == 1 ) {
+          tzoEmail.value = '';
+          tzoKey.value = '';
+        } else {
+          tzoEmail.value = 'Name';
+          tzoKey.value = 'Password';
+        }
+      }
+    } else {
+      document.all.tzoInfo.style.display = status;
+    }
+  }
+}
+
+function hideNOIPInfo(hide) {
+  var status = 'block';
+  if ( hide == 1 )
+    status = 'none';
+  if (document.getElementById) // DOM3 = IE5, NS6
+    document.getElementById('noipInfo').style.display = status;
+  else {
+    if (document.layers) { // NS4
+      with ( document.forms[0] ) {
+        if ( hide == 1 ) {
+          ddnsHostname.value = '';
+        } else {
+          ddnsHostname.value = 'Hostname';
+        }
+      }
+    } else {
+      document.all.noipInfo.style.display = status;
+    }
+  }
+}
+
+function frmLoad() {
+  with (document.forms[0]) {
+    ddnsMode.selectedIndex = 0;
+  }
+
+  ddnsChange();
+}
+
+function btnApply(place) {
+  var loc = place + '?action=add&service=';
+
+  if ( place == "ddnsmngr.cmd" ) {
+    with ( document.forms[0] ) {
+      switch( ddnsMode[ddnsMode.selectedIndex].value ) {
+      case 'dyndns':
+        loc += '0';
+        break;
+      case 'tzo':
+        loc += '1';
+		break;
+	  case 'noip':
+	    loc += '2';
+        break;
+      }
+
+      switch( ddnsMode[ddnsMode.selectedIndex].value ) {
+      case "dyndns":
+        update_username = dyndnsUsername.value;
+        update_password = dyndnsPassword.value;
+        break;
+      case "tzo":
+        update_username = tzoEmail.value;
+        update_password = tzoKey.value;
+		break;
+	  case "noip":
+	    update_username = noipUsername.value;
+		update_password = noipPassword.value;
+        break;
+      }
+
+      if ( update_username.length == 0 ) {
+        if ( ddnsMode[ddnsMode.selectedIndex].value == 'dyndns' )
+          alert('Empty username.' );
+        else
+          alert('Invalid Email address.' );
+        return;
+      }
+      loc += '&username=' + update_username;
+
+      if ( update_password.length == 0 ) {
+        if ( ddnsMode[ddnsMode.selectedIndex].value == 'dyndns' )
+          alert('Empty password.' );
+        else
+          alert('Invalid key.' );
+        return;
+      }
+      loc += '&password=' + update_password;
+
+      if ( ddnsHostname.value.length == 0 ) {
+        alert('Empty hostname.');
+        return;
+      }
+      loc += '&hostname=' + ddnsHostname.value;
+
+	  if (ddnsInterface[ddnsInterface.selectedIndex].value == 'undefined')
+	  {
+	      alert("Please make sure select an valid interface.");
+		  return;
+	  }
+      loc += '&iface=' + ddnsInterface[ddnsInterface.selectedIndex].value;
+    }
+    loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+    var code = 'location="' + loc + '"';
+    eval(code);
+  }
+}
+
+// done hiding -->
+    </script>
+  </head>
+  <body onLoad='frmLoad()'>
+    <center>
+      <form>
+        <table>
+		<tr><td class=h1>Add Dynamic DNS</td></tr>
+		<tr><td class=blue></td></tr>
+		<tr><td>
+        This page allows you to add a Dynamic DNS address from
+        DynDNS.org, TZO or NO-IP.
+        </td></tr>
+		<tr><td>&nbsp;</td></tr>
+		</table>
+        <table>
+          <tr>
+            <td class=item>D-DNS provider:</td>
+            <td><select name='ddnsMode' onChange='ddnsChange()' class=list>
+				  <option value="noip">No-IP</option>
+                  <option value="dyndns">DynDNS.org</option>
+                  <option value="tzo">TZO</option>
+                </select>
+            </td>
+          </tr>
+		  <tr><td>&nbsp;</td></tr>
+        </table>
+        <div id="ddnsInfo">
+          <table>
+            <tr>
+              <td class=item>Hostname:</td>
+              <td><input type="text" name="ddnsHostname" style = "width:160px"></td>
+            </tr>
+            <tr>
+              <td class=item>Interface:</td>
+              <td><select name='ddnsInterface' class=list>
+                        <script language="javascript">
+<!-- hide
+{
+   var i = 0;
+   var interfaceInfo = '<%ejGetOther(wanInterfaceInfo, route)%>';
+   var interfaces = interfaceInfo.split('|');
+ 
+   for ( i = 0; i < interfaces.length; i++ ) {
+      var names = interfaces[i].split('/');
+      document.write("  <option value='" + names[1] + "'>");
+      document.writeln(interfaces[i]);
+   }
+}
+// done hiding -->
+</script>
+              </select></td>
+            </tr>
+			<tr><td>&nbsp;</td></tr>
+          </table>
+        </div>
+        <div id="dyndnsInfo">
+		<tr><td>
+          <table>
+            <tr><td colspan=2><b>DynDNS Settings</b></td></tr>
+            <tr>
+              <td class=item>Username:</td>
+              <td><input type='text' name='dyndnsUsername' style = "width:160px"></td>
+            </tr>
+            <tr>
+              <td class=item>Password:</td>
+              <td><input type="password" name="dyndnsPassword" style = "width:160px"></td>
+            </tr>
+			<tr><td>&nbsp;</td></tr>
+          </table>
+        </div>
+        <div id="tzoInfo">
+		<tr><td>
+          <table>
+            <tr><td colspan=2><b>TZO Settings</b></td></tr>
+            <tr>
+              <td class=item>Email:</td>
+              <td><input type="text" name="tzoEmail" style = "width:160px"></td>
+            </tr>
+            <tr>
+              <td class=item>Key:</td>
+              <td><input type="password" name="tzoKey" style = "width:160px"></td>
+            </tr>
+			<tr><td>&nbsp;</td></tr>
+          </table>
+        </div>
+		<div id="noipInfo">
+          <table>
+            <tr><td colspan=2><b>No-IP Settings</b></td></tr>
+            <tr>
+              <td class=item>Username:</td>
+              <td><input type="text" name="noipUsername" style = "width:160px"></td>
+            </tr>
+            <tr>
+              <td class=item>Password:</td>
+              <td><input type="password" name="noipPassword" style = "width:160px"></td>
+            </tr>
+			<tr><td>&nbsp;</td></tr>
+          </table>
+        </div>
+		<table>
+		<tr><td class=blue></td></tr>
+		<tr><td>
+        <center>
+          <input type='button' value="Save/Apply" onClick='btnApply("ddnsmngr.cmd")'>
+        </center>
+		</td></tr>
+		</table>
+      </form>
+    </center>
+  </body>
+</html>

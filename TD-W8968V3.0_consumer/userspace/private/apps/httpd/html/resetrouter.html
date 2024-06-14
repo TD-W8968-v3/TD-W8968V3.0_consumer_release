@@ -1,0 +1,52 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript">
+<!-- hide
+
+var sessionKey='<%ejGetOther(sessionKey)%>';
+function btnReset() {
+   if (confirm("Are you sure you want to reboot?"))
+   {
+       var loc = 'rebootinfo.cgi?';
+       loc += 'sessionKey=' + sessionKey;
+       var code = 'location="' + loc + '"';
+       eval(code);
+   }
+}
+
+function frmLoad() {
+   var sysReboot = '<%ejGet(sysReboot)%>';
+   var lanRefresh = '<%ejGet(lanRefresh)%>';
+
+   if ( sysReboot == '1' )
+      btnReset();
+   else if ( lanRefresh == '1' ) {
+      var code = 'location="resetrouter.cgi?lanRefresh=0"';
+      eval(code);
+   }
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+         <center>
+         <form>
+         	<table>
+         		<tr><td class=h1>Reboot router</td><tr>
+            	<tr><td class=blue></td></tr>
+            	<tr><td>
+            			Click the button below to reboot the router.
+            	</td></tr>
+            	<tr><td class=blue></td></tr>
+            </table>
+      <p align="center">
+         <input type='button' onClick='btnReset()' value='Reboot' class='buttonL'>
+         <br>
+      </p>
+      </center>
+   </body>
+</html>

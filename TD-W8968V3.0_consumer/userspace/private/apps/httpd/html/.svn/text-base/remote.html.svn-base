@@ -1,0 +1,111 @@
+<html>
+   <head>
+	<meta http-equiv="Pragma" content="no-cache">
+	<link rel="stylesheet" href="stylemain.css" type="text/css">
+	<link rel="stylesheet" href="colors.css" type="text/css">
+	<script type="text/javascript" src="util.js"></script>
+	<script type="text/javascript"><!-- hide
+/*EJ_PLACEHOLDER*/
+if (entryList === undefined) {
+	var sessionKey = '123456789';
+	var entryList = [
+		['eth0.1','110','10'],
+		['ppp0.1','010','01']
+	];
+	var selIndex = 1;
+}
+
+function genWanOptions() {
+	var html = '', v;
+	for (var i = 0; i < entryList.length; i++) {
+		v = entryList[i];
+		v[1] = v[1].split(''); // now access is an array
+		html += '\n<option value="'+v[0]+'">'+v[0]+'</option>';
+	}
+	document.write(html);
+	with ( document.forms[0] )
+	{
+		ifName.selectedIndex = selIndex;
+	}
+}
+
+function changeIfname() {
+	with ( document.forms[0] ) {
+		var v = entryList[ifName.selectedIndex][1];
+		var i = v.length; while (--i >= 0) {
+			access[i].checked = (v[i] == '1');
+		}
+		var webWarnInfo = document.getElementById('web_warn');
+		var telWarnInfo = document.getElementById('tel_warn');
+		
+		v = entryList[ifName.selectedIndex][2];
+		if (v[0] == '1')
+			webWarnInfo.innerText = "(Since port 80 is used by virtual server, WEB server could not be accessed through this interface.)";
+		else
+			webWarnInfo.innerText = "";
+			
+		if (v[1] == '1')
+			telWarnInfo.innerText = "(Since port 23 is used by virtual server, TELNET server could not be accessed through this interface.)";
+		else
+			telWarnInfo.innerText = "";
+
+	}
+}
+
+function btnApply() {
+	if (!entryList) return;
+	var loc = 'remote.cmd?action=set';
+	with ( document.forms[0] ) {
+		loc += '&selIndex=' + ifName.selectedIndex;
+		loc += '&ifname=' + ifName.value + '&access=';
+		for (var i = 0; i < 3; i++) {
+			loc += access[i].checked ? '1' : '0';
+		}
+   }
+	go(loc, sessionKey);
+}
+
+function frmLoad() {
+	changeIfname();
+}
+	// done hiding --></script>
+</head>
+
+<body onload="frmLoad()">
+<center><form><table>
+			<tr><td class="h1">Access Control -- Remote Access</td></tr>                
+			<tr><td class="blue"></td></tr>
+	<tr><td>
+		Access your DSL Modem Router by WAN side through user account ( <b>support</b> and <b>admin</b> ).
+				</td></tr>
+	<tr><td>&nbsp;</td></tr>
+	<tr><td><table border="0" cellpadding="4" cellspacing="0" style="width:100%">
+		<tr>
+			<td class="item">Selected WAN Interface:</td>
+			<td><select name="ifName" onchange="changeIfname()">
+				<script type="text/javascript"><!-- hide
+				genWanOptions();
+			// done hiding --></script>
+			</select></td>
+		</tr>
+               <tr>
+			<td class="item">Web:</td>
+				<td><input type="checkbox" name="access">&nbsp;&nbsp;<span id='web_warn'></td>
+               </tr>
+               <tr>
+			<td class="item">Telnet:</td>
+				<td><input type="checkbox" name="access">&nbsp;&nbsp;<span id='tel_warn'></td>
+               </tr>
+               <tr>
+			<td class="item">ICMP(ping):</td>
+			<td><input type="checkbox" name="access"></td>
+               </tr>
+	</table></td></tr>
+        	<tr><td class="blue"></td></tr>
+	<tr><td><center>
+		<input type="button" onClick="btnApply()" value="Save/Apply">
+	</center></td></tr>
+</table></form></center>
+   </body>
+</html>
+

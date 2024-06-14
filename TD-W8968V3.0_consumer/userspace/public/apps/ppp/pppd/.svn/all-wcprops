@@ -1,0 +1,299 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/BA/BCM4/!svn/ver/411/branches/W8960N_5.0/userspace/public/apps/ppp/pppd
+END
+ipcp.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/ipcp.h
+END
+utils.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/utils.c
+END
+upap.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/upap.c
+END
+sys-sunos4.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/sys-sunos4.c
+END
+multilink.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/multilink.c
+END
+pppd.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/pppd.h
+END
+tdb.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/tdb.c
+END
+chap_ms.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/chap_ms.c
+END
+upap.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/upap.h
+END
+sys-linux.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/sys-linux.c
+END
+tdb.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/tdb.h
+END
+chap_ms.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/chap_ms.h
+END
+magic.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/magic.c
+END
+ipxcp.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/ipxcp.c
+END
+md4.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/md4.c
+END
+md5.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/md5.c
+END
+magic.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/magic.h
+END
+ipxcp.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/ipxcp.h
+END
+demand.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/demand.c
+END
+pppd.8
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/pppd.8
+END
+md4.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/md4.h
+END
+md5.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/md5.h
+END
+ppp.pam
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/ppp.pam
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/BA/BCM4/!svn/ver/411/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/Makefile
+END
+eui64.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/eui64.c
+END
+auth.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/auth.c
+END
+eui64.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/eui64.h
+END
+ccp.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/ccp.c
+END
+ipv6cp.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/ipv6cp.c
+END
+cbcp.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/cbcp.c
+END
+ccp.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/ccp.h
+END
+Makefile.sol2
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/Makefile.sol2
+END
+chap.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BA/BCM4/!svn/ver/411/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/chap.c
+END
+ipv6cp.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/ipv6cp.h
+END
+cbcp.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/cbcp.h
+END
+lcp.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/lcp.c
+END
+chap.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/chap.h
+END
+tty.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/tty.c
+END
+lcp.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/lcp.h
+END
+main.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BA/BCM4/!svn/ver/411/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/main.c
+END
+fsm.c
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/fsm.c
+END
+pathnames.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/pathnames.h
+END
+Makefile.sunos4
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/Makefile.sunos4
+END
+sys-solaris.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/sys-solaris.c
+END
+fsm.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/fsm.h
+END
+Makefile.linux
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/Makefile.linux
+END
+ipcp.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BA/BCM4/!svn/ver/411/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/ipcp.c
+END
+options.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/options.c
+END
+patchlevel.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/patchlevel.h
+END

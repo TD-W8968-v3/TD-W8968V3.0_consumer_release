@@ -1,0 +1,53 @@
+<html>
+<head>
+<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+<link rel=stylesheet href='stylemain.css' type='text/css'>
+<link rel=stylesheet href='colors.css' type='text/css'>
+<script language="javascript">
+<!-- hide
+
+function btnBack() {
+   var loc = 'dslptm.cmd';
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnReset() {
+   var loc = 'rebootinfo.cgi?';
+
+   loc += 'sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+</head>
+
+<body>
+<center>
+<table><tr><td class=h1>DSL Interface Configuration Error</td></tr>
+<tr><td class=blue></td></tr>
+<tr><td>
+<br>
+Please double check your configuration information and
+<br><br>
+Click on "Back" button to give it an another try.
+<br><br>
+Or
+<br><br>
+Click on "Reboot Router" button to reboot the DSL Router and try it again.
+<br><br>
+</td></tr>
+<tr><td class=blue></td></tr>
+<tr><td>
+<center>
+<input type='button' onClick='btnBack()' value='Back'>
+<input type='button' onClick='btnReset()' value='Reboot Router'>
+</center>
+</td></tr>
+</table>
+</center>
+</body>
+</html>

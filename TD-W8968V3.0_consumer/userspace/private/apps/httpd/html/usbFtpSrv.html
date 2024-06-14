@@ -1,0 +1,322 @@
+<html>
+	<head>
+		<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+		<link rel="stylesheet" href='stylemain.css' type='text/css'>
+		<link rel="stylesheet" href='colors.css' type='text/css'>
+		<script language="javascript">
+<!-- hide
+/*EJ_PLACEHOLDER*/
+if (sessionKey === undefined)
+{
+	var sessionKey = '123456789';
+	var ftpSrvStatus = 0;
+	var accessStatus = 0;
+	var accessIp = '0.0.0.0';
+	var srvPort = 21;
+	var folderList = [
+		/* last 5 members are for user access right. 
+		   0 for full; 
+		   1 for read-only; 
+		   2 for non-access; 
+		   3 for user not exist */
+		['volume', '/', 1, 0, 3, 3, 3, 1], 
+		['test', '/test', 0, 0, 3, 3, 3, 2],
+	];
+	var usrAccountList = [
+		[1, 1], /*member 1 for isSupper; member 2 for status;*/
+		[0, 0],
+		[0, 0],
+		[0, 0],
+		[1, 0],
+	];
+	var MAX_FOLDERS = 3;
+}
+
+function frmLoad()
+{
+	var i = 0;
+	document.getElementById("Srv_Status").innerHTML = ftpSrvStatus ? "Enabled" : "Disabled";
+	document.getElementById("Btn_Srv_Status").value = ftpSrvStatus ? "Disable" : "Enable";
+	if (accessStatus)
+		document.getElementById("access_en").checked = true;
+	else
+		document.getElementById("access_dis").checked = true;
+		
+	document.getElementById("Access_Ip").innerHTML = accessIp;
+	
+	document.getElementById("Srv_Port").value = srvPort;
+	
+	for (i = 1; i <= usrAccountList.length; i++)
+	{
+		var obj = document.getElementById("usr" + i);
+		obj.innerHTML = i;
+		if (0 == usrAccountList[i-1][1])
+			obj.style["color"] = "#999";
+			
+		if (1 == usrAccountList[i-1][0])
+			obj.innerHTML += "*";
+		else
+			obj.innerHTML += "&nbsp;";
+	}
+	
+	setupFolderTbl();
+	
+	if (folderList.length >= MAX_FOLDERS)
+	{
+		hideAddButton(1);
+	}
+}
+
+function setupFolderTbl()
+{
+	var folder_tbl = document.getElementById("Folder_Tbl"); 
+	
+	for (var i = 0; i < folderList.length; i++)
+	{
+		var row = folder_tbl.insertRow(-1);
+		var cell = row.insertCell(-1);
+		
+		row.align = "center";
+		cell.innerHTML = "<input type='checkbox' id='selItem" + i + "' onClick='doSelClick("+ i + ")'>";
+		
+		cell = row.insertCell(-1);
+		cell.innerHTML = folderList[i][0];
+		
+		cell = row.insertCell(-1);
+		cell.innerHTML = folderList[i][1];
+		
+		for (var j = 0; j < usrAccountList.length; j++)
+		{
+			cell = row.insertCell(-1);
+			if (0 == folderList[i][j + 3])
+				cell.innerHTML = "F";
+			else if (1 == folderList[i][j + 3])
+				cell.innerHTML = "R";
+			else if (2 == folderList[i][j + 3])
+				cell.innerHTML = "N";
+			else
+				cell.innerHTML = "-";
+		}
+		
+		cell = row.insertCell(-1);
+		cell.innerHTML = folderList[i][2] ? "Enabled" : "Disabled";
+		
+		cell = row.insertCell(-1);
+		cell.innerHTML = "<a class='usb' onClick='doFolderSet(" + i + ")'>Edit</a>";
+	}
+}
+
+function doFolderSet(idx)
+{
+	var loc = 'usbFolderBrowse.cmd?action=view&sessionKey=' + sessionKey;
+	
+	//loc += "&currname=" + folderList[idx][0];
+	//loc += "&currpath=" + folderList[idx][1];
+	loc += "&folIdx=" + idx;
+	loc += "&path=" + folderList[idx][1].replace(/\&/g, "|").replace(/%/g, "*").replace(/#/g, ":").replace(/\+/g, "<");
+	loc += "&name=" + folderList[idx][0];
+	loc += "&pageType=1";
+	
+	var code = 'location="' + loc + '"';
+
+	eval(code);
+}
+
+function doSelClick(idx)
+{
+	if (document.getElementById('selItem'+idx).checked == false)
+		document.getElementById('selAll').checked = false;
+}
+
+function doSelAll()
+{
+	for (var i = 0; i < folderList.length; i++)
+	{
+		document.getElementById('selItem'+i).checked = document.getElementById('selAll').checked;
+	}
+}
+
+function btnAddFolder()
+{
+	var loc = 'usbFolderBrowse.cmd?action=view&sessionKey=' + sessionKey;
+	
+	loc += '&pageType=1';
+	loc += '&folIdx=-1';
+	
+	var code = 'location="' + loc + '"';
+
+	eval(code);
+}
+
+function doSelAction(action)
+{
+	var loc = 'usbFtpSrv.cmd?action=set';
+	
+	loc += '&folder=';
+	switch (action)
+	{
+	case 0:
+		loc += 'enable';
+		break;
+		
+	case 1:
+		loc += 'disable';
+		break;
+		
+	case 2:
+		loc += 'delete';
+		break;
+	}
+	
+	loc += '&sessionKey=' + sessionKey;
+	
+	var mask = 0;
+	for (var i = 0; i < folderList.length; i++)
+	{
+		if (document.getElementById('selItem' + i).checked)
+		{
+			mask |= 1 << i;
+		}
+	}
+	loc += "&mask=" + mask;
+
+	var code = 'location="' + loc + '"';
+
+	eval(code);
+}
+
+function doSrvStatus()
+{
+	var loc = 'usbFtpSrv.cmd?action=set';
+	
+	loc += '&server=';
+	if (document.getElementById("Btn_Srv_Status").value == 'Disable')
+		loc += 'disable';
+	else
+		loc += 'enable'
+		
+	loc += '&sessionKey=' + sessionKey;
+	
+	var code = 'location="' + loc + '"';
+
+	eval(code);
+}
+
+function btnSave()
+{
+	var loc = 'usbFtpSrv.cmd?action=set&sessionKey=' + sessionKey;
+	
+	loc += '&access=' + (document.getElementById("access_en").checked ? 1 : 0);
+
+	loc += "&port=" + document.getElementById("Srv_Port").value;
+	
+	var code = 'location="' + loc + '"';
+
+	eval(code);
+}
+
+function hideAddButton(hide) 
+{
+   var status = 'block';
+   
+   if ( hide == 1 )
+      status = 'none';
+
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('addFolder').style.display = status;
+
+   else {
+      if (document.layers == false) // Netscape 4
+         document.all.addFolder.style.display = status; // IE 4
+   }
+}
+// done hiding-->
+		</script>
+	</head>
+<body onLoad="frmLoad()">
+<center>
+<form>
+	<table>
+	<tr><td class=h1>FTP Server Settings</td></tr>
+	<tr><td class=blue></td></tr>
+	<tr><td>
+	FTP (File Transfer Protocol) server allows you to share the files on the USB storage device to the local or public network. You will need to define the shared folders and assign the user's authorization for the different folders.
+	</td></tr>
+	</table>
+	<table>
+	<tr>
+		<td class=item>Server Status:</td>
+		<td><b><span id='Srv_Status'></span></b>&nbsp;&nbsp;<input id='Btn_Srv_Status' type='button' name='enBtn' onClick='doSrvStatus()' value='Disable'></td>
+	</tr>
+	<tr>
+		<td class=item>Internet Access:</td>
+		<td>
+			<input id='access_en' type='radio' name='enAccess'>Enable
+			<input id='access_dis' type='radio' name='enAccess'>Disable
+		</td>
+	</tr>
+	<tr>
+		<td class=item>Internet Address:</td>
+		<td><span id='Access_Ip'></span></td>
+	</tr>
+	<tr>
+		<td class=item>Service Port:</td>
+		<td>
+			<input id='Srv_Port' type='text' name='srvPort' style='width:50' value=21>(The default is 21. Do not change unless necessary.)
+		</td>
+	</tr>
+	<tr><td class=blue colspan=2></td></tr>
+	<script language="javascript">
+		document.writeln("<tr><td colspan=2>Choose \"Add New Folder\", \"Enable Selected\", \"Disable Selected\", \"Delete Selected\" or \"Edit \"to configure ftp folders. A maximum "+MAX_FOLDERS+" folders can be configured.</td>");
+	</script>
+	<tr>
+		<td colspan=2><b>Folder Table:</b></td>
+	</tr>
+	</table>
+	<table border='1' cellpadding='4' cellspacing='0' style="width:60%" id='Folder_Tbl'>
+	<tr>
+		<th rowspan="2" width="5%"><input type="checkbox" id="selAll" onclick="doSelAll()"></th>
+		<th rowspan="2" width="15%">Share name</th>
+		<th rowspan="2" width="30%">Directory</th>
+		<td colspan="5" width="30%"><center><b>User Index</b></br>(F:Full-Access, R:Read-Only, N:No-Access)</center></td>
+		<th rowspan="2" width="10%">Status</th>
+		<th rowspan="2" width="10%">Edit</th>
+	</tr>
+	<tr>
+		<th width="6%"><span id='usr1'></span></th>
+		<th width="6%"><span id='usr2'></span></th>
+		<th width="6%"><span id='usr3'></span></th>
+		<th width="6%"><span id='usr4'></span></th>
+		<th width="6%"><span id='usr5'></span></th>
+	</tr>
+	</table>
+	<table>
+	<tr><td>* : "Super User". It has full-access permission (Read & Write) to all active volume(s) and share folder(s).</td></tr>
+	<tr>
+		<td>
+			<input type='button' class='buttonL' id='addFolder' onClick='btnAddFolder()' value='Add New Folder'>
+			<input type='button' class='buttonL' onClick='doSelAction(0)' value='Enable Selected'>
+			<input type='button' class='buttonL' onClick='doSelAction(1)' value='Disable Selected'>
+			<input type='button' class='buttonL' onClick='doSelAction(2)' value='Delete Selected'>
+		</td>
+	</tr>
+	<tr><td class=blue></td></tr>
+	</table>
+	<table>
+	<tr><td>
+		<center><input type='button' class='buttonL' onClick='btnSave()' value='Save/Apply'></center>
+	</td></tr>
+	<tr><td>
+	Note:
+	</td></tr>
+	<tr><td>1. You could be able to access the folders by entering the following URL on Windows Explorer or other FTP software:
+    ftp://(IP Address)
+    eg. ftp://192.168.1.1
+	</td></tr>
+	<tr><td>2. FTP Server will get restarted and all your current FTP connections will be terminated after you click Apply button.
+	</td></tr>
+	</table>
+	</form>
+</center>
+</body>
+</html>

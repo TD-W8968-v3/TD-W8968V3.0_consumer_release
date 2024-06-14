@@ -1,0 +1,130 @@
+<html>
+<head>
+	<meta http-equiv="Pragma" content="no-cache">
+	<style type="text/css">
+body {
+	color: black;
+	font-size: 12px;
+	font-family: "Arial", "Helvetica", "Geneva", "Swiss", "SunSans-Regular", "sans-serif";
+	background: #fafafa;
+}
+table {
+	width: 90%;
+}
+td {
+	font-size: 12px;
+}
+td.h1 {
+	font-size: 22px;
+	font-weight: bold;
+	white-space: nowrap;
+}
+td.h2 {
+	font-size: 16px;
+	font-weight: bold;
+	padding-left: 5%;
+	white-space: normal;
+	height: 30px;
+}
+hr.blue {
+	margin: 20px 0px 10px 0px;
+	color: #6699CC;
+	border-color: #6699CC;
+}
+</style>
+	<script type="text/javascript"><!-- hide
+var ethIpAddress = '<%ejGet(ethIpAddress)%>';
+var lanreload_timeout = 5;
+var interval, title, message;
+
+function getElementById(id) {
+	if (document.getElementById) {
+		return document.getElementById(id);
+	} else if (document.all) {
+		return document.all[id];
+	} else if (document.layers) {
+		return document.layers[id];
+	}
+}
+
+function showhide_tr(id, cnt, show) {
+	var display = show ? (navigator.appName == 'Microsoft Internet Explorer' ?
+		'block' : 'table-row') : 'none';
+	if (document.getElementById) {
+		var tr = document.getElementById(id);
+		var trs = tr.parentNode.rows;
+		var i = tr.rowIndex;
+		while (tr && --cnt >= 0) {
+			tr.style.display = display;
+			tr = trs[++i];
+		}
+	} else if (document.all) {
+		document.all[id].style.display = status;
+	} else if (document.layers) {
+		document.layers[id].display = status;
+	}
+   }
+
+function doReFresh() {
+	setTimeout("lanreload()", interval);
+}
+
+var rate = 0;
+function lanreload() {
+	document.cookie="Authorization=;expires="+(new Date()).toGMTString();
+	rate += 1;
+	getElementById('processbar').style.width = rate + '%';
+	var percent = getElementById('percent');
+	percent.innerHTML = rate + '%';
+	if (rate < 100) {
+	doReFresh();
+    return;
+    }
+	getElementById('notice').style.display = 'block';
+	var status = getElementById('status');
+	status.innerHTML = 'Completed!';
+	status.style.color = 'red';
+	percent.style.color = 'red';
+
+	window.top.location.href = 'http://'+ethIpAddress;
+}
+
+(function() {
+	interval = lanreload_timeout * 1000 / 100;
+	title = 'Redirect';
+	message = 'The DSL Router LAN IP has been changed and is redirecting.';
+})();
+
+function doLoad() {
+	doReFresh();
+}
+	// done hiding --></script>
+</head>
+
+<body onLoad="doLoad()">
+<center><table border="0">
+	<tr><td class="h1"><script type="text/javascript"><!-- hide
+		document.write(title);
+	// done hiding --></script></td></tr>
+	<tr><td><hr class="blue"/></td></tr>
+	<tr><td class="h2"><script type="text/javascript"><!-- hide
+		document.write(message);
+	// done hiding --></script></td></tr>
+	<tr id="processInfo"><td class="h2" id="status">Redirecting...</td></tr>
+<tr><td align = "center" style="padding-left:5%">
+		<table border="0" cellpadding="0" cellspacing="0"><tr>
+			<td id="percent">&nbsp;</td>
+	<td style = "width:98%">
+				<table id="processbar" border="0" cellpadding="0" cellspacing="0" style="width:0%">
+					<tr><td height="10" bgcolor="#6699FF" style="width:100%"></td></tr>
+</table>
+			</td>
+		</tr></table>
+</td></tr>
+	<tr><td class="h2" id="notice" style="display:none">
+		Please wait a moment, if the browser does not refresh automatically, click Refresh on the top of your browser.
+	</td></tr>
+	<tr><td><hr class="blue"/></td></tr>
+</table></center>
+</body>
+</html>

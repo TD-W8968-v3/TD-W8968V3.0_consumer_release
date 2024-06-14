@@ -1,0 +1,1176 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+	  <link rel="stylesheet" href='stylemain.css' type='text/css'>
+	  <link rel="stylesheet" href='wlschedule.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+
+			
+var enblSch = '<%ejGetWl(wlEnblSch)%>';
+var isUsrCtrl = '<%ejGetWl(wlIsUsrCtrl)%>';
+var isTimeSet = '<%ejGet(wlIsTimeSet)%>';
+var monAm = '<%ejGetWl(wlMonAm)%>';
+var monPm = '<%ejGetWl(wlMonPm)%>';
+var tueAm = '<%ejGetWl(wlTueAm)%>';
+var tuePm = '<%ejGetWl(wlTuePm)%>';
+var wedAm = '<%ejGetWl(wlWedAm)%>';
+var wedPm = '<%ejGetWl(wlWedPm)%>';
+var thuAm = '<%ejGetWl(wlThuAm)%>';
+var thuPm = '<%ejGetWl(wlThuPm)%>';
+var friAm = '<%ejGetWl(wlFriAm)%>';
+var friPm = '<%ejGetWl(wlFriPm)%>';
+var satAm = '<%ejGetWl(wlSatAm)%>';
+var satPm = '<%ejGetWl(wlSatPm)%>';
+var sunAm = '<%ejGetWl(wlSunAm)%>';
+var sunPm = '<%ejGetWl(wlSunPm)%>';
+var wlRefresh = '<%ejGetWl(wlRefresh)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var idIndex;
+var tmpWeek;
+var stk;
+
+if ( wlRefresh == '1' ) {
+   var code = 'location="wlschrefresh.wl?wlRefresh=0"';
+    eval(code);   
+}
+
+function selTime()
+{
+	var dayList = [];
+	for (var i = 0; i < 14; i++)
+	{
+		dayList[i] = "00000000";
+		for (var j = 23; j >=0; j--)
+		{
+			var tmpTimeId = 24 * i + j;
+			if (idIndex[tmpTimeId] == 1)	
+			{
+				dayList[i] += "1";
+			}
+			else					
+			{
+				dayList[i] += "0";
+			}
+		}
+		
+		if (i == 0)
+			sunAm = parseInt(dayList[0], 2);
+		else if (i == 1)
+			sunPm =  parseInt(dayList[1], 2);	
+		else if (i == 2)
+			monAm = parseInt(dayList[2], 2);
+		else if (i == 3) 
+			monPm = parseInt(dayList[3], 2);
+		else if (i == 4)
+			tueAm = parseInt(dayList[4], 2);
+		else if (i == 5)
+			tuePm = parseInt(dayList[5], 2);
+		else if (i == 6)
+			wedAm = parseInt(dayList[6], 2);
+		else if (i == 7)
+			wedPm = parseInt(dayList[7], 2);
+		else if (i == 8)
+			thuAm = parseInt(dayList[8], 2);
+		else if (i == 9)
+			thuPm = parseInt(dayList[9], 2);
+		else if (i == 10)
+			friAm = parseInt(dayList[10], 2);
+		else if (i == 11)
+			friPm = parseInt(dayList[11], 2);
+		else if (i == 12)
+			satAm = parseInt(dayList[12], 2);
+		else if (i == 13)
+			satPm = parseInt(dayList[13], 2);	
+	}
+}
+//add for wireless schedule
+function removeClass(elem, className) 
+{
+	if (elem && elem.nodeType == 1 /*&& $.hasClass(elem, className)*/) {
+		elem.className = elem.className.replace(className, "");
+		elem.className = elem.className.replace(/\s+/, " ");
+	}
+}
+function addClass(elem, className)
+{
+	if (elem && elem.nodeType == 1/* && !$.hasClass(elem, className)*/)
+		elem.className = (elem.className ? " " : "") + className;
+}
+//end add
+function doClick(val)
+{
+	var tmpTimeId = "timeid" + val;
+	var elem = document.getElementById(tmpTimeId);
+	if (idIndex[val] == 0)
+	{
+		//$.addClass($.id(tmpTimeId), "sel");
+		addClass(elem, "sel");
+		idIndex[val] = 1;
+	}
+	else if (idIndex[val] == 1)
+	{
+		//$.removeClass($.id(tmpTimeId), "sel");
+		removeClass(elem, "sel");
+		idIndex[val] = 0;
+	}
+}
+function cleanTbl()
+{	
+	for (var i = 0; i < 336; i++)
+	{
+		var tmpTimeId = "timeid" + i;
+		//$.removeClass($.id(tmpTimeId), "sel");
+		removeClass(document.getElementById(tmpTimeId), "sel");
+		idIndex[i] = 0;
+	}
+	tmpWeek = []; 
+	for (var i = 0; i < 14; i++)
+	{
+		tmpWeek[i] = "";
+	}
+}
+function initTbl()
+{
+	for (var i = 0; i < 14; i++)
+	{
+		for (var j = 23; j >= 0; j--)
+		{
+			var tmpid = 24 * i + j;
+			var tmpTimeId = "timeid" + tmpid;
+			if (tmpWeek[i].charAt(j) == 1)
+			{
+				//$.addClass($.id(tmpTimeId), "sel");
+				addClass(document.getElementById(tmpTimeId), "sel");
+				idIndex[tmpid] = 1;
+			}
+			else if (tmpWeek[i].charAt(j) == 0)
+			{
+				//$.removeClass($.id(tmpTimeId), "sel");
+				removeClass(document.getElementById(tmpTimeId), "sel");
+				idIndex[tmpid] = 0;
+			}
+		}
+	}
+}
+function addTbl()
+{
+	for (var i = 0; i < 14; i++)
+	{
+		for (var j = 23; j >= 0; j--)
+		{
+			var tmpid = 24 * i + j;
+			var tmpTimeId = "timeid" + tmpid;
+			if (tmpWeek[i].charAt(j) == 1)
+			{
+				//$.addClass($.id(tmpTimeId), "sel");
+				addClass(document.getElementById(tmpTimeId), "sel");
+				idIndex[tmpid] = 1;
+			}
+		}
+	}
+}
+function init()
+{
+	idIndex = [];
+	//isTimeSet = 1;
+	//var basicList=$.act(ACT_GL,LAN_WLAN_TASK_SCHEDULE,null,null,["isTimeSet", "enable","timeDot", "monAm", "monPm","tueAm","tuePm","wedAm","wedPm","thuAm","thuPm","friAm","friPm","satAm","satPm","sunAm","sunPm"]);
+	//var basicList;
+	//(!$.exe())
+	//{
+		//var scheCfg = basicList[0];
+		//stk = scheCfg.__stack;
+		
+		if (isTimeSet == 0)
+		{	
+			/*
+			$.id("saveBtn").disabled=true;	
+			$.id("t_clear").disabled=true;
+			$.id("scheAdd").disabled=true;
+			$.id("apen").disabled=true;
+			$.id("apdis").disabled=true;
+			*/
+			document.getElementById("saveBtn").disabled=true;
+			document.getElementById("t_clear").disabled=true;
+			document.getElementById("scheAdd").disabled=true;
+			document.getElementById("apen").disabled=true;
+			document.getElementById("apdis").disabled=true;
+		}
+		else
+		{
+			//$.addClass($.id("apTip"),"nd");
+			addClass(document.getElementById("apTip"), "nd");
+		}
+		
+		if(1 == enblSch)
+			//$.id("apen").checked=true;
+			document.getElementById("apen").checked=true;
+		else
+			//$.id("apdis").checked=true;
+			document.getElementById("apdis").checked=true;
+		//var tbl= $.id("timeTbl");
+		var tbl = document.getElementById("timeTbl");
+		for (var i = 0; i < 7; i++)
+		{
+			var row = tbl.insertRow(-1);
+			for (var j = 0; j < 24; j++)
+			{
+				var cell = row.insertCell(-1);	
+				var id1 = i * 48 + 2 * j;
+				var id2 = i * 48 + 2 * j + 1;
+				cell.innerHTML = "<span id=\"timeid"+id1+"\" onclick='doClick("+id1+");'></span><span id=\"timeid"+id2+"\" onclick='doClick("+id2+");'></span>";
+			}
+		}
+		for (var i = 0; i < 336; i++)
+			idIndex[i] = 0;
+		tmpWeek = []; 
+		for (var i = 0; i < 14; i++)
+		{
+			tmpWeek[i] = "";
+		}
+	
+			while (sunAm > 0)
+			{
+				if (sunAm % 2 == 1)
+					tmpWeek[0] += "1";
+				else if (sunAm % 2 == 0)
+					tmpWeek[0] += "0";
+				sunAm = Math.floor(sunAm / 2);
+			}
+			while (sunPm > 0)
+			{
+				if (sunPm % 2 == 1)
+					tmpWeek[1] += "1";
+				else if (sunPm % 2 == 0)
+					tmpWeek[1] += "0";
+				sunPm = Math.floor(sunPm / 2);
+			}
+			while (monAm > 0)
+			{
+				if (monAm % 2 == 1)
+					tmpWeek[2] += "1";
+				else if (monAm % 2 == 0)
+					tmpWeek[2] += "0";
+				monAm = Math.floor(monAm / 2);
+			}
+			while (monPm > 0)
+			{
+				if (monPm % 2 == 1)
+					tmpWeek[3] += "1";
+				else if (monPm % 2 == 0)
+					tmpWeek[3] += "0";
+				monPm = Math.floor(monPm / 2);
+			}
+			while (tueAm > 0)
+			{
+				if (tueAm % 2 == 1)
+					tmpWeek[4] += "1";
+				else if (tueAm % 2 == 0)
+					tmpWeek[4] += "0";
+				tueAm = Math.floor(tueAm / 2);
+			}
+			while (tuePm > 0)
+			{
+				if (tuePm % 2 == 1)
+					tmpWeek[5] += "1";
+				else if (tuePm % 2 == 0)
+					tmpWeek[5] += "0";
+				tuePm = Math.floor(tuePm / 2);
+			}
+			while (wedAm > 0)
+			{
+				if (wedAm % 2 == 1)
+					tmpWeek[6] += "1";
+				else if (wedAm % 2 == 0)
+					tmpWeek[6] += "0";
+				wedAm = Math.floor(wedAm / 2);
+			}
+			while (wedPm > 0)
+			{
+				if (wedPm % 2 == 1)
+					tmpWeek[7] += "1";
+				else if (wedPm % 2 == 0)
+					tmpWeek[7] += "0";
+				wedPm = Math.floor(wedPm / 2);
+			}
+			while (thuAm > 0)
+			{
+				if (thuAm % 2 == 1)
+					tmpWeek[8] += "1";
+				else if (thuAm % 2 == 0)
+					tmpWeek[8] += "0";
+				thuAm = Math.floor(thuAm / 2);
+			}
+			while (thuPm > 0)
+			{
+				if (thuPm % 2 == 1)
+					tmpWeek[9] += "1";
+				else if (thuPm % 2 == 0)
+					tmpWeek[9] += "0";
+				thuPm = Math.floor(thuPm / 2);
+			}
+			while (friAm > 0)
+			{
+				if (friAm % 2 == 1)
+					tmpWeek[10] += "1";
+				else if (friAm % 2 == 0)
+					tmpWeek[10] += "0";
+				friAm = Math.floor(friAm / 2);
+			}
+			while (friPm > 0)
+			{
+				if (friPm % 2 == 1)
+					tmpWeek[11] += "1";
+				else if (friPm % 2 == 0)
+					tmpWeek[11] += "0";
+				friPm = Math.floor(friPm / 2);
+			}
+			while (satAm > 0)
+			{
+				if (satAm % 2 == 1)
+					tmpWeek[12] += "1";
+				else if (satAm % 2 == 0)
+					tmpWeek[12] += "0";
+				satAm = Math.floor(satAm / 2);
+			}
+			while (satPm > 0)
+			{
+				if (satPm % 2 == 1)
+					tmpWeek[13] += "1";
+				else if (satPm % 2 == 0)
+					tmpWeek[13] += "0";
+				satPm = Math.floor(satPm / 2);
+			}
+			
+			initTbl();
+	//}
+	
+}
+/*
+function doSave()
+{
+	selTime();
+	//taskSche.enable=$.id("apen").checked?1:0;
+	//taskSche.isUsrCtrl = 0;
+	enblSch = document.getElementById("apen").checked?1:0;
+	isUsrCtrl = 0;
+	$.act(ACT_SET, LAN_WLAN_TASK_SCHEDULE, stk, null, taskSche);
+	$.addLoading($.id("saveBtn"));
+	$.exe(function(err)
+	{
+		if (!err)
+		{
+			$.reload();
+		}
+	});
+}*/ //replaced by btnApply
+function btnApply(){
+	var loc = 'wlschedule.sch?';
+	selTime();
+	enblSch = document.getElementById("apen").checked?1:0;
+	isUsrCtrl = 0;
+		
+		loc += 'wlEnblSch=' + enblSch;
+		loc += '&wlIsTimeSet=' + isTimeSet;
+		loc += '&wlMonAm=' + monAm;
+		loc += '&wlMonPm=' + monPm;
+		loc += '&wlTueAm=' + tueAm;
+		loc += '&wlTuePm=' + tuePm;
+		loc += '&wlWedAm=' + wedAm;
+		loc += '&wlWedPm=' + wedPm;
+		loc += '&wlThuAm=' + thuAm;
+		loc += '&wlThuPm=' + thuPm;
+		loc += '&wlFriAm=' + friAm;
+		loc += '&wlFriPm=' + friPm;
+		loc += '&wlSatAm=' + satAm;
+		loc += '&wlSatPm=' + satPm;
+		loc += '&wlSunAm=' + sunAm;
+		loc += '&wlSunPm=' + sunPm;
+		loc += '&wlIsUsrCtrl=' + isUsrCtrl;
+			
+
+	loc += '&sessionKey=' + sessionKey;
+   	var code = 'location="' + loc + '"';
+
+   	eval(code);
+}
+function showWeek()
+{
+	/*if ($.id("weekDay").value == "day")
+		$.addClass($.id("week"), "nd");*/
+	if(document.getElementById("weekDay").value == "day")
+		addClass(document.getElementById("week"), "nd");
+	//else if ($.id("weekDay").value == "week")
+	else if (document.getElementById("weekDay").value == "week")
+	{/*
+		$.id("mon").checked = 0;
+		$.id("tue").checked = 0;
+		$.id("wed").checked = 0;
+		$.id("thu").checked = 0;
+		$.id("fri").checked = 0;
+		$.id("sat").checked = 0;
+		$.id("sun").checked = 0;
+		*/
+		document.getElementById("mon").checked = 0;
+		document.getElementById("tue").checked = 0;
+		document.getElementById("wed").checked = 0;
+		document.getElementById("thu").checked = 0;
+		document.getElementById("fri").checked = 0;
+		document.getElementById("sat").checked = 0;
+		document.getElementById("sun").checked = 0;
+		//$.removeClass($.id("week"), "nd");
+		removeClass(document.getElementById("week"), "nd");
+	}
+}
+function checkTime()
+{
+	if (parseInt($.id("timeS").value, 10) > parseInt($.id("timeE").value, 10))
+	{
+		alert(ERR_FW_TIME_INVAD);
+		return;
+	}
+}
+function addTime()
+{
+	tmpWeek = []; 
+	for (var i = 0; i < 14; i++)
+	{
+		tmpWeek[i] = "";
+	}
+	//if (parseInt($.id("timeS").value, 10) > parseInt($.id("timeE").value, 10))
+	/*if (parseInt(document.getElementById("timeS").value, 10) > parseInt(document.getElementById("timeE").value, 10))
+	{
+		//$.alert(ERR_FW_TIME_INVAD);
+		alert("ERR_FW_TIME_INVAD");
+		return;
+	}*/
+	//var timeS = parseInt($.id("timeS").value, 10);
+	//var timeE = parseInt($.id("timeE").value, 10);
+	var timeS = parseInt(document.getElementById("timeS").value, 10);
+	var timeE = parseInt(document.getElementById("timeE").value, 10);
+	
+	if (timeS == timeE + 1)
+	{
+		timeS = 0;
+		timeE = 47;
+	}
+	
+	if (timeS < timeE + 1)
+	{
+	//if ($.id("weekDay").value == "day")
+	if (document.getElementById("weekDay").value == "day")
+	{
+		if ((timeS < 24) && (timeE < 24))
+		{
+			for (var i = 0; i < timeS; i++)
+			{
+				tmpWeek[0] += "0";
+				tmpWeek[2] += "0";
+				tmpWeek[4] += "0";
+				tmpWeek[6] += "0";
+				tmpWeek[8] += "0";
+				tmpWeek[10] += "0";
+				tmpWeek[12] += "0";
+			}
+			for (var i = timeS; i <= timeE; i++)
+			{
+				tmpWeek[0] += "1";
+				tmpWeek[2] += "1";
+				tmpWeek[4] += "1";
+				tmpWeek[6] += "1";
+				tmpWeek[8] += "1";
+				tmpWeek[10] += "1";
+				tmpWeek[12] += "1";
+			}
+			for (var i = (timeE + 1); i < 24; i++)
+			{
+				tmpWeek[0] += "0";
+				tmpWeek[2] += "0";
+				tmpWeek[4] += "0";
+				tmpWeek[6] += "0";
+				tmpWeek[8] += "0";
+				tmpWeek[10] += "0";
+				tmpWeek[12] += "0";
+			}
+		}
+		else if ((timeS > 23) && (timeE > 23))
+		{
+			for (var i = 24; i< timeS; i++)
+			{
+				tmpWeek[1] += "0";
+				tmpWeek[3] += "0";
+				tmpWeek[5] += "0";
+				tmpWeek[7] += "0";
+				tmpWeek[9] += "0";
+				tmpWeek[11] += "0";
+				tmpWeek[13] += "0";
+			}
+			for (var i = timeS; i<= timeE; i++)
+			{
+				tmpWeek[1] += "1";
+				tmpWeek[3] += "1";
+				tmpWeek[5] += "1";
+				tmpWeek[7] += "1";
+				tmpWeek[9] += "1";
+				tmpWeek[11] += "1";
+				tmpWeek[13] += "1";
+			}
+			for (var i = (timeE + 1); i< 24; i++)
+			{
+				tmpWeek[1] += "0";
+				tmpWeek[3] += "0";
+				tmpWeek[5] += "0";
+				tmpWeek[7] += "0";
+				tmpWeek[9] += "0";
+				tmpWeek[11] += "0";
+				tmpWeek[13] += "0";
+			}
+		}
+		else if ((timeS < 24) && (timeE > 23))
+		{
+			for (var i = 0; i < timeS; i++)
+			{
+				tmpWeek[0] += "0";
+				tmpWeek[2] += "0";
+				tmpWeek[4] += "0";
+				tmpWeek[6] += "0";
+				tmpWeek[8] += "0";
+				tmpWeek[10] += "0";
+				tmpWeek[12] += "0";
+			}
+			for (var i = timeS; i < 24; i++)
+			{
+				tmpWeek[0] += "1";
+				tmpWeek[2] += "1";
+				tmpWeek[4] += "1";
+				tmpWeek[6] += "1";
+				tmpWeek[8] += "1";
+				tmpWeek[10] += "1";
+				tmpWeek[12] += "1";
+			}
+			for (var i = 24; i <= timeE; i++)
+			{
+				tmpWeek[1] += "1";
+				tmpWeek[3] += "1";
+				tmpWeek[5] += "1";
+				tmpWeek[7] += "1";
+				tmpWeek[9] += "1";
+				tmpWeek[11] += "1";
+				tmpWeek[13] += "1";
+			}
+			for (var i = (timeE + 1); i< 24; i++)
+			{
+				tmpWeek[1] += "0";
+				tmpWeek[3] += "0";
+				tmpWeek[5] += "0";
+				tmpWeek[7] += "0";
+				tmpWeek[9] += "0";
+				tmpWeek[11] += "0";
+				tmpWeek[13] += "0";
+			}
+		}
+	}
+	//else if ($.id("weekDay").value == "week")
+	else if (document.getElementById("weekDay").value == "week")
+	{
+		if ((timeS < 24) && (timeE < 24))
+		{
+			for (var i = 0; i < timeS; i++)
+			{/*
+				if ($.id("sun").checked == 1)	tmpWeek[0] += "0";
+				if ($.id("mon").checked == 1)	tmpWeek[2] += "0";
+				if ($.id("tue").checked == 1)	tmpWeek[4] += "0";
+				if ($.id("wed").checked == 1)	tmpWeek[6] += "0";
+				if ($.id("thu").checked == 1)	tmpWeek[8] += "0";
+				if ($.id("fri").checked == 1)	tmpWeek[10] += "0";
+				if ($.id("sat").checked == 1)	tmpWeek[12] += "0";
+				*/
+				if (document.getElementById("sun").checked == 1)	tmpWeek[0] += "0";
+				if (document.getElementById("mon").checked == 1)	tmpWeek[2] += "0";
+				if (document.getElementById("tue").checked == 1)	tmpWeek[4] += "0";
+				if (document.getElementById("wed").checked == 1)	tmpWeek[6] += "0";
+				if (document.getElementById("thu").checked == 1)	tmpWeek[8] += "0";
+				if (document.getElementById("fri").checked == 1)	tmpWeek[10] += "0";
+				if (document.getElementById("sat").checked == 1)	tmpWeek[12] += "0";
+			}
+			for (var i = timeS; i <= timeE; i++)
+			{/*
+				if ($.id("sun").checked == 1)	tmpWeek[0] += "1";
+				if ($.id("mon").checked == 1)	tmpWeek[2] += "1";
+				if ($.id("tue").checked == 1)	tmpWeek[4] += "1";
+				if ($.id("wed").checked == 1)	tmpWeek[6] += "1";
+				if ($.id("thu").checked == 1)	tmpWeek[8] += "1";
+				if ($.id("fri").checked == 1)	tmpWeek[10] += "1";
+				if ($.id("sat").checked == 1)	tmpWeek[12] += "1";*/
+				if (document.getElementById("sun").checked == 1)	tmpWeek[0] += "1";
+				if (document.getElementById("mon").checked == 1)	tmpWeek[2] += "1";
+				if (document.getElementById("tue").checked == 1)	tmpWeek[4] += "1";
+				if (document.getElementById("wed").checked == 1)	tmpWeek[6] += "1";
+				if (document.getElementById("thu").checked == 1)	tmpWeek[8] += "1";
+				if (document.getElementById("fri").checked == 1)	tmpWeek[10] += "1";
+				if (document.getElementById("sat").checked == 1)	tmpWeek[12] += "1";
+			}
+			for (var i = (timeE + 1); i < 24; i++)
+			{/*
+				if ($.id("sun").checked == 1)	tmpWeek[0] += "0";
+				if ($.id("mon").checked == 1)	tmpWeek[2] += "0";
+				if ($.id("tue").checked == 1)	tmpWeek[4] += "0";
+				if ($.id("wed").checked == 1)	tmpWeek[6] += "0";
+				if ($.id("thu").checked == 1)	tmpWeek[8] += "0";
+				if ($.id("fri").checked == 1)	tmpWeek[10] += "0";
+				if ($.id("sat").checked == 1)	tmpWeek[12] += "0";*/
+				if (document.getElementById("sun").checked == 1)	tmpWeek[0] += "0";
+				if (document.getElementById("mon").checked == 1)	tmpWeek[2] += "0";
+				if (document.getElementById("tue").checked == 1)	tmpWeek[4] += "0";
+				if (document.getElementById("wed").checked == 1)	tmpWeek[6] += "0";
+				if (document.getElementById("thu").checked == 1)	tmpWeek[8] += "0";
+				if (document.getElementById("fri").checked == 1)	tmpWeek[10] += "0";
+				if (document.getElementById("sat").checked == 1)	tmpWeek[12] += "0";
+			}
+		}
+		else if ((timeS > 23) && (timeE > 23))
+		{
+			for (var i = 24; i< timeS; i++)
+			{/*
+				if ($.id("sun").checked == 1)	tmpWeek[1] += "0";
+				if ($.id("mon").checked == 1)	tmpWeek[3] += "0";
+				if ($.id("tue").checked == 1)	tmpWeek[5] += "0";
+				if ($.id("wed").checked == 1)	tmpWeek[7] += "0";
+				if ($.id("thu").checked == 1)	tmpWeek[9] += "0";
+				if ($.id("fri").checked == 1)	tmpWeek[11] += "0";
+				if ($.id("sat").checked == 1)	tmpWeek[13] += "0";*/
+				if (document.getElementById("sun").checked == 1)	tmpWeek[1] += "0";
+				if (document.getElementById("mon").checked == 1)	tmpWeek[3] += "0";
+				if (document.getElementById("tue").checked == 1)	tmpWeek[5] += "0";
+				if (document.getElementById("wed").checked == 1)	tmpWeek[7] += "0";
+				if (document.getElementById("thu").checked == 1)	tmpWeek[9] += "0";
+				if (document.getElementById("fri").checked == 1)	tmpWeek[11] += "0";
+				if (document.getElementById("sat").checked == 1)	tmpWeek[13] += "0";
+			}
+			for (var i = timeS; i<= timeE; i++)
+			{/*
+				if ($.id("sun").checked == 1)	tmpWeek[1] += "1";
+				if ($.id("mon").checked == 1)	tmpWeek[3] += "1";
+				if ($.id("tue").checked == 1)	tmpWeek[5] += "1";
+				if ($.id("wed").checked == 1)	tmpWeek[7] += "1";
+				if ($.id("thu").checked == 1)	tmpWeek[9] += "1";
+				if ($.id("fri").checked == 1)	tmpWeek[11] += "1";
+				if ($.id("sat").checked == 1)	tmpWeek[13] += "1";*/
+				if (document.getElementById("sun").checked == 1)	tmpWeek[1] += "1";
+				if (document.getElementById("mon").checked == 1)	tmpWeek[3] += "1";
+				if (document.getElementById("tue").checked == 1)	tmpWeek[5] += "1";
+				if (document.getElementById("wed").checked == 1)	tmpWeek[7] += "1";
+				if (document.getElementById("thu").checked == 1)	tmpWeek[9] += "1";
+				if (document.getElementById("fri").checked == 1)	tmpWeek[11] += "1";
+				if (document.getElementById("sat").checked == 1)	tmpWeek[13] += "1";
+			}
+			for (var i = (timeE + 1); i< 24; i++)
+			{/*
+				if ($.id("sun").checked == 1)	tmpWeek[1] += "0";
+				if ($.id("mon").checked == 1)	tmpWeek[3] += "0";
+				if ($.id("tue").checked == 1)	tmpWeek[5] += "0";
+				if ($.id("wed").checked == 1)	tmpWeek[7] += "0";
+				if ($.id("thu").checked == 1)	tmpWeek[9] += "0";
+				if ($.id("fri").checked == 1)	tmpWeek[11] += "0";
+				if ($.id("sat").checked == 1)	tmpWeek[13] += "0";*/
+				if (document.getElementById("sun").checked == 1)	tmpWeek[1] += "0";
+				if (document.getElementById("mon").checked == 1)	tmpWeek[3] += "0";
+				if (document.getElementById("tue").checked == 1)	tmpWeek[5] += "0";
+				if (document.getElementById("wed").checked == 1)	tmpWeek[7] += "0";
+				if (document.getElementById("thu").checked == 1)	tmpWeek[9] += "0";
+				if (document.getElementById("fri").checked == 1)	tmpWeek[11] += "0";
+				if (document.getElementById("sat").checked == 1)	tmpWeek[13] += "0";
+			}
+		}
+		else if ((timeS < 24) && (timeE > 23))
+		{
+			for (var i = 0; i < timeS; i++)
+			{/*
+				if ($.id("sun").checked == 1)	tmpWeek[0] += "0";
+				if ($.id("mon").checked == 1)	tmpWeek[2] += "0";
+				if ($.id("tue").checked == 1)	tmpWeek[4] += "0";
+				if ($.id("wed").checked == 1)	tmpWeek[6] += "0";
+				if ($.id("thu").checked == 1)	tmpWeek[8] += "0";
+				if ($.id("fri").checked == 1)	tmpWeek[10] += "0";
+				if ($.id("sat").checked == 1)	tmpWeek[12] += "0";*/
+				if (document.getElementById("sun").checked == 1)	tmpWeek[0] += "0";
+				if (document.getElementById("mon").checked == 1)	tmpWeek[2] += "0";
+				if (document.getElementById("tue").checked == 1)	tmpWeek[4] += "0";
+				if (document.getElementById("wed").checked == 1)	tmpWeek[6] += "0";
+				if (document.getElementById("thu").checked == 1)	tmpWeek[8] += "0";
+				if (document.getElementById("fri").checked == 1)	tmpWeek[10] += "0";
+				if (document.getElementById("sat").checked == 1)	tmpWeek[12] += "0";
+			}
+			for (var i = timeS; i < 24; i++)
+			{/*
+				if ($.id("sun").checked == 1)	tmpWeek[0] += "1";
+				if ($.id("mon").checked == 1)	tmpWeek[2] += "1";
+				if ($.id("tue").checked == 1)	tmpWeek[4] += "1";
+				if ($.id("wed").checked == 1)	tmpWeek[6] += "1";
+				if ($.id("thu").checked == 1)	tmpWeek[8] += "1";
+				if ($.id("fri").checked == 1)	tmpWeek[10] += "1";
+				if ($.id("sat").checked == 1)	tmpWeek[12] += "1";*/
+				if (document.getElementById("sun").checked == 1)	tmpWeek[0] += "1";
+				if (document.getElementById("mon").checked == 1)	tmpWeek[2] += "1";
+				if (document.getElementById("tue").checked == 1)	tmpWeek[4] += "1";
+				if (document.getElementById("wed").checked == 1)	tmpWeek[6] += "1";
+				if (document.getElementById("thu").checked == 1)	tmpWeek[8] += "1";
+				if (document.getElementById("fri").checked == 1)	tmpWeek[10] += "1";
+				if (document.getElementById("sat").checked == 1)	tmpWeek[12] += "1";
+			}
+			for (var i = 24; i <= timeE; i++)
+			{/*
+				if ($.id("sun").checked == 1)	tmpWeek[1] += "1";
+				if ($.id("mon").checked == 1)	tmpWeek[3] += "1";
+				if ($.id("tue").checked == 1)	tmpWeek[5] += "1";
+				if ($.id("wed").checked == 1)	tmpWeek[7] += "1";
+				if ($.id("thu").checked == 1)	tmpWeek[9] += "1";
+				if ($.id("fri").checked == 1)	tmpWeek[11] += "1";
+				if ($.id("sat").checked == 1)	tmpWeek[13] += "1";*/
+				if (document.getElementById("sun").checked == 1)	tmpWeek[1] += "1";
+				if (document.getElementById("mon").checked == 1)	tmpWeek[3] += "1";
+				if (document.getElementById("tue").checked == 1)	tmpWeek[5] += "1";
+				if (document.getElementById("wed").checked == 1)	tmpWeek[7] += "1";
+				if (document.getElementById("thu").checked == 1)	tmpWeek[9] += "1";
+				if (document.getElementById("fri").checked == 1)	tmpWeek[11] += "1";
+				if (document.getElementById("sat").checked == 1)	tmpWeek[13] += "1";
+			}
+			for (var i = (timeE + 1); i< 24; i++)
+			{/*
+				if ($.id("sun").checked == 1)	tmpWeek[1] += "0";
+				if ($.id("mon").checked == 1)	tmpWeek[3] += "0";
+				if ($.id("tue").checked == 1)	tmpWeek[5] += "0";
+				if ($.id("wed").checked == 1)	tmpWeek[7] += "0";
+				if ($.id("thu").checked == 1)	tmpWeek[9] += "0";
+				if ($.id("fri").checked == 1)	tmpWeek[11] += "0";
+				if ($.id("sat").checked == 1)	tmpWeek[13] += "0";*/
+				if (document.getElementById("sun").checked == 1)	tmpWeek[1] += "0";
+				if (document.getElementById("mon").checked == 1)	tmpWeek[3] += "0";
+				if (document.getElementById("tue").checked == 1)	tmpWeek[5] += "0";
+				if (document.getElementById("wed").checked == 1)	tmpWeek[7] += "0";
+				if (document.getElementById("thu").checked == 1)	tmpWeek[9] += "0";
+				if (document.getElementById("fri").checked == 1)	tmpWeek[11] += "0";
+				if (document.getElementById("sat").checked == 1)	tmpWeek[13] += "0";
+			}
+		}
+	}
+	}
+	else
+	{
+		if (document.getElementById("weekDay").value == "day")
+		{
+			if ((timeS < 24) && (timeE  + 1 < 24))
+			{
+				for (var i = 0; i < timeE + 1; i++)
+				{
+					tmpWeek[0] += "1";
+					tmpWeek[2] += "1";
+					tmpWeek[4] += "1";
+					tmpWeek[6] += "1";
+					tmpWeek[8] += "1";
+					tmpWeek[10] += "1";
+					tmpWeek[12] += "1";
+				}
+				for (var i = timeE + 1; i < timeS; i++)
+				{
+					tmpWeek[0] += "0";
+					tmpWeek[2] += "0";
+					tmpWeek[4] += "0";
+					tmpWeek[6] += "0";
+					tmpWeek[8] += "0";
+					tmpWeek[10] += "0";
+					tmpWeek[12] += "0";
+				}
+				for (var i = timeS; i < 24; i++)
+				{
+					tmpWeek[0] += "1";
+					tmpWeek[2] += "1";
+					tmpWeek[4] += "1";
+					tmpWeek[6] += "1";
+					tmpWeek[8] += "1";
+					tmpWeek[10] += "1";
+					tmpWeek[12] += "1";
+				}
+				for (var i = 0; i < 24; i++)
+				{
+					tmpWeek[1] += "1";
+					tmpWeek[3] += "1";
+					tmpWeek[5] += "1";
+					tmpWeek[7] += "1";
+					tmpWeek[9] += "1";
+					tmpWeek[11] += "1";
+					tmpWeek[13] += "1";
+				}				
+			}
+			else if ((timeS > 23) && (timeE + 1> 23))
+			{
+				for (var i = 24; i< timeE + 1; i++)
+				{
+					tmpWeek[1] += "1";
+					tmpWeek[3] += "1";
+					tmpWeek[5] += "1";
+					tmpWeek[7] += "1";
+					tmpWeek[9] += "1";
+					tmpWeek[11] += "1";
+					tmpWeek[13] += "1";
+				}
+				for (var i = timeE + 1; i< timeS; i++)
+				{
+					tmpWeek[1] += "0";
+					tmpWeek[3] += "0";
+					tmpWeek[5] += "0";
+					tmpWeek[7] += "0";
+					tmpWeek[9] += "0";
+					tmpWeek[11] += "0";
+					tmpWeek[13] += "0";
+				}
+				for (var i = timeS; i< 48; i++)
+				{
+					tmpWeek[1] += "1";
+					tmpWeek[3] += "1";
+					tmpWeek[5] += "1";
+					tmpWeek[7] += "1";
+					tmpWeek[9] += "1";
+					tmpWeek[11] += "1";
+					tmpWeek[13] += "1";
+				}
+				for (var i = 0; i < 24; i++)
+				{
+					tmpWeek[0] += "1";
+					tmpWeek[2] += "1";
+					tmpWeek[4] += "1";
+					tmpWeek[6] += "1";
+					tmpWeek[8] += "1";
+					tmpWeek[10] += "1";
+					tmpWeek[12] += "1";
+				}	
+			}
+			else if ((timeE + 1 < 24) && (timeS > 23))
+			{
+				for (var i = 0; i < timeE + 1; i++)
+				{
+					tmpWeek[0] += "1";
+					tmpWeek[2] += "1";
+					tmpWeek[4] += "1";
+					tmpWeek[6] += "1";
+					tmpWeek[8] += "1";
+					tmpWeek[10] += "1";
+					tmpWeek[12] += "1";
+				}
+				for (var i = timeE + 1; i < 24; i++)
+				{
+					tmpWeek[0] += "0";
+					tmpWeek[2] += "0";
+					tmpWeek[4] += "0";
+					tmpWeek[6] += "0";
+					tmpWeek[8] += "0";
+					tmpWeek[10] += "0";
+					tmpWeek[12] += "0";
+				}
+				for (var i = 24; i < timeS; i++)
+				{
+					tmpWeek[1] += "0";
+					tmpWeek[3] += "0";
+					tmpWeek[5] += "0";
+					tmpWeek[7] += "0";
+					tmpWeek[9] += "0";
+					tmpWeek[11] += "0";
+					tmpWeek[13] += "0";
+				}
+				for (var i = timeS; i < 48; i++)
+				{
+					tmpWeek[1] += "1";
+					tmpWeek[3] += "1";
+					tmpWeek[5] += "1";
+					tmpWeek[7] += "1";
+					tmpWeek[9] += "1";
+					tmpWeek[11] += "1";
+					tmpWeek[13] += "1";
+				}
+			}
+		}
+		else if (document.getElementById("weekDay").value == "week")
+		{
+			if ((timeS < 24) && (timeE + 1 < 24))
+			{
+				for (var i = 0; i < timeE + 1; i++)
+				{//if (document.getElementById("sat").checked == 1)	tmpWeek[13] += "0";
+					tmpWeek[2] += (document.getElementById("sun").checked == 1) ? "1" : "0";
+					tmpWeek[4] += (document.getElementById("mon").checked == 1) ? "1" : "0";
+					tmpWeek[6] += (document.getElementById("tue").checked == 1) ? "1" : "0";
+					tmpWeek[8] += (document.getElementById("wed").checked == 1) ? "1" : "0";
+					tmpWeek[10] += (document.getElementById("thu").checked == 1) ? "1" : "0";
+					tmpWeek[12] += (document.getElementById("fri").checked == 1) ? "1" : "0";
+					tmpWeek[0] += (document.getElementById("sat").checked == 1) ? "1" : "0";
+				}
+				for (var i = timeE + 1; i < timeS; i++)
+				{
+					if (document.getElementById("sun").checked == 1)	tmpWeek[0] += "0";
+					if (document.getElementById("mon").checked == 1)	tmpWeek[2] += "0";
+					if (document.getElementById("tue").checked == 1)	tmpWeek[4] += "0";
+					if (document.getElementById("wed").checked == 1)	tmpWeek[6] += "0";
+					if (document.getElementById("thu").checked == 1)	tmpWeek[8] += "0";
+					if (document.getElementById("fri").checked == 1)	tmpWeek[10] += "0";
+					if (document.getElementById("sat").checked == 1)	tmpWeek[12] += "0";
+				}
+				for (var i = timeS; i < 24; i++)
+				{
+					if (document.getElementById("sun").checked == 1)	tmpWeek[0] += "1";
+					if (document.getElementById("mon").checked == 1)	tmpWeek[2] += "1";
+					if (document.getElementById("tue").checked == 1)	tmpWeek[4] += "1";
+					if (document.getElementById("wed").checked == 1)	tmpWeek[6] += "1";
+					if (document.getElementById("thu").checked == 1)	tmpWeek[8] += "1";
+					if (document.getElementById("fri").checked == 1)	tmpWeek[10] += "1";
+					if (document.getElementById("sat").checked == 1)	tmpWeek[12] += "1";
+				}
+				for (var i = 0; i < 24; i++)
+				{
+					if (document.getElementById("sun").checked == 1) tmpWeek[1] += "1";
+					if (document.getElementById("mon").checked == 1) tmpWeek[3] += "1";
+					if (document.getElementById("tue").checked == 1) tmpWeek[5] += "1";
+					if (document.getElementById("wed").checked == 1) tmpWeek[7] += "1";
+					if (document.getElementById("thu").checked == 1) tmpWeek[9] += "1";
+					if (document.getElementById("fri").checked == 1) tmpWeek[11] += "1";
+					if (document.getElementById("sat").checked == 1) tmpWeek[13] += "1";
+				}				
+			}
+			else if ((timeS > 23) && (timeE + 1 > 23))
+			{
+				for (var i = 24; i< timeE + 1; i++)
+				{
+					tmpWeek[3] += (document.getElementById("sun").checked == 1) ? "1" : "0";
+					tmpWeek[5] += (document.getElementById("mon").checked == 1) ? "1" : "0";
+					tmpWeek[7] += (document.getElementById("tue").checked == 1) ? "1" : "0";
+					tmpWeek[9] += (document.getElementById("wed").checked == 1) ? "1" : "0";
+					tmpWeek[11] += (document.getElementById("thu").checked == 1) ? "1" : "0";
+					tmpWeek[13] += (document.getElementById("fri").checked == 1) ? "1" : "0";
+					tmpWeek[1] += (document.getElementById("sat").checked == 1) ? "1" : "0";
+				}
+				for (var i = timeE + 1; i< timeS; i++)
+				{
+					if (document.getElementById("sun").checked == 1)	tmpWeek[1] += "0";
+					if (document.getElementById("mon").checked == 1)	tmpWeek[3] += "0";
+					if (document.getElementById("tue").checked == 1)	tmpWeek[5] += "0";
+					if (document.getElementById("wed").checked == 1)	tmpWeek[7] += "0";
+					if (document.getElementById("thu").checked == 1)	tmpWeek[9] += "0";
+					if (document.getElementById("fri").checked == 1)	tmpWeek[11] += "0";
+					if (document.getElementById("sat").checked == 1)	tmpWeek[13] += "0";
+				}
+				for (var i = timeS; i< 48; i++)
+				{
+					if (document.getElementById("sun").checked == 1)	tmpWeek[1] += "1";
+					if (document.getElementById("mon").checked == 1)	tmpWeek[3] += "1";
+					if (document.getElementById("tue").checked == 1)	tmpWeek[5] += "1";
+					if (document.getElementById("wed").checked == 1)	tmpWeek[7] += "1";
+					if (document.getElementById("thu").checked == 1)	tmpWeek[9] += "1";
+					if (document.getElementById("fri").checked == 1)	tmpWeek[11] += "1";
+					if (document.getElementById("sat").checked == 1)	tmpWeek[13] += "1";
+				}
+				for (var i = 0; i < 24; i++)
+				{
+					tmpWeek[2] += (document.getElementById("sun").checked == 1) ? "1" : "0";
+					tmpWeek[4] += (document.getElementById("mon").checked == 1) ? "1" : "0";
+					tmpWeek[6] += (document.getElementById("tue").checked == 1) ? "1" : "0";
+					tmpWeek[8] += (document.getElementById("wed").checked == 1) ? "1" : "0";
+					tmpWeek[10] += (document.getElementById("thu").checked == 1) ? "1" : "0";
+					tmpWeek[12] += (document.getElementById("fri").checked == 1) ? "1" : "0";
+					tmpWeek[0] += (document.getElementById("sat").checked == 1) ? "1" : "0";
+				}			
+			}
+			else if ((timeE + 1 < 24) && (timeS > 23))
+			{
+				for (var i = 0; i < timeE + 1; i++)
+				{
+					tmpWeek[2] += (document.getElementById("sun").checked == 1) ? "1" : "0";
+					tmpWeek[4] += (document.getElementById("mon").checked == 1) ? "1" : "0";
+					tmpWeek[6] += (document.getElementById("tue").checked == 1) ? "1" : "0";
+					tmpWeek[8] += (document.getElementById("wed").checked == 1) ? "1" : "0";
+					tmpWeek[10] += (document.getElementById("thu").checked == 1) ? "1" : "0";
+					tmpWeek[12] += (document.getElementById("fri").checked == 1) ? "1" : "0";
+					tmpWeek[0] += (document.getElementById("sat").checked == 1) ? "1" : "0";
+				}
+				for (var i = timeE + 1; i < 24; i++)
+				{
+					if (document.getElementById("sun").checked == 1)	tmpWeek[0] += "0";
+					if (document.getElementById("mon").checked == 1)	tmpWeek[2] += "0";
+					if (document.getElementById("tue").checked == 1)	tmpWeek[4] += "0";
+					if (document.getElementById("wed").checked == 1)	tmpWeek[6] += "0";
+					if (document.getElementById("thu").checked == 1)	tmpWeek[8] += "0";
+					if (document.getElementById("fri").checked == 1)	tmpWeek[10] += "0";
+					if (document.getElementById("sat").checked == 1)	tmpWeek[12] += "0";
+				}
+				for (var i = 24; i < timeS; i++)
+				{
+					if (document.getElementById("sun").checked == 1)	tmpWeek[1] += "0";
+					if (document.getElementById("mon").checked == 1)	tmpWeek[3] += "0";
+					if (document.getElementById("tue").checked == 1)	tmpWeek[5] += "0";
+					if (document.getElementById("wed").checked == 1)	tmpWeek[7] += "0";
+					if (document.getElementById("thu").checked == 1)	tmpWeek[9] += "0";
+					if (document.getElementById("fri").checked == 1)	tmpWeek[11] += "0";
+					if (document.getElementById("sat").checked == 1)	tmpWeek[13] += "0";
+				}
+				for (var i = timeS; i < 48; i++)
+				{
+					if (document.getElementById("sun").checked == 1)	tmpWeek[1] += "1";
+					if (document.getElementById("mon").checked == 1)	tmpWeek[3] += "1";
+					if (document.getElementById("tue").checked == 1)	tmpWeek[5] += "1";
+					if (document.getElementById("wed").checked == 1)	tmpWeek[7] += "1";
+					if (document.getElementById("thu").checked == 1)	tmpWeek[9] += "1";
+					if (document.getElementById("fri").checked == 1)	tmpWeek[11] += "1";
+					if (document.getElementById("sat").checked == 1)	tmpWeek[13] += "1";
+				}
+			}
+		}
+	}
+	addTbl();
+}
+
+function setTime()
+{
+	 var loc = 'jumpToTimeSet.cmd?';
+	 var code = 'location="' + loc + '"';
+	 eval(code);
+	 //go('sntpcfg.html');
+}
+</script>
+<body onLoad="init()">
+<center>
+<form>
+<table border="0" cellpadding="4" cellspacing="0">
+	<tr><td class="h1">Wireless -- Schedule</td></tr>
+	<tr><td class="blue"></td><tr>
+ </table>
+<div class="con1 L">
+<p class="ct"></p>
+<!--<p class="bl"></p>-->
+<div class="con2">
+<table>
+<tr><td>Schedule can be set on this page.</td></tr>
+<tr><td><i class="T">Click the schedule table or use the 'Add' button to choose the period on which you need the wireless off automatically!</i></td></tr>
+<br>
+</table>
+<div id="apTip">
+<table>
+<tr><td><i><span class="T">Schedule does not work while system time is not set, Click</span><span class="a T" onclick="setTime()"> here</span><span class="T"> to set system time.</span></i>
+</td></tr>
+</table>
+</div>
+<table>
+<tr><td>
+<b class="item T">Wireless Schedule:</b>
+<input type="radio" name="scheap" id="apen" /><span class="T T_en">Enable</span>
+<b class="S">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+<input type="radio" name="scheap" id="apdis" /><span class="T T_dis">Disable</span>
+</td></tr>
+</table>
+<table><tr><td class="blue"></td></tr></table>
+<p><b class="fl L ml T" id="t_setto">Apply To:</b><b class="fl L T" id="t_start">Start Time:</b><b class="fl L T" id="t_end">End Time:</b></p>
+<p><b class="fl L"><select id="weekDay" class="M" onchange="showWeek();">
+<option class="T" id="t_day" value="day">Each Day</option>
+<option class="T" id="t_week" value="week">Each Week</option>
+</select></b>
+<b class="fl L">
+<select id="timeS" class="M" >
+<option value=0>00:00</option><option value=1>00:30</option>
+<option value=2>01:00</option><option value=3>01:30</option>
+<option value=4>02:00</option><option value=5>02:30</option>
+<option value=6>03:00</option><option value=7>03:30</option>
+<option value=8>04:00</option><option value=9>04:30</option>
+<option value=10>05:00</option><option value=11>05:30</option>
+<option value=12>06:00</option><option value=13>06:30</option>
+<option value=14>07:00</option><option value=15>07:30</option>
+<option value=16>08:00</option><option value=17>08:30</option>
+<option value=18>09:00</option><option value=19>09:30</option>
+<option value=20>10:00</option><option value=21>10:30</option>
+<option value=22>11:00</option><option value=23>11:30</option>
+<option value=24>12:00</option><option value=25>12:30</option>
+<option value=26>13:00</option><option value=27>13:30</option>
+<option value=28>14:00</option><option value=29>14:30</option>
+<option value=30>15:00</option><option value=31>15:30</option>
+<option value=32>16:00</option><option value=33>16:30</option>
+<option value=34>17:00</option><option value=35>17:30</option>
+<option value=36>18:00</option><option value=37>18:30</option>
+<option value=38>19:00</option><option value=39>19:30</option>
+<option value=40>20:00</option><option value=41>20:30</option>
+<option value=42>21:00</option><option value=43>21:30</option>
+<option value=44>22:00</option><option value=45>22:30</option>
+<option value=46>23:00</option><option value=47>23:30</option>
+</select></b>
+<b class="fl L">
+<select id="timeE" class="M" onchange="checkTime();">
+<option value=0>00:30</option>
+<option value=1>01:00</option><option value=2>01:30</option>
+<option value=3>02:00</option><option value=4>02:30</option>
+<option value=5>03:00</option><option value=6>03:30</option>
+<option value=7>04:00</option><option value=8>04:30</option>
+<option value=9>05:00</option><option value=10>05:30</option>
+<option value=11>06:00</option><option value=12>06:30</option>
+<option value=13>07:00</option><option value=14>07:30</option>
+<option value=15>08:00</option><option value=16>08:30</option>
+<option value=17>09:00</option><option value=18>09:30</option>
+<option value=19>10:00</option><option value=20>10:30</option>
+<option value=21>11:00</option><option value=22>11:30</option>
+<option value=23>12:00</option><option value=24>12:30</option>
+<option value=25>13:00</option><option value=26>13:30</option>
+<option value=27>14:00</option><option value=28>14:30</option>
+<option value=29>15:00</option><option value=30>15:30</option>
+<option value=31>16:00</option><option value=32>16:30</option>
+<option value=33>17:00</option><option value=34>17:30</option>
+<option value=35>18:00</option><option value=36>18:30</option>
+<option value=37>19:00</option><option value=38>19:30</option>
+<option value=39>20:00</option><option value=40>20:30</option>
+<option value=41>21:00</option><option value=42>21:30</option>
+<option value=43>22:00</option><option value=44>22:30</option>
+<option value=45>23:00</option><option value=46>23:30</option>
+<option value=47 selected>24:00</option>
+</select></b>
+<input type="button" class="button L T T_add" value="Add" id="scheAdd" onclick="addTime();"/>
+</p>
+<div id="week" class="nd">
+<p class="br"></p>
+<p>
+<input type="checkbox" id="mon"/><span class="T T_mon">Mon.</span>&nbsp;&nbsp;
+<input type="checkbox" id="tue"/><span class="T T_tues">Tues.</span>&nbsp;&nbsp;
+<input type="checkbox" id="wed"/><span class="T T_wed">Wed.</span>&nbsp;&nbsp;
+<input type="checkbox" id="thu"/><span class="T T_thur">Thur.</span>&nbsp;&nbsp;
+<input type="checkbox" id="fri"/><span class="T T_fri">Fri.</span>&nbsp;&nbsp;
+<input type="checkbox" id="sat"/><span class="T T_sat">Sat.</span>&nbsp;&nbsp;
+<input type="checkbox" id="sun"/><span class="T T_sun">Sun.</span>
+</p>
+</div>
+<p class="br"></p>
+<div style="width: 524px; margin: 0 auto;">
+<div style="float: left; width: 40px; padding: 1px 0 0 1px;">
+<table class="week" style="border-collapse: collapse;" cellpadding="0" cellspacing="0">
+	<tr><th class="T T_time" style="height: 35px;">Time</th></tr>
+	<tr><th class="T T_sun">Sun.</th></tr>
+	<tr><th class="T T_mon">Mon.</th></tr>
+	<tr><th class="T T_tues">Tues.</th></tr>
+	<tr><th class="T T_wed">Wed.</th></tr>
+	<tr><th class="T T_thur">Thur.</th></tr>
+	<tr><th class="T T_fri">Fri.</th></tr>
+	<tr><th class="T T_sat">Sat.</th></tr>
+</table>
+</div>
+<div style="overflow-x: scroll; width: 481px; padding: 1px 0 0 1px; float: left;">
+<table id="timeTbl" class="cale bdr" style="border-collapse: collapse; width: 769px; table-layout: fixed;" cellpadding="0" cellspacing="0">
+<tr height="35px">
+	<th>0:00</th><th>1:00</th><th>2:00</th><th>3:00</th><th>4:00</th><th>5:00</th>
+	<th>6:00</th><th>7:00</th><th>8:00</th><th>9:00</th><th>10:00</th><th>11:00</th>
+	<th>12:00</th><th>13:00</th><th>14:00</th><th>15:00</th><th>16:00</th><th>17:00</th>
+	<th>18:00</th><th>19:00</th><th>20:00</th><th>21:00</th><th>22:00</th><th>23:00</th>
+</tr></table>
+</div>
+</div>
+<div class="clr"></div>
+<p class="br"></p>
+<p><input type="button" class="button XL T" value="Clear Schedule" id="t_clear" onclick="cleanTbl();" /></p>
+<p class="br"></p>
+</div>
+<table><tr><td class="blue"></td></tr></table>
+<p class="tail" id="tail"><input type="button" class="button L T T_save" id="saveBtn" value="Save/Apply" onclick="btnApply();"/>
+</div>
+</form>
+</center>
+</body>
+</html>

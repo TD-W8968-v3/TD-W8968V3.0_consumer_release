@@ -1,0 +1,184 @@
+<html>
+<head>
+	<meta http-equiv="Pragma" content="no-cache">
+	<link rel="stylesheet" href="stylemain.css" type="text/css">
+	<link rel="stylesheet" href="colors.css" type="text/css">
+	<script language="javascript" src="util.js"></script>
+	<script language="javascript"><!-- hide
+/*EJ_PLACEHOLDER*/
+if (entryList === undefined) {
+	var sessionKey = '123456789';
+	var MAX_ENTRY = 16;
+	var entryList = [
+		[1,1,'192.168.1.10','192.168.1.20',80,8080,'TCP',5,10,20,30,40],
+		[3,1,'192.168.1.10','',-1,-1,'TCP or UDP',6,10,0,30,0],
+		[4,0,'','',8080,-1,'UDP',7,10,20,30,40]
+	];
+}
+var gstEntryIdx = 255;//add by jy for guestnetwork
+function getEntry(i) {
+	if (i < gstEntryIdx)
+		return entryList[i][0];
+	else
+		return entryList[i+1][0];
+}
+
+function getSelects() {
+	var sel = document.forms[0].sel;
+	return sel.length === undefined ? new Array(sel) : sel;
+}
+
+var glbAllSelected = false;
+function selectAllClick() {
+	var sel = getSelects();
+	glbAllSelected = !glbAllSelected;
+	var i = sel.length; while (--i >= 0) {
+		sel[i].checked = glbAllSelected;
+	}
+}
+
+function editClick(i) {
+	go('tcmgmt.cmd?action=edit&entry='+(isNaN(i) ? '' : getEntry(i)) , sessionKey);
+}
+function gstEditClick(){
+    go('wlgstnwk.html');
+}
+function getSelected() {
+	var sel = getSelects();
+	var lst = new Array();
+	for (var i = 0; i < sel.length; i++) {
+		if (sel[i].checked) lst.push(getEntry(i));
+	}
+	return lst.join(',');
+}
+
+function enableClick(enable) {
+	var lst = getSelected();
+	if (lst) go('tcmgmt.cmd?action=enable&enable='+enable+'&lst='+lst, sessionKey);
+}
+
+function removeClick() {
+	var lst = getSelected();
+	if (lst) go('tcmgmt.cmd?action=remove&lst='+lst, sessionKey);
+}
+
+function genEntriesTable() {
+	var html = '', v;
+	var gstListCnt = 0;
+	for (var i = 0; i < entryList.length; i++) {
+		v = entryList[i];
+		if (v[12] == 1)
+		{
+			gstListCnt++;
+			continue;
+		}
+		html += '<tr align="center">\n\t<td align="left">';
+		if (v[2]) {
+			html += v[2];
+			if (v[3]) html += '-' + v[3];
+			html += ', ';
+		}
+		if (v[4] >= 0) {
+			html += v[4];
+			if (v[5] >= 0) html += '-' + v[5];
+			html += ', ';
+		}
+		html += (v[6] == 'TCP or UDP' ? 'TCP/UDP' : v[6]);
+		html += '</td>\n\t<td>' + v[7];
+		html += '</td>\n\t<td>' + v[8];
+		html += '</td>\n\t<td>' + (v[9] ? v[9] : 'Total');
+		html += '</td>\n\t<td>' + v[10];
+		html += '</td>\n\t<td>' + (v[11] ? v[11] : 'Total') + '</td>\n\t';
+		if (v[1] == 1) {
+			html += '<td class="greenText">Enabled</td>\n\t';
+		} else {
+			html += '<td class="redText">Disabled</td>\n\t';
+		}
+		html += '<td><input type="button" onclick="editClick(' + (i-gstListCnt);
+		html += ')" value="Edit"></td>\n\t<td><input type="checkbox" name="sel"></td>\n<tr>\n';
+	}
+	for (var i = 0; i < entryList.length; i++)
+	{
+		v = entryList[i];
+		if (v[12] == 0 || v[1] == 0)
+			continue;
+		gstEntryIdx = i;//add by jy for guestnetwork
+		html += '<tr align="center">\n\t<td align="left">';
+		if (v[2]) {
+			html += v[2];
+			if (v[3]) html += '-' + v[3];
+			html += ', ';
+		}
+		if (v[4] >= 0) {
+			html += v[4];
+			if (v[5] >= 0) html += '-' + v[5];
+			html += ', ';
+		}
+		//html += (v[6] == 'TCP or UDP' ? 'TCP/UDP' : v[6]);
+		html += 'Guest Network';
+		html += '</td>\n\t<td>' + v[7];
+		html += '</td>\n\t<td>' + v[8];
+		html += '</td>\n\t<td>' + (v[9] ? v[9] : 'Total');
+		html += '</td>\n\t<td>' + v[10];
+		html += '</td>\n\t<td>' + (v[11] ? v[11] : 'Total') + '</td>\n\t';
+		if (v[1] == 1) {
+			html += '<td class="greenText">Enabled</td>\n\t';
+		} else {
+			html += '<td class="redText">Disabled</td>\n\t';
+		}
+		html += '<td><input type="button" onclick="gstEditClick()' ;
+		html += '" value="Edit"></td>\n\t<td>&nbsp;</td>\n<tr>';
+		//html += '<td>Unsupported</td><tr>\n';
+	}
+	document.write(html);
+}
+	// done hiding --></script>
+</head>
+
+<body>
+<center><form><table>
+	<tr><td class="h1">Bandwidth Control Rules List</td></tr>
+	<tr><td class="blue"></td></tr>
+	<tr><td>
+		This page displays Bandwidth Control rules. You can click corresponding buttons to configure these rules.
+		A maximum <script type="text/javascript"><!-- hide
+			document.write(MAX_ENTRY);
+		// done hiding --></script> entries can be configured.<br/>
+		<b>If <i>max</i> bandwidth is not configured or greater than total bandwidth, then it will take effect with total bandwidth.<br/>
+		Make sure the sum of <i>min</i> bandwidth is less than total bandwidth, otherwise Bandwidth Control may not take effect.</b>
+	</td></tr>
+	<tr><td>&nbsp;</td></tr>
+	<tr><td><table border="1" cellpadding="4" cellspacing="0" style="width:100%">
+		<tr align="center">
+			<td class="hd" rowspan="2">Description</td>
+			<td class="hd" rowspan="2">Priority</td>
+			<td class="hd" colspan="2">Upstream Bandwidth (Kbps)</td>
+			<td class="hd" colspan="2">Downstream Bandwidth (Kbps)</td>
+			<td class="hd" rowspan="2">Status</td>
+			<td class="hd" rowspan="2">Edit</td>
+			<td class="hd" rowspan="2"><input type="checkbox" title="Select All" onclick="selectAllClick()"></td>
+		</tr>
+		<tr align="center">
+			<td class="hd">Min</td>
+			<td class="hd">Max</td>
+			<td class="hd">Min</td>
+			<td class="hd">Max</td>
+		</tr>
+		<script type="text/javascript"><!-- hide
+			genEntriesTable();
+		// done hiding --></script>
+	</table></td></tr>
+	<tr><td class="blue"></td></tr>
+	<tr><td><center>
+		<script type="text/javascript"><!-- hide
+		if (entryList.length < MAX_ENTRY) {
+			document.write('<input type="button" onclick="editClick()" value="Add">');
+		}
+		// done hiding --></script>
+		<input type="button" onclick="enableClick(1)" value="Enable">
+		<input type="button" onclick="enableClick(0)" value="Disable">
+		<input type="button" onclick="removeClick()" value="Remove">
+	</center></td></tr>
+</table></form></center>
+</body>
+</html>

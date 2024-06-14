@@ -1,0 +1,31 @@
+<html>
+<head>
+<meta http-equiv="Pragma" content="no-cache">
+<title><%ejGetOther(specialStr, place_name, windows_txt)%></title>
+<script language="javascript">
+<!-- hide
+
+function op(){}
+
+var empty = '<%ejGetOther(memInfo, isDataEmpty)%>';
+
+document.writeln("<frameset onmouseout='javascript:return false;' rows='92.5,*' border='0' frameborder='1' framespacing='0'>");
+document.writeln("	<frame name=logofrm marginWidth=0 marginHeight=0 src='top.html' target='_self' noResize scrolling=no frameSpacing=1 frameBorder=1>");
+document.writeln("  <frameset cols='180,*' frameborder='0' border='0' framespacing='0'>");
+document.writeln("      <frame src='menu.html' name='menufrm' frameborder='yes' border='0' scrolling='auto' target='_self' marginwidth='0' marginheight='0' noresize>");
+
+if ( empty == '1' )
+   msg = "      <frame src='vpivci.html' ";
+else
+   msg = "      <frame src='info.html' ";
+msg += "name='basefrm' frameborder='1' border='0' scrolling='auto' target='_self' marginwidth='0' marginheight='16' noresize>";
+document.writeln(msg);
+
+document.writeln("   </frameset>");
+//document.writeln("   <frame src='footer.html' name='footerfrm' frameborder='no' border='0' scrolling='no' target='_self' marginwidth='0' marginheight='0' noresize>");
+document.writeln("</frameset>");
+
+// done hiding -->
+</script>
+</head>
+</html>

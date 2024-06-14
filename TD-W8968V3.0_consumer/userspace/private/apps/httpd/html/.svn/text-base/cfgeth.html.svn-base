@@ -1,0 +1,95 @@
+<html>
+   <head>
+      <meta http-equiv="Pragma" content="no-cache">
+      <LINK href="stylemain.css" type="text/css" rel="stylesheet">
+         <LINK href="colors.css" type="text/css" rel="stylesheet">
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript" src="portName.js"></script>
+            <script language="javascript">
+<!-- hide
+
+var buildvlm =  '<%ejGetOther(sysInfo, buildWanVlanMux)%>';
+var brdId = '<%ejGet(boardID)%>';
+var interfaceInfo = '<%ejGetOther(ethL2AvaIntf, 0)%>';
+var interfaces = interfaceInfo ? interfaceInfo.split('|') : Array();
+var gmacInterfaces = '<%ejGetOther(gmacIntf, 0)%>';
+var i;
+var intfDisp = '';
+var brdIntf = '';
+
+function frmLoad() {
+}
+
+function btnBack() {
+   var code = 'location="ethwan.cmd"';
+   eval(code);
+}
+
+
+function btnSave() {
+   var loc = 'ethwan.cmd?action=add';
+
+   with ( document.forms[0] ) {
+      var idx = ethIntf.selectedIndex;
+      var ifc = ethIntf.options[idx].value;
+      loc += '&ifname=' + ifc;
+
+      if (buildvlm == 0)
+         loc += '&connMode=0';  //default mode
+      else
+         loc += '&connMode=1';  //vlanmux mode
+   }
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+
+// done hiding -->
+</script>
+   </head>
+   <body onload="frmLoad()">
+      <center>
+         <form ID="Form1">
+            <table>
+			<tr><td class=h1>ETH WAN Configuration</td></tr>
+			<tr><td class=blue></td></tr>
+			<tr><td>
+            This screen allows you to configure a ETH port .
+            </td></tr>
+			<tr><td><table><tr>
+ <script language="javascript">
+<!-- hide
+            if (gmacInterfaces.length != 0)
+              document.writeln("<tr><td><font color='green'>" + "Full Gigabit WAN Interfaces (GMAC): " + gmacInterfaces + "</font></td></tr>");	
+            if (interfaces.length > 0) 
+            {
+               document.write("<td class=item>Select a ETH port:</td>");
+               document.write("<td><select name='ethIntf'>");
+               for (i = 0; i < interfaces.length; i++) 
+               {
+                  brdIntf = brdId + '|' + interfaces[i];
+                  intfDisp = getUNameByLName(brdIntf);
+                  brdIntf = '';		  
+				  /* limit, only LAN4 can be used by ETH WAN port, yuanshang, 2012-03-20 */
+				  if (intfDisp == 'LAN4/WAN')
+					document.write("<option value='" + interfaces[i] + "'>" + interfaces[i] + "/(" + intfDisp + ")");
+               }
+               document.write("</select></td>");
+            } else {
+            	document.write("<td colspan='2'><b>No valid ETH port exists, please enable the Virtual LAN Ports.</b></td>");
+   			}			
+// done hiding -->
+</script>
+            </tr></table></td></tr>
+			<tr><td class=blue></td></tr>
+			<tr><td>
+			<center>
+               <input type='button' onClick='btnBack()' value='Back'> <input type='button' onClick='btnSave()' value='Save/Apply'>
+            </center>
+			</td></tr>
+			</table>
+         </form>
+      </center>
+   </body>
+</html>

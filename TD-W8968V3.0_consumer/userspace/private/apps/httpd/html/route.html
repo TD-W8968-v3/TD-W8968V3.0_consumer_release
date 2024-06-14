@@ -1,0 +1,133 @@
+<html>
+<head>
+	<meta http-equiv="Pragma" content="no-cache">
+	<link rel="stylesheet" href="stylemain.css" type="text/css">
+	<link rel="stylesheet" href="colors.css" type="text/css">
+	<script language="javascript" src="util.js"></script>
+	<script language="javascript"><!-- hide
+/*EJ_PLACEHOLDER*/
+if (entryList === undefined) {
+	var sessionKey = '123456789';
+	var MAX_ENTRY = 32;
+	var entryList = [
+		[4,1,'192.168.1.0/24','192.168.1.1','br0',0,1]
+	];
+}
+
+function getEntry(i) {
+	var v = entryList[i];
+	return v[0] + '|' + v[1];
+}
+
+function enableClick(i, enable) {
+	go('rtroutecfg.cmd?action=enable&entry='+getEntry(i) + '&enable='+enable, sessionKey);
+}
+
+function editClick(i) {
+	go('rtroutecfg.cmd?action=edit&entry='+getEntry(i), sessionKey);
+}
+
+function addClick() {
+	go('routeadd.html');
+}
+
+function enableAllClick() {
+	if (entryList.length > 0)
+		go('rtroutecfg.cmd?action=enable&entry=&enable=1', sessionKey);
+}
+
+var glbAllSelected = false;
+function selectAllClick() {
+	var rml = document.forms[0].rml;
+	if (!(rml.length > 0)) {
+		rml = new Array(rml);
+	}
+	glbAllSelected = !glbAllSelected;
+	var i = rml.length;
+	while (--i >= 0) {
+		rml[i].checked = glbAllSelected;
+	}
+}
+
+function removeClick() {
+	var rml = document.forms[0].rml;
+	if (!(rml.length > 0)) {
+		rml = new Array(rml);
+	}
+	var lst = new Array();
+	for (var i = 0; i < rml.length; i++) {
+		if (rml[i].checked) {
+			lst.push(getEntry(i));
+		}
+	}
+	if (lst.length == 0) return;
+	go('rtroutecfg.cmd?action=remove&rmLst='+lst.join(', '), sessionKey);
+}
+
+function tr_val(val) {return val ? val : '&nbsp;'}
+function genEntriesTable() {
+	var html = '', v;
+	for (var i = 0; i < entryList.length; i++) {
+		v = entryList[i];
+		html += '<tr>\n\t<td>' + v[0];
+		html += '</td>\n\t<td>' + tr_val(v[2]);
+		html += '</td>\n\t<td>' + tr_val(v[3]);
+		html += '</td>\n\t<td>' + tr_val(v[4]);
+		html += '</td>\n\t<td>' + (v[5] < 0 ? '&nbsp;' : v[5]);
+		if (v[6] == 1) {
+			html += '<td class="greenText">Enabled</td>\n\t<td align="center"><input type="button" ';
+			html += 'onClick="enableClick(' + i + ',0)" value="Disable"></td>\n\t';
+		} else {
+			html += '<td class="redText">Disabled</td>\n\t<td align="center"><input type="button" ';
+			html += 'onClick="enableClick(' + i + ',1)" value="Enable"></td>\n\t';
+		}
+		html += '<td align="center"><input type="button" onClick="editClick(' + i + ')" value="Edit">';
+		html += '</td>\n\t<td align="center"><input type="checkbox" name="rml"></td>\n</tr>\n';
+	}
+	document.write(html);
+}
+	// done hiding --></script>
+</head>
+
+<body>
+<center><form><table>
+	<tr><td class="h1">Routing -- Static Route</td></tr>
+	<tr><td class="blue"></td></tr>
+	<tr><td>
+		A maximum <script type="text/javascript"><!-- hide
+			document.write(MAX_ENTRY);
+		// done hiding --></script> entries can beconfigured.
+	</td></tr>
+	<tr><td>&nbsp;</td></tr>
+
+	<tr><td><table border="1" cellpadding="4" cellspacing="0" style="width:100%">
+		<tr align="center">
+			<td class="hd">IP Version</td>
+			<td class="hd">DstIP/PrefixLength</td>
+			<td class="hd">Gateway</td>
+			<td class="hd">Interface</td>
+			<td class="hd">Metric</td>
+			<td class="hd">Status</td>
+			<td class="hd">Enable/Disable</td>
+			<td class="hd">Edit</td>
+			<td class="hd">Remove</td>
+		</tr>
+		<script type="text/javascript"><!-- hide
+			genEntriesTable();
+		// done hiding --></script>
+	</table></td></tr>
+
+	<tr><td class="blue"></td></tr>
+	<tr><td><center>
+		<script type="text/javascript"><!-- hide
+		if (entryList.length < MAX_ENTRY) {
+			document.write('<input type="button" onClick="addClick()" value="Add">');
+		}
+		// done hiding --></script>
+		<input type="button" onClick="enableAllClick()" value="Enable All">
+		<input type="button" onClick="selectAllClick()" value="Select All">
+		<input type="button" onClick="removeClick()" value="Remove">
+	</center></td></tr>
+</table></form></center>
+</body>
+</html>

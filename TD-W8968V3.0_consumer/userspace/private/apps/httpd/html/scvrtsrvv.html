@@ -1,0 +1,322 @@
+<html>
+<head>
+	<meta http-equiv="Pragma" content="no-cache">
+	<link rel="stylesheet" href="stylemain.css" type="text/css">
+	<link rel="stylesheet" href="colors.css" type="text/css">
+	<script src="util.js" type="text/javascript"></script>
+<script type="text/javascript"><!-- hide
+
+/*EJ_PLACEHOLDER*/
+if (vrtSrvInfo === undefined) { /* for debug */
+	var sessionKey = '123456789';
+	var MAX_MANUAL_ENTRY = 32;
+	var MAX_UPNP_ENTRY = 64;
+	var EXIST_MANUAL_ENTRY = 30;
+	var vrtSrvInfo = [
+		['Test',1234,2345,'TCP',3456,4567,'192.168.1.10','atm0.1',1],
+		['Test',4000,4000,'TCP or UDP',4000,4000,'192.168.1.10','atm0.1',0]
+	];
+}
+
+var glbAllSelected = false;
+var glbCurVrtSrv;
+
+function getVrtSrv(i) {
+	var info = vrtSrvInfo[i];
+	// info = 'atm0.1|TCP|1234|2345';
+	info = new Array(info[7], info[3], info[1], info[2]);
+	return info.join('|');
+}
+
+function enableClick(i, enable) {
+	if (vrtSrvInfo.length > 0)
+		go('scvrtsrv.cmd?action=enable&srv='+getVrtSrv(i) + '&enable='+enable, sessionKey);
+}
+
+function showEdit(show) {
+	showhide_tr('edit', '_edit', show);
+	showhide_tr('info', '_info', !show);
+}
+
+function changeInPort() {
+	with (document.forms[0]) {
+		iPort.disabled = iMode[0].checked;
+	}
+}
+
+function editClick(i) {
+	with ( document.forms[0] ) {
+		glbCurVrtSrv = i;
+		var info = vrtSrvInfo[i];
+		dstWanIf.value = info[7];
+		srvName.value = info[0];
+		srvAddr.value = info[6];
+		if (info[3] == 'TCP') {
+			proto.selectedIndex = 1;
+		} else if (info[3] == 'UDP') {
+			proto.selectedIndex = 2;
+		} else {
+			proto.selectedIndex = 0;
+		}
+		eStart.value = info[1];
+		eEnd.value = info[2];
+		if (info[4] == info[5]) {
+			iPort.value = info[4];
+			iMode[1].checked = true;
+		} else {
+			iPort.value = '';
+			iMode[0].checked = true;
+	}
+		changeInPort();
+}
+	showEdit(1);
+}
+
+function applyClick() {
+	var loc = 'scvrtsrv.cmd?action=edit&srv=' + getVrtSrv(glbCurVrtSrv);
+	with ( document.forms[0] ) {
+		var val = stripStr(srvName.value), ps, pe;
+		if (val == '') {
+			alert('Require server name.');
+			srvName.focus();
+			return;
+		}
+		loc += '&srvName=' + encodeUrl(val);
+		val = srvAddr.value;
+		if (!(isValidIpAddress(val))) {
+			alert('Server IP Address "' + val + '" is invalid.');
+			srvAddr.focus();
+			return;
+		}
+		loc += '&srvAddr=' + val;
+		val = proto.value;
+		loc += '&proto=' + val;
+		ps = eStart.value;
+		pe = eEnd.value;
+		if (!isValidPort(ps)) {
+			alert('External port start "' + ps + '" is invalid.');
+			eStart.focus();
+			return;
+		}
+		if (!isValidPort(pe)) {
+			alert('External port end "' + pe + '" is invalid.');
+			eEnd.focus();
+			return;
+		}
+		ps = parseInt(ps);
+		pe = parseInt(pe);
+		if (ps > pe) {
+			alert('External port range [' + ps + '-' + pe + '] is invalid.');
+			eStart.focus();
+			return;
+		}
+		if (val != '2') {
+			if (ps <= 80 && pe >= 80) {
+				alert('Since port 80 is used, the DSL Modem Router\n' +
+					  'WEB server could not be accessed through this interface.');
+			}
+			if (ps <= 23 && pe >= 23) {
+				alert('Since port 23 is used, the DSL Modem Router\n' +
+					  'TELNET server could not be accessed through this interface.');
+			}
+		}
+		loc += '&eStart=' + ps;
+		loc += '&eEnd=' + pe;
+		if (iMode[1].checked) {
+			ps = iPort.value;
+		if (!isValidPort(ps)) {
+			alert('Internal port start "' + ps + '" is invalid.');
+				iPort.focus();
+			return;
+		}
+			pe = ps = parseInt(ps);
+		if (ps == 22) {
+			alert('Since port 22 is used, the DSL Modem Router\n' +
+				  'SSH server could not be accessed through this interface.');
+		} else if (ps == 21) {
+			alert('Since port 21 is used, the DSL Modem Router\n' +
+				  'FTP server could not be accessed through this interface.');
+		} else if (ps == 69) {
+			alert('Since port 69 is used, the DSL Modem Router\n' +
+				  'TFTP server could not be accessed through this interface.');
+		} else if (ps == 161) {
+			alert('Since port 161 is used, the DSL Modem Router\n' + 
+				  'SNMP could not be accessed through this interface.');
+		}
+		}
+		loc += '&iStart=' + ps;
+		loc += '&iEnd=' + pe;
+	}
+	go(loc, sessionKey);
+}
+
+function addClick() {
+   go('scvrtsrv.html');
+}
+
+function selectAllClick() {
+	var rml = document.forms[0].rml;
+	if (!(rml.length > 0)) {
+		rml = new Array(rml);
+	}
+	glbAllSelected = !glbAllSelected;
+	var i = rml.length;
+	while (--i >= 0) {
+		rml[i].checked = glbAllSelected;
+	}
+}
+
+function enableAllClick() {
+	go('scvrtsrv.cmd?action=enable&srv=all&enable=1', sessionKey);
+}
+
+function removeClick() {
+	var rml = document.forms[0].rml;
+	if (!(rml.length > 0)) {
+		rml = new Array(rml);
+	}
+	var lst = new Array();
+	for (var i = 0; i < rml.length; i++) {
+		if (rml[i].checked) {
+			lst.push(getVrtSrv(i));
+		}
+	}
+	if (lst.length == 0) return;
+	go('scvrtsrv.cmd?action=remove&rmLst='+lst.join(','), sessionKey);
+}
+
+function tdval(val) { return val ? val : '&nbsp;' }
+function genEntriesTable() {
+	var html = '', info;
+	for (var i = 0; i < vrtSrvInfo.length; i++) {
+		info = vrtSrvInfo[i];
+		html += '<tr>\n\t<td>' + tdval(info[0]);
+		html += '</td>\n\t<td>' + info[1];
+		html += '</td>\n\t<td>' + info[2];
+		if (info[3] == 'TCP' || info[3] == 'UDP') {
+			html += '</td>\n\t<td>' + info[3];
+		} else {
+			html += '</td>\n\t<td>TCP/UDP';
+		}
+		html += '</td>\n\t<td>' + info[4];
+		html += '</td>\n\t<td>' + info[5];
+		html += '</td>\n\t<td>' + tdval(info[6]);
+		html += '</td>\n\t<td>' + info[7] + '</td>\n\t';
+		if (info[8] == '1') {
+			html += '<td class="greenText">Enabled</td>\n\t<td align="center"><input type="button" ';
+			html += 'onClick="enableClick(' + i + ',0)" value="Disable"></td>\n\t';
+		} else {
+			html += '<td class="redText">Disabled</td>\n\t<td align="center"><input type="button" ';
+			html += 'onClick="enableClick(' + i + ',1)" value="Enable"></td>\n\t';
+		}
+		html += '<td align="center"><input type="button" onClick="editClick(' + i + ')" value="Edit">';
+		html += '</td>\n\t<td align="center"><input type="checkbox" name="rml"></td>\n</tr>\n';
+	}
+	document.write(html);
+}
+
+// done hiding --></script>
+</head>
+
+<body>
+<blockquote><form><table>
+	<tr><td class="h1">NAT -- Virtual Servers Setup</td></tr>
+	<tr><td class="blue"></td></tr>
+	<tr><td>
+		Virtual Server allows you to direct incoming traffic from WAN side 
+		(identified by Protocol and External port) to the Internal server 
+		with private IP address on the LAN side.<br/>
+		The Internal port is required 
+		only if the external port needs to be converted to a different 
+		port number used by the server on the LAN side.<br/>
+		A maximum <script type="text/javascript"><!-- hide
+			document.write(MAX_MANUAL_ENTRY);
+		// done hiding --></script> entries can be added manually. <br/>
+		A maximum <script type="text/javascript"><!-- hide
+			document.write(MAX_UPNP_ENTRY);
+		// done hiding --></script> entries can be added by UPnP clients.
+	</td></tr>
+	<tr><td>&nbsp;</td></tr>
+
+	<tr id="info"><td><table border="1" cellpadding="4" cellspacing="0" style="width:100%">
+		<tr>
+			<td class="hd">Server Name</td>
+			<td class="hd">External Port Start</td>
+			<td class="hd">External Port End</td>
+			<td class="hd">Protocol</td>
+			<td class="hd">Internal Port Start</td>
+			<td class="hd">Internal Port End</td>
+			<td class="hd">Server IP Address</td>
+			<td class="hd">WAN Interface</td>
+			<td class="hd">Status</td>
+			<td class="hd">Enable/Disable</td>
+			<td class="hd">Edit</td>
+			<td class="hd">Remove</td>
+		</tr>
+		<script type="text/javascript"><!-- hide
+			genEntriesTable();
+		// done hiding --></script>
+	</table></td></tr>
+	<tr><td class="blue"></td></tr>
+	<tr id="_info"><td><center>
+		<script type="text/javascript"><!-- hide
+		if (EXIST_MANUAL_ENTRY < MAX_MANUAL_ENTRY) {
+			document.write('<input type="button" onClick="addClick()" value="Add">');
+		}
+		// done hiding --></script>
+		<input type="button" onClick="enableAllClick()" value="Enable All">
+		<input type="button" onClick="selectAllClick()" value="Select All">
+		<input type="button" onClick="removeClick()" value="Remove">
+	</center></td></tr>
+
+	<tr id="edit"><td><table border="0">
+		<tr>
+			<td class="item">WAN Interface:</td>
+			<td><input type="text" name="dstWanIf" disabled="true"></td>
+		</tr>
+		<tr>
+			<td class="item">Server Name:</td>
+			<td><input type="text" name="srvName"></td>
+		</tr>
+		<tr>
+			<td class="item">Server IP Address:</td>
+			<td><input type="text" name="srvAddr"></td>
+		</tr>
+		<tr>
+			<td class="item">Protocol:</td>
+			<td><select name="proto">
+				<option value="0">TCP/UDP</option>
+				<option value="1">TCP</option>
+				<option value="2">UDP</option>
+			</select></td>
+		</tr>
+		<tr>
+			<td class="item">External Port Start:</td>
+			<td><input type="text" name="eStart"></td>
+		</tr>
+		<tr>
+			<td class="item">External Port End:</td>
+			<td><input type="text" name="eEnd"></td>
+		</tr>
+		<tr>
+			<td rowspan="2" class="item">Internal Port:</td>
+			<td><input type="radio" name="iMode" onchange="changeInPort()">Equal External Port</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="radio" name="iMode" onchange="changeInPort()">Change to
+				<input type="text" name="iPort" size="7">
+			</td>
+		</tr>
+	</table></td></tr>
+	<tr><td class="blue"></td></tr>
+	<tr id="_edit"><td><center>
+		<input type="button" onClick="showEdit(0)" value="Cancel">
+		<input type="button" onClick="applyClick()" value="Save/Apply">
+	</center></td></tr>
+	<script type="text/javascript"><!-- hide
+		showEdit(0);
+	// done hiding --></script>
+</table></form></blockquote>
+</body>
+</html>

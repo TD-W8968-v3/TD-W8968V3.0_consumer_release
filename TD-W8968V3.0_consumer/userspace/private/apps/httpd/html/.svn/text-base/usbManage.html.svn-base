@@ -1,0 +1,259 @@
+<html>
+	<head>
+		<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+		<link rel="stylesheet" href='stylemain.css' type='text/css'>
+		<link rel="stylesheet" href='colors.css' type='text/css'>
+	</head>
+	<script language="javascript">
+<!-- hide
+/*EJ_PLACEHOLDER*/
+if (usbDevList === undefined)
+{
+	var sessionKey = '123456789';
+	var usbDevList = [
+		['Kingston(DT 101 G2)', 'PMAP', 2],
+		['Sandisk', 'ABC', 1],
+		['TEST', 'CDE', 0]
+	];
+	var volumeList = [
+		[0, 'usb1_41', 'NTFS', '7.5GB', 0],
+		[1, 'usb2_3', 'FAT32', '3.2GB',1],
+		[0, 'usb1_5', 'FAT32', '320MB', 2],
+		[2, 'usb1_5', 'FAT32', '320MB', 2]
+	];	
+}
+
+function handleDevice(idx, enable)
+{
+	var loc = 'usbManage.cmd?action=set&sessionKey='+sessionKey;
+	
+	loc += '&usbnum=' + idx;
+	loc += '&enable=' + enable;
+	
+	var code = 'location="' + loc + '"';
+
+	eval(code);
+}
+
+function handleVolume(idx, enable)
+{
+	var loc = 'usbManage.cmd?action=set&sessionKey='+sessionKey;
+	
+	loc += '&volnum=' + idx;
+	loc += '&enable=' + enable;
+	
+	var code = 'location="' + loc + '"';
+
+	eval(code);
+}
+
+function doRefresh()
+{
+	var loc = 'usbManage.cmd?action=view&sessionKey='+sessionKey;
+	
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+function frmLoad()
+{
+	for (var i = 0; i < usbDevList.length; i++)
+	{
+		if (usbDevList[i][2] == 0)
+			document.getElementById('USB_Stat'+i).style["color"] = "green";
+		else if (usbDevList[i][2] == 1)
+			document.getElementById('USB_Stat'+i).style["color"] = "red";
+		else
+			document.getElementById('USB_Stat'+i).style["color"] = "#ff9900";
+	}
+	
+	for (var i = 0; i < volumeList.length; i++)
+	{
+		if (volumeList[i][4] == 0)
+			document.getElementById('Vol_Stat'+i).style["color"] = "green";
+		else if (volumeList[i][4] == 2)
+			document.getElementById('Vol_Stat'+i).style["color"] = "#ff9900";
+		else
+			document.getElementById('Vol_Stat'+i).style["color"] = "red";
+	}	
+}
+//done hiding-->
+	</script>
+<body onLoad='frmLoad()'>
+<center>
+<form>
+<table>
+<tr><td class=h1>USB Mass Storage</td></tr>
+<tr><td class=blue></td></tr>
+<tr><td>
+This page provides the basic information about the connected USB mass storage, to configure Storage Sharing/FTP/Media Server, please click the corresponding menu on the left side.
+</td></tr>
+<tr><td>&nbsp;</td></tr>
+<script language="javascript">
+<!-- hide
+if (usbDevList.length == 0)
+{
+	document.writeln("<tr><td><b>USB Mass storage Disconnected!</b></td></tr>");
+}
+else
+{
+	var volumeArray = new Array();
+	var volumeIndex = new Array();
+	var enableDevCnt = 0;
+	for (var i=0; i<usbDevList.length; i++)
+	{
+		if (usbDevList[i][2] == 0)
+			enableDevCnt++;
+	}
+	for (var i=0; i < volumeList.length; i++)
+	{
+		volumeArray[i] = volumeList[i][1].split('_')[1];
+		volumeIndex[i] = i;
+	}
+	for (var i=0; i < volumeList.length; i++)
+	{
+		for (var j=i+1; j < volumeList.length; j++)
+		{
+			if (Number(volumeArray[i]) > Number(volumeArray[j]))
+			{
+				var tmp = volumeIndex[i];
+				volumeIndex[i] = volumeIndex[j];
+				volumeIndex[j] = tmp;
+				tmp = volumeArray[i];
+				volumeArray[i] = volumeArray[j];
+				volumeArray[j] = tmp;
+			}
+		}
+	}
+	document.writeln("<tr><td><b>USB Mass storage List:</b></td></tr>");
+	for (var i=0; i < usbDevList.length; i++)
+	{
+		var usbInfo = usbDevList[i];
+		var usbStat;
+		var btnExist = 1;
+		var usbBtn;
+		var usbEnbl;
+		if (usbInfo[2] == 0)
+		{
+			usbStat = 'Connected';
+			usbBtn = 'Disconnect';
+			usbEnbl = 0; 
+		}
+		else if (usbInfo[2] == 1)
+		{
+			usbStat = 'Disconnected';
+			usbBtn = 'Connect';
+			usbEnbl = 1;
+		}
+		else
+		{
+			usbStat = 'Standby';
+			usbBtn = 'Connect';
+			usbEnbl = 1;
+			if (enableDevCnt > 1)
+				btnExist = 0;
+			else
+				btnExist = 1;
+		}
+		document.write("<tr><td>Disk" + (i + 1) + ": " + usbInfo[0] + " Rev: " + usbInfo[1] + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id='USB_Stat"+i+"'>" + usbStat + "</span>&nbsp;");
+		if (btnExist)
+			document.writeln("<a class='usb' onClick='handleDevice(" + i + "," + usbEnbl + ")'>" + usbBtn + "</a></td></tr>");
+		document.writeln("<tr><td>");
+		document.writeln("<center>");
+		document.writeln("<table border=1 cellpadding=4 cellspacing=0>");
+		document.writeln("<tr align='center'>");
+		document.writeln("	<td class='hd'>Volume</td>");
+		document.writeln("	<td class='hd'>File System</td>");
+		document.writeln("	<td class='hd'>Capacity</td>");
+		document.writeln("	<td class='hd'>Status</td>");
+		document.writeln("	<td class='hd'>Action</td>");
+		document.writeln("</tr>");
+		for (var j=0; j < volumeList.length; j++)
+		{
+			//var volume = volumeList[j];
+			var volume = volumeList[volumeIndex[j]];
+			var volStat ;
+			var volBtnExist = 1;
+			var volBtn;
+			var volEnbl;
+			if (volume[0] == i)
+			{
+				if (usbDevList[volume[0]][2] == 0)
+				{
+					if (volume[4] == 0)
+					{
+						volBtn = 'Deactivate';
+						volEnbl = 0;
+					}
+					else if (volume[4] == 1)
+					{
+						volBtn = 'Activate';
+						volEnbl = 1;
+					}
+					else if (volume[4] == 2)
+					{
+						volBtn = 'Activate';
+						volEnbl = 1;
+					}
+					volBtnExist = 1;
+				}
+				else
+				{
+					volBtn = 'Not Available';
+					volBtnExist = 0;
+				}
+				
+				if (volume[4] == 0)
+				{
+					volStat = 'Active';
+				}
+				else if (volume[4] == 1)
+				{
+					volStat = 'Inactive';
+				}
+				else if (volume[4] == 2)
+				{
+					volStat = 'Standby';
+				}
+			
+				document.writeln("	<tr align='center'>");
+				document.writeln("		<td>" + volume[1] + "</td>");
+				document.writeln("		<td>" + volume[2] + "</td>");
+				document.writeln("		<td>" + volume[3] + "</td>");
+				document.writeln("		<td><span id='Vol_Stat"+ volumeIndex[j] +"'>" + volStat + "</span></td>");
+				if (volBtnExist)
+					document.writeln("		<td><a class='usb' onClick='handleVolume(" + volumeIndex[j] + "," + volEnbl + ")'>" + volBtn +"</a></td>");
+				else
+					document.writeln("        <td>" + volBtn + "</td>");
+				document.writeln("	</tr>");
+			}
+		}
+		document.writeln("</table>");
+		document.writeln("</center>");
+		document.writeln("</td></tr>");
+	}
+}
+
+//done hiding-->
+</script>
+<tr><td class=blue></td></tr>
+<tr><td><center>
+	<input type='button' onClick='doRefresh()' value='Refresh'>
+</center></td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>
+Note:
+</td></tr>
+<tr><td>1. Click the REFRESH button to detect your USB device. The Modem Router will automatically activate the first two USB storage devices or up to eight volumes.</td></tr>
+<tr><td>2. If you want to use other volumes in your storage device(s), please "Deactivate" some unused volumes and "Activate" the other desired volumes.</td></tr>
+<tr><td>3. Click "Disconnect" button before unplugging your USB device to avoid data loss or damage to the device.</td></tr>
+<tr><td>4. <b>Supported USB Mass Storage: </b>hard disk, flash disk or memory card reader;<br>
+    <b>&nbsp;&nbsp;&nbsp;&nbsp;Supported File System Type: </b>FAT32 and NTFS;<br>
+    <b>&nbsp;&nbsp;&nbsp;&nbsp;Supported Volumes: </b>Only two USB storage devices with up to eight volumes could be activated simultaneously, up to four USB storage devices with about eighteen volumes could be recognized.
+</td></tr>	
+</table>
+</form>
+</center>
+</body>
+</html>

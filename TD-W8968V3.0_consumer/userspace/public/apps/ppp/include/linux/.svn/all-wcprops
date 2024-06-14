@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/include/linux
+END
+ppp-comp.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/include/linux/ppp-comp.h
+END
+if_ppp.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/include/linux/if_ppp.h
+END
+ppp_defs.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/include/linux/ppp_defs.h
+END
+if_pppvar.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/include/linux/if_pppvar.h
+END

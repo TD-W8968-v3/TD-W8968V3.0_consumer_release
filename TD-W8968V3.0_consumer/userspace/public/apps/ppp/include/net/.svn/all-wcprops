@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/include/net
+END
+slcompress.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/include/net/slcompress.h
+END
+ppp-comp.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/include/net/ppp-comp.h
+END
+vjcompress.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/include/net/vjcompress.h
+END
+if_ppp.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/include/net/if_ppp.h
+END
+ppp_defs.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/include/net/ppp_defs.h
+END
+pppio.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/include/net/pppio.h
+END

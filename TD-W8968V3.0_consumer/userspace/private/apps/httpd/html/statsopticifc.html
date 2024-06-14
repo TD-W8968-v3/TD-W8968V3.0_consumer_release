@@ -1,0 +1,56 @@
+<html>
+   <head>
+      <meta http-equiv='Pragma' content='no-cache'>
+      <meta http-equiv="refresh" content="15">
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+          <script language="javascript" src="portName.js"></script>
+            <script language="javascript">
+<!-- hide
+
+function resetClick() {
+   var loc = 'statsopticifcreset.html';
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body>
+      <center>
+         <form>
+            <table>
+			<tr><td class=h1>Statistics -- Optical</td></tr>
+            <tr><td class=blue></td></tr>
+			<tr><td colspan=2>&nbsp;</td></tr>
+			<tr><td>
+            <table border="1" cellpadding="2" cellspacing="0" style="width:100%">
+               <tr>
+                  <td class='hd' rowspan="2"><center>Interface</center></td>
+                  <td class='hd' colspan="4"><center>Received</center></td>
+                  <td class='hd' colspan="4"><center>Transmitted</center></td>
+               </tr>
+               <tr>
+                  <td class='hd'>Bytes</td>
+                  <td class='hd'>Pkts</td>
+                  <td class='hd'>Errs</td>
+                  <td class='hd'>Drops</td>
+                  <td class='hd'>Bytes</td>
+                  <td class='hd'>Pkts</td>
+                  <td class='hd'>Errs</td>
+                  <td class='hd'>Drops</td>
+               </tr>
+<%ejGetOther(stsopticget,0,0)%>
+            </table>
+		  </td></tr>
+		  </table>
+         </form>
+      </center>
+   </body>
+<script language="javascript">
+<!-- hide
+// done hiding -->
+</script>
+</html>

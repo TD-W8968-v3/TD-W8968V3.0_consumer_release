@@ -1,0 +1,337 @@
+<html>
+	<head>
+	<meta http-equiv="Pragma" content="no-cache">
+	<LINK href="stylemain.css" type="text/css" rel="stylesheet">
+	<LINK href="colors.css" type="text/css" rel="stylesheet">
+	<script language="javascript" src="util.js"></script>
+	<script language="javascript"  src="3g.js"></script>
+	<script language="javascript">	
+	<!-- hide
+
+var autoISPInfo = '<%ejGet(usb3gAutoIspInfo)%>';	
+var locationIdx = '<%ejGet(usb3gLocationIdx)%>';
+var ispIdx = '<%ejGet(usb3gIspIdx)%>';
+var APN = '<%ejGet(usb3gAPN)%>';
+var dialNumber = '<%ejGet(usb3gDialNumber)%>';
+var userName = '<%ejGet(usb3gUserName)%>';
+var passWd = '<%ejGet(usb3gPassWd)%>';
+var serverName = '<%ejGet(usb3gBackUpServiceName)%>';
+var mtu = '<%ejGet(usb3gBackUpMtu)%>';
+var sessionKey = '<%ejGetOther(sessionKey)%>';
+
+function frmLoad()
+{
+	showAutoIsp();
+	
+	loadLocation();
+	document.getElementById("location_sel").value = locationIdx;
+	loadISP();
+	document.getElementById("isp_sel").value = ispIdx;
+	
+	showParam(autoISPInfo)
+		
+	document.getElementById('pppMtu').value = mtu;
+	document.getElementById('pppServerName').value = serverName;
+}
+
+
+function btnNext()
+{
+	var loc ='qsetupcfg.cmd?&q_step=input_3gbackUp';
+	var usb3g_locationIdx = document.getElementById("location_sel").value;
+       var usb3g_ispIdx = document.getElementById("isp_sel").value;
+       var usb3g_dialNumber = document.getElementById("dial_num").value;	
+	var usb3g_APN = document.getElementById("apn").value;   
+	var pattern = /[^0-9\*#]/ig;
+	
+	if (usb3g_dialNumber.match(pattern) != null)
+	{
+			alert("Error: Invalid dial number!");
+			document.getElementById("dial_num").focus();
+			document.getElementById("dial_num").select();
+			return;
+	}
+	
+	loc += '&usb3gAutoIspInfo=' + autoISPInfo;
+	loc += '&APN=' + usb3g_APN;
+	loc += '&locationIdx=' + usb3g_locationIdx;
+	loc += '&ispIdx=' + usb3g_ispIdx;
+	loc += '&usb3gDialNumber=' +encodeUrl(usb3g_dialNumber);
+
+	//div_ppp
+	//if ((protcl.value == 0) || (protcl.value == 1))
+	if(1)
+	{
+		userName = document.getElementById('pppUserName');
+		passwd = document.getElementById('pppPassword');
+		serverName = document.getElementById('pppServerName');
+		mtu = document.getElementById('pppMtu');
+			
+		var pvc_username = userName.value;
+		var pvc_psw = passwd.value;
+
+		//yuanshang add to avoid space
+		if ( pvc_username.indexOf(" ") != -1 || pvc_psw.indexOf(" ") != -1)
+		{
+			msg = 'The UserName or Password should not have space!';
+			alertAndFocus(userName, msg);
+			return;
+		}
+		var len = userName.value.length;
+		if ( len > 64 )
+		{
+			msg = 'The length of UserName (' + len + ') is too long [0-64].';
+			alertAndFocus(userName, msg);
+			return;
+		}
+		// validate password
+		len = passwd.value.length;
+		if ( len > 32 )
+		{
+			msg = 'The length of Password (' + len + ') is too long [0-32].';
+			alertAndFocus(passwd, msg);
+			return;
+		}
+		loc += '&usb3gUserName=' + encodeUrl(pvc_username);
+		loc += '&usb3gPassWd=' + encodeUrl(pvc_psw);
+		if (1)
+		{
+			len = serverName.value.length;
+			if ( len > 32 ) {
+				msg = 'The length of PPPoE Service Name (' + len + ') is too long [0-32].';
+				alertAndFocus(serverName, msg);
+				return;
+			}
+			if ( serverName.value.indexOf(" ") != -1)
+			{
+				msg = 'The ServerName should not have space!';
+				alertAndFocus(serverName, msg);
+				return;
+			}
+			loc += '&usb3gSrcName=' + encodeUrl(serverName.value);
+		}
+		if (1)
+		{
+			if ( isNaN(parseInt(mtu.value)) == true )
+			{
+				msg = 'MTU "' + mtu.value + '" is invalid.';
+				alertAndFocus(mtu, msg);
+				return;
+			}
+			var mtuNum = parseInt(mtu.value);
+			if ( (mtuNum < 576 || mtuNum > 1492))
+			{
+				msg = 'PPPoE\'s MTU "' + mtu.value +'" is out of range [576-1492].';
+				alertAndFocus(mtu, msg);
+				return;
+			}
+			loc += '&usb3gBackUpMtu=' + mtu.value;
+		}
+	}
+   loc += '&sessionKey=' + sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnBack()
+{
+	var loc = 'quicksetupview.cmd';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function doSkip()
+{
+	go('wlqsetup.cgi?qs3gBackUpSkip=1', sessionKey);//TODO, change to qsetupWifi	
+}
+
+function loadLocation() {
+    var i = 0;
+    var selLocObj = document.getElementById("location_sel");
+
+    if (selLocObj.options.length > 0) {
+        selLocObj.options.remove(0);
+    }
+
+    for (tag in w3gisp_js) {
+        i = parseInt(tag.substring(8, 16));
+        var locOption = document.createElement("option");
+
+        locOption.value = i;
+        locOption.text = w3gisp_js[tag]["location_name"];
+        try {
+            selLocObj.add(locOption, null);
+        } catch (e) {
+            selLocObj.add(locOption);
+        }
+    }
+}
+
+function loadISP() {
+    var location = "location" + document.getElementById("location_sel").value;
+    var selIspObj = document.getElementById("isp_sel");
+
+    while ((i = selIspObj.options.length) > 0) {
+        selIspObj.remove(0);
+    }
+
+    i = 0;
+    for (tag in w3gisp_js[location]) {
+        if (w3gisp_js[location][tag]["isp_name"] == undefined) {
+            continue;
+        }
+        var ispOption = document.createElement("option");
+        ispOption.value = i;
+        ispOption.text = w3gisp_js[location][tag]["isp_name"];
+        try {
+            selIspObj.add(ispOption, null);
+        } catch (e) {
+            selIspObj.add(ispOption);
+        }
+        i++;
+    }
+}
+
+function showParam(autoIsp) {   
+    if (autoIsp == 1) {
+
+    var location = "location" + document.getElementById("location_sel").value;
+    var isp = "isp" + document.getElementById("isp_sel").value;
+
+        document.getElementById("pppUserName").value = w3gisp_js[location][isp]["username"];
+        document.getElementById("pppPassword").value = w3gisp_js[location][isp]["password"];
+        document.getElementById("apn").value = w3gisp_js[location][isp]["apn"];
+        document.getElementById("dial_num").value = w3gisp_js[location][isp]["dial_num"];
+	
+    }
+    else{
+        document.getElementById("apn").value = APN;
+        document.getElementById("dial_num").value = dialNumber;
+	 document.getElementById("pppUserName").value = userName;
+        document.getElementById("pppPassword").value = passWd;	
+    }
+}
+
+function changeISP() {
+    showParam(autoISPInfo);
+}
+
+function changeLocation() {
+    loadISP();
+    changeISP();
+}	
+
+function autoGetIspInfo(item) {
+	 if ( item.checked == true ) 
+	 {
+	 	autoISPInfo = 1;
+		document.getElementById("location_sel").disabled = false;
+		document.getElementById("isp_sel").disabled = false;
+		document.getElementById("dial_num").disabled = true;
+		document.getElementById("apn").disabled = true;
+		document.getElementById("pppUserName").disabled = true;
+		document.getElementById("pppPassword").disabled = true;	
+	 }
+	 else
+	 {
+	 	autoISPInfo = 0;
+		document.getElementById("location_sel").disabled = true;
+		document.getElementById("isp_sel").disabled = true;
+		document.getElementById("dial_num").disabled = false;
+		document.getElementById("apn").disabled = false;
+		document.getElementById("pppUserName").disabled = false;
+		document.getElementById("pppPassword").disabled = false;	
+	 }
+
+	 showParam(autoISPInfo)
+}
+
+function showAutoIsp()
+{
+	if (autoISPInfo == '1')
+	{
+		document.getElementById('autoIspInfo').checked = true;
+		
+		document.getElementById("location_sel").disabled = false;
+		document.getElementById("isp_sel").disabled = false;
+		document.getElementById("dial_num").disabled = true;
+		document.getElementById("apn").disabled = true;
+		document.getElementById("pppUserName").disabled = true;
+		document.getElementById("pppPassword").disabled = true;	
+	}
+	else
+	{
+		document.getElementById('autoIspInfo').checked = false;
+		
+		document.getElementById("location_sel").disabled = true;
+		document.getElementById("isp_sel").disabled = true;
+		document.getElementById("dial_num").disabled = false;
+		document.getElementById("apn").disabled = false;
+		document.getElementById("pppUserName").disabled = false;
+		document.getElementById("pppPassword").disabled = false;	
+	}		
+}
+	// done hidding -->
+	</script>
+	</head>
+	<body onload='frmLoad()'>
+		<center>
+		<table>
+			<tr><td class=h1 style="height:28px" >Quick Setup - 3G Configurations</td></tr>
+			<tr><td class="blue"></td></tr>
+			<tr><td>
+				You haved enabled 3G as backup internet access. You can setup 3G settings here.
+			</td></tr>
+		</table>
+		<table>
+			<tr>
+				<td width='30' height='30' class=item><input type='checkbox' id='autoIspInfo' onClick='autoGetIspInfo(this)'></td>
+				<td>Automatically fill ISP Information</td>
+			</tr>
+			<tr>
+				<td width='180' class='item'>Location:</td>
+				<td><select id='location_sel' onchange='changeLocation()'></select></td>
+			</tr>
+			<tr>
+				<td width='180' class='item'>Mobile ISP:</td>
+				<td><select id='isp_sel' onchange='changeISP()'></select></td>
+			</tr>
+				
+			<tr>
+				<td width='180' class='item'>Dial Number:</td>
+				<td><input id='dial_num' type='text' maxlength='31'/></td>
+			</tr>
+			<tr>
+				<td width='180' class='item'>APN:</td>
+				<td><input id='apn' type='text'  maxlength='31'/></td>
+			</tr>	
+			<tr><td colspan='2' class='blue'></td>
+		</table>
+		<table border="0" cellpadding="0" cellSpacing='4'>
+			<tr>
+				<td width="180" class='item'>PPP Username:</td>
+				<td><input type='text' name='pppUserName' id='pppUserName'></td>
+			</tr>
+			<tr>
+				<td width="180" class='item'>PPP Password:</td>
+				<td><input type='password' name='pppPassword' id='pppPassword'></td>
+			</tr>
+			<tr id='pppoe_svr_name'>
+				<td width='180' class='item'>PPPoE Service Name:</td>
+				<td><input type='text' name='pppServerName' id='pppServerName'>&nbsp;(optional)</td>	
+			</tr>
+			<tr>
+				<td width="180" class='item'>MTU (bytes):</td>
+				<td><input type='text' name='pppMtu' id='pppMtu'>&nbsp;(optional)</td>
+			</tr>
+			<tr><td colspan='2' class='blue'></td></tr>
+		</table>
+		<table>
+			<tr><td><center>
+				<input type='button' onClick='btnBack()' value='Back' class='buttonL'>&nbsp;&nbsp;
+				<input type='button' onClick='doSkip()' value='Skip 3G' class='buttonL'>&nbsp;&nbsp;
+				<input type='button' onClick='btnNext()' value='Next' class='buttonL'>
+			</center></td></tr>
+		</table>
+	</center>
+	</body>
+</html>

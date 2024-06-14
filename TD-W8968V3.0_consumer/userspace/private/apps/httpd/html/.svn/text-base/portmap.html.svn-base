@@ -1,0 +1,122 @@
+<html>
+<head>
+	<meta http-equiv="Pragma" content="no-cache">
+	<link rel="stylesheet" href="stylemain.css" type="text/css">
+	<link rel="stylesheet" href="colors.css" type="text/css">
+	<script src="portName.js" type="text/javascript"></script>
+<script type="text/javascript"><!-- hide
+
+/*EJ_PLACEHOLDER*/
+if (groupInfo === undefined) { /* for debug */
+	var sessionKey = '123456789';
+	var MAX_ENTRY = 16;
+	var brdId = '96368VVW';
+	var groupInfo = [
+		['Default','eth0.1','eth1|eth2|eth3','V1|V2|V3'],
+		['Test','eth0.1','','V1|V2|V3'],
+		['Test2','eth0.1','111','']
+	];
+}
+
+function go(loc, sessionKey) {
+	if (sessionKey) {
+		loc += '&sessionKey='+sessionKey;
+	}
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+function addClick() {
+	go('portmapadd.html');
+}
+
+function editClick(name) {
+	go('portmapedit.cgi?groupName=' + name, sessionKey);
+}
+
+function removeClick() {
+	var rml = document.forms[0].rml;
+	if (!(rml.length > 0)) {
+		rml = new Array(rml);
+	}
+	var lst = new Array();
+	for (var i = 0; i < rml.length; i++) {
+		if (rml[i].checked) {
+			lst.push(rml[i].value);
+		}
+	}
+	if (lst.length == 0) return;
+	go('portmapcfg.cmd?action=savapply&intfSts=&brdSts=1&rml='+lst.join(', '), sessionKey);
+}
+
+function tdval(val) { return val == '' ? '&nbsp;' : val; }
+function printGroupInfo(groupName, wanInterfaces, interfaces, vendorIds) {
+	wanInterfaces = wanInterfaces ? wanInterfaces.split('|') : new Array();
+	interfaces = interfaces ? interfaces.split('|') : new Array();
+	for (var i = 0; i < interfaces.length; i++) {
+		interfaces[i] = getUNameByLName(brdId + '|' + interfaces[i]);
+	}
+	vendorIds = vendorIds ? vendorIds.split('|') : new Array();
+	var html = '<tr>\n\t<td>' + tdval(groupName) + '</td>\n\t<td align="center">';
+	if (groupName == 'Default'|| groupName == 'IPTV_Group') {/*modified by xieping for iptv*/
+		html += '&nbsp;'
+	} else {
+		html += '<input type="checkbox" name="rml" value="' + groupName+ '">';
+	}
+	html += '</td>\n\t<td>' + tdval(wanInterfaces.join('<br/>')) + '</td>\n\t<td>';
+	html += tdval(interfaces.join('<br/>')) + '</td>\n\t<td>';
+	html += tdval(vendorIds.join('<br/>')) + '</td>\n</tr>\n';
+	document.write(html);
+}
+function genEntriesTable() {
+	var info;
+	for (var i = 0; i < groupInfo.length; i++) {
+		info = groupInfo[i];
+		printGroupInfo(info[0], info[1], info[2], info[3]);
+	}
+}
+
+// done hiding --></script>
+</head>
+
+<body>
+<center><form><table>
+	<tr><td class="h1">Interface Grouping</td></tr>
+	<tr><td class="blue"></td></tr>
+	<tr><td>
+		Interface Grouping supports multiple ports to PVC and bridging groups. Each group
+		will perform as an independent network. To support this feature, you must
+		create mapping groups with appropriate LAN and WAN interfaces using
+		the Add button. The Remove button will remove the grouping and add the
+		ungrouped interfaces to the Default group. Only the default group has IP interface.
+		A maximum <script type="text/javascript"><!-- hide
+			document.write(MAX_ENTRY);
+		// done hiding --></script> entries can be configured.
+	</td></tr>
+	<tr><td>&nbsp;</td></tr>
+
+	<tr><td><table border="1" cellpadding="4" cellspacing="0" style="width:100%">
+		<tr>
+			<td class="hd">Group Name</td>
+			<td class="hd">Remove</td>
+			<td class="hd">WAN Interface</td>
+			<td class="hd">LAN Interfaces</td>
+			<td class="hd">DHCP Vendor IDs</td>
+		</tr>
+		<script type="text/javascript"><!-- hide
+			genEntriesTable();
+		// done hiding --></script>
+	</table></td></tr>
+
+	<tr><td class="blue"></td></tr>
+	<tr><td><center>
+		<script type="text/javascript"><!-- hide
+		if (groupInfo.length < MAX_ENTRY) {
+			document.write('<input type="button" onClick="addClick()" value="Add">');
+		}
+		// done hiding --></script>
+		<input type="button" onClick="removeClick()" value="Remove">
+	</center></td></tr>
+</table></form></center>
+</body>
+</html>

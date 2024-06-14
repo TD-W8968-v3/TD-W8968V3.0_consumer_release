@@ -1,0 +1,64 @@
+<html>
+<head>
+<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+<link rel=stylesheet href='stylemain.css' type='text/css'>
+<link rel=stylesheet href='colors.css' type='text/css'>
+<script language="javascript">
+<!-- hide
+
+function frmLoad() {
+   var state = '<%ejGetTest(berState)%>';
+   if ( state == '0' ) {
+      var loc = 'berstop.tst';
+
+      var code = 'location="' + loc + '"';
+      eval(code);
+   }
+   setTimeout('location.reload()', 2 * 1000);
+}
+
+function btnStop() {
+   var loc = 'berstop.tst?berState=0';
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnBack() {
+   var loc = 'berstop.tst?berState=0';
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+//   window.close();
+   code = 'location="statsadsl.html"'; 
+   eval(code);
+}
+
+// done hiding -->
+</script>
+<base target="_self">
+</head>
+
+<body onLoad='frmLoad()'>
+<center>
+<form>
+<table>
+<tr><td class=h1>ADSL BER Test - Running</td></tr>
+<tr><td class=blue></td></tr>
+<tr><td>
+The xDSL BER test is in progress. The connection speed is <%ejGetOther(lineRate,1,0)%> Kbps.
+The test will run for <%ejGetTest(berTime)%> seconds.
+<br><br>
+Click "Stop" to terminate the test.
+</td></tr>
+<tr><td class=blue></td></tr>
+<tr><td>
+<center><input type='button' onClick='btnStop()' value='Stop'>&nbsp;<input type='button' onClick='btnBack()' value='Back'></center></td></tr>
+</table>
+</form>
+</center>
+</body>
+</html>
+
+
+

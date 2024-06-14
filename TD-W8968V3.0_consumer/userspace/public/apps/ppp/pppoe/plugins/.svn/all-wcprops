@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/BA/BCM4/!svn/ver/352/branches/W8960N_5.0/userspace/public/apps/ppp/pppoe/plugins
+END
+minconn.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppoe/plugins/minconn.c
+END
+passprompt.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppoe/plugins/passprompt.c
+END
+Makefile.linux
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppoe/plugins/Makefile.linux
+END
+Makefile.sol2
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppoe/plugins/Makefile.sol2
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppoe/plugins/Makefile
+END

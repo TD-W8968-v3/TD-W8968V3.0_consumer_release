@@ -1,0 +1,116 @@
+<html>
+<head>
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" href="stylemain.css" type="text/css">
+	<link rel="stylesheet" href="colors.css" type="text/css">
+	<script language="javascript" src="util.js"></script>
+	<script language="javascript"><!-- hide
+
+/*EJ_PLACEHOLDER*/
+if (macCloneInfo === undefined) {
+	var sessionKey = '123456789';
+	var pcMacAddr = '00:11:22:33:44:55';
+	var macCloneInfo = [
+		['ppp0.1',''],
+		['eth0.2','00:11:22:33:44:55']
+	]
+}
+
+function frmLoad() {
+	if (macCloneInfo.length == 0) {
+		showhide('alertStr', 1);
+	} else {
+		showhide('cloneTab', 1);
+	}
+}
+
+function macClone(intf, mac) {
+	var loc = 'macClone.cmd?action=set&sessionKey='+sessionKey;
+
+	loc += '&ifname=' + intf;
+	loc += '&mac=' + mac;
+
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+function macCloneSet() {
+	with (document.forms[0]) {
+		var mac = cloneMAC.value.toLowerCase();;
+		if (!isValidMacAddress(mac)) {
+			alert('MAC Address '+ mac + ' is invalid.');
+			return;
+		}
+		var info = macCloneInfo[wanIntfList.selectedIndex];
+		macClone(info[0], mac);
+	}
+}
+
+function macCloneReset(i) {
+	with (document.forms[0]) {
+		var info = macCloneInfo[i];
+		macClone(info[0], '');
+	}
+}
+
+	// done hiding --></script>
+</head>
+
+<body onLoad="frmLoad()">
+<center>
+<form>
+	<table>
+		<tr><td class="h1">MAC Address Clone</td></tr>
+		<tr><td class="blue"></td></tr>
+		<tr><td>
+			Set the special MAC address to the selected WAN Service.
+		</td></tr>
+	</table><br/>
+
+	<div id="cloneTab" style="display:none">
+		<table border='1' cellpadding='4' cellspacing='0'>
+			<script language="javascript"><!-- hide
+{
+	var html = '', wanSelectHtml = '', info, checked;
+	for (var i = 0; i < macCloneInfo.length; i++) {
+		info = macCloneInfo[i];
+		wanSelectHtml += '\t<option>' + info[0] + '&nbsp;</option>\r';
+		html += '<tr>\r\t<td>Clone MAC address for <b>' + info[0] + '</b>:</td>\r';
+		if (info[1] != '') {
+			html += '\t<td>' + info[1] + '</td>\r\t<td>';
+			checked = info[2]=='1' ? ' checked="checked"' : '';
+			html += '<input type="button" onclick="macCloneReset(' + i +')" value="Restore Default"/></td>\r';
+		} else {
+			html += '\t<td>Not configured</td>\r\t<td>';
+			html += '<input type="button" disabled="true" value="Restore Default"/></td>\r';
+		}
+	}
+	document.write(html);
+}
+			// done hiding --></script>
+			<tr>
+				<td>Current PC MAC:</td>
+				<td><script type="text/javascript"><!-- hide
+					document.write('<input type="text" name="cloneMAC" value="'+pcMacAddr+'"/>');
+				// done hiding --></script></td>
+				<td>
+					<input type="button" onclick="macCloneSet()" value="Clone"/> to
+					<select name='wanIntfList'><script>document.write(wanSelectHtml);</script></select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div id="alertStr" style="display:none">
+		<table><tr><td>
+		No routed WAN Service exists, MAC clone disabled.
+		</td></tr></table>
+	</div>
+	<table>
+		<tr><td><b style='font-size:16px'>Note:</b> Only the WAN ports can using MAC address clone. All the clone MAC address <b>MUST NOT</b> be the same with each other.</td></tr>
+		<tr><td class="blue"></td></tr>
+	</table>
+</form>
+</center>
+</body>
+</html>

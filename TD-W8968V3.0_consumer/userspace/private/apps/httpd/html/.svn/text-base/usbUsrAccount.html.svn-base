@@ -1,0 +1,267 @@
+<html>
+	<head>
+		<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+		<link rel="stylesheet" href='stylemain.css' type='text/css'>
+		<link rel="stylesheet" href='colors.css' type='text/css'>
+		<script language="javascript" src="util.js"></script>
+		<script language="javascript">
+<!-- hide
+/*EJ_PLACEHOLDER*/
+if (sessionKey === undefined)
+{
+	var usrAccountList = [
+		['admin', 1, 1],
+		['', 0, 0],
+		['', 0, 0],
+		['', 0, 0],
+		['allen', 0, 0]
+	];
+	var sessionKey = '123456789';
+}
+var usrTbl = new Array();
+
+function btnSave(index, name, pwd, status)
+{
+	var loc = 'usbUsrAccount.cmd?action=set&sessionKey='+sessionKey;
+	loc += '&index=' + index;
+	if (status != 2)
+			{
+		loc += '&name=' + name;
+		loc += '&pwd=' + pwd;
+		loc += '&status=' + status;
+	}
+	else
+		loc += '&delete=1'
+	
+	var code = 'location="' + loc + '"';
+
+	eval(code);
+}
+
+function btnSet()
+{
+	with (document.forms[0])
+	{
+		if (usrPwd.value != usrPwdCfm.value)
+		{
+			alert("The passwords do not match.");
+			usrPwdCfm.value = '';
+			usrPwd.value = '';
+			usrPwd.focus();
+			return;
+		}
+		
+		if (usrPwd.value.length == 0)
+		{
+			alert('Password cannot be null.');
+			usrPwdCfm.value = '';
+			usrPwd.value = '';
+			usrPwd.focus();
+			return;
+		}
+		
+		var str = new String();
+		str = usrPwd.value;
+		if (str.length > 16)
+		{
+			alert('Password should not be longer than 16 characters.');
+			usrPwdCfm.value = '';
+			usrPwd.value = '';
+			usrPwd.focus();
+			return;
+		}
+		if ( str.indexOf(' ') != -1 ) 
+		{
+			alert('Password cannot contain a space.');
+			usrPwdCfm.value = '';
+			usrPwd.value = '';
+			usrPwd.focus();
+			return;
+		}
+		
+		str = usrName.value;
+		if (str.length == 0)
+		{
+			alert('User name cannot be null.');
+			usrName.focus();
+			return;
+		}
+		if (str.length > 16)
+		{
+			alert('User name should not be longer than 16 characters.');
+			usrName.focus();
+			return;
+		}
+		if ( isValidName(str) != true )
+		{
+			alert('User name contains an invalid character.');
+			usrName.focus();
+			return;
+		}
+		if ( str.indexOf(' ') != -1 ) 
+		{
+			alert('User name cannot contain a space.');
+			usrName.focus();
+			return;
+		}
+		
+		var idx = usrIdx.value;
+		
+		for (var i = 0; i < usrAccountList.length; i++)
+		{
+			if (str == usrTbl[i].name && i != idx - 1)
+			{
+				alert('Conflict with another user name.');
+				usrName.focus();
+				return;
+			}
+		}
+		btnSave(idx, usrName.value, usrPwd.value, 1);
+		}
+}
+
+function doEnUsr(idx)
+{
+	var usrState;
+	if (document.getElementById("enUsr_en_" + idx).checked)
+		usrState = 1;
+	else
+		usrState = 0;
+		
+	btnSave(idx, usrTbl[idx-1].name, usrTbl[idx-1].pwd, usrState);
+}
+
+function doDel(idx)
+	{
+	btnSave(idx, '', '', 2);
+}
+
+function frmLoad()
+{
+	var idx = 0;
+	for (idx = 0; idx < usrAccountList.length; idx++)
+	{
+		usrTbl[idx] = {};
+
+		usrTbl[idx].name = usrAccountList[idx][0];
+		usrTbl[idx].isSu = usrAccountList[idx][1];
+		usrTbl[idx].status = usrAccountList[idx][2];
+		usrTbl[idx].pwd = "";
+		usrTbl[idx].isChange = 0;
+
+	}
+	initUserTbl();
+}
+
+function initUserTbl()
+{	
+	for (var i = 1; i <= usrAccountList.length; i++)
+	{
+		var userList = document.getElementById("user_tbl");
+		var row = userList.insertRow(-1);
+		var cell = row.insertCell(-1);
+		
+		row.align = "center";
+		cell.innerHTML = i;
+		cell.height = 30;
+		cell = row.insertCell(-1);
+		cell.innerHTML = usrAccountList[i-1][0];
+		if (1 == usrAccountList[i-1][1])
+		{
+			cell.innerHTML += "*";
+		}
+		else
+		{
+			cell.innerHTML += "&nbsp;";
+		}
+		cell = row.insertCell(-1);
+		if ("" != usrAccountList[i-1][0])
+		{
+			cell.innerHTML = usrAccountList[i-1][2] ? "Enabled" : "Disabled";
+			cell = row.insertCell(-1);
+			cell.innerHTML = "<input type='radio' name='enUsr" + i + "' id='enUsr_en_" + i + "' onClick='doEnUsr(" + i + ")'>Enable&nbsp;&nbsp;<input type='radio' name='enUsr" + i + "' id='enUsr_dis_" + i + "' onClick='doEnUsr(" + i + ")'>Disable";
+			
+			if (i != 1)
+			{
+				cell.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;<a class='usb' onClick='doDel(" + i + ")'>Delete</a>"
+			}
+			
+			if (1 == usrAccountList[i-1][2])
+			{
+				document.getElementById("enUsr_en_" + i).checked = true;
+			}
+			else
+			{
+				document.getElementById("enUsr_dis_" + i).checked = true;
+			}
+		}
+		else
+		{
+			cell.innerHTML = "&nbsp;";
+			cell = row.insertCell(-1);
+			cell.innerHTML = "&nbsp;";
+		}
+	}
+}
+
+// done hiding-->
+		</script>
+	</head>
+<body onLoad="frmLoad()">
+<center>
+<form>
+	<table>
+	<tr><td class=h1>User Accounts</td></tr>
+	<tr><td class=blue></td></tr>
+	<tr><td>
+	This page allows you to configure user accounts for Storage Sharing/FTP Server.
+	</td></tr>
+	</table>
+	
+	<table border='1' cellpadding='4' cellspacing='0' id='user_tbl' style="width:60%">
+		<tr align='center'>
+			<td class='hd' style='width:10%' height='35'>Index</td>
+			<td class='hd' style='width:40%'>Username</td>
+			<td class='hd' style='width:20%'>Status</td>
+			<td class='hd' style='width:30%'>Action</td>
+		</tr>
+	</table>
+	<table border=0>
+	<tr><td colspan=2>
+	<center>
+	* : "Super User", It has full-access permission to all active volume(s) and shared folder(s).
+	</center>
+	</td></tr>
+	<tr><td class=blue colspan=2></td></tr>
+	<tr>
+		<td class=item>Choose Index:</td>
+		<td><select name='usrIdx'>
+			<option value=1>1</option>
+			<option value=2>2</option>
+			<option value=3>3</option>
+			<option value=4>4</option>
+			<option value=5>5</option>
+		</select></td>
+	</tr>
+	<tr>
+		<td class=item>New Username:</td>
+		<td><input type='text' name='usrName'></td>
+	</tr>
+	<tr>
+		<td class=item>New Password:</td>
+		<td><input type='password' name='usrPwd'></td>
+	</tr>
+	<tr>
+		<td class=item>Confirm Password:</td>
+		<td><input type='password' name='usrPwdCfm'></td>
+	</tr>
+	<tr>
+		<td class=item>&nbsp;</td>
+		<td><input type='button' onClick='btnSet()' style='width:80' value='Set'></td>
+	</tr>
+	</table>
+</form>
+</center>
+</body>
+</html>
+

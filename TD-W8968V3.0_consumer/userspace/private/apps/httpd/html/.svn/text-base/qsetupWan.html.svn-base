@@ -1,0 +1,1779 @@
+﻿<html>
+<head>
+<meta http-equiv="Pragma" content="no-cache">
+<LINK href="stylemain.css" type="text/css" rel="stylesheet">
+<LINK href="colors.css" type="text/css" rel="stylesheet">
+<script language="javascript" src="util.js"></script>
+<script language='javascript' src='portName.js'></script>
+<script language='javascript' src='3g.js'></script>
+<script language="javascript">
+	
+var lanips = '<%ejGetOther(wanips, wanip)%>';
+var enblv6 = '<%ejGet(enblIpVer)%>';
+var addr6Type = '<%ejGet(wanAddr6Type)%>'; if ( addr6Type == '&nbsp' ) addr6Type = '';
+var addr6 = '<%ejGet(wanAddr6)%>'; if (addr6 == '&nbsp') addr6 = '';
+var gtwy6 = '<%ejGet(wanGtwy6)%>'; if (gtwy6 == '&nbsp') gtwy6 = '';
+var wirelesscountry = '<%ejGetWl(wlCountry)%>';
+var selectedCountry;
+var quickSetupCountry = '<%ejGet(quickSetupCountry)%>';
+var quickSetupISP = '<%ejGet(quickSetupISP)%>';
+
+var autoISPInfo = '<%ejGet(usb3gAutoIspInfo)%>';
+var locationIdx = '<%ejGet(usb3gLocationIdx)%>';
+var ispIdx = '<%ejGet(usb3gIspIdx)%>';
+var APN = '<%ejGet(usb3gAPN)%>';
+var dialNumber = '<%ejGet(usb3gDialNumber)%>';
+var sessionKey = '<%ejGetOther(sessionKey)%>';
+
+var countryAndISP = new Array(
+	["Argentina", "Argentina Telecom", 0, 33, "PPPoE", "LLC"],
+	["Argentina", "Other", 0, 33, "PPPoE", "LLC"],
+
+	["Australia", "CountryWide", 8, 35, "PPPoE", "LLC"],
+	["Australia", "AAPT", 8, 35, "PPPoE", "LLC"],
+	["Australia", "Dodo Internet", 8, 35, "PPPoE", "LLC"],
+	["Australia", "Internode", 8, 35, "PPPoE", "LLC"],
+	["Australia", "iinet", 8, 35, "PPPoE", "LLC"],
+	["Australia", "iPrimus", 8, 35, "PPPoE", "LLC"],
+	["Australia", "Netspace", 8, 35, "PPPoE", "LLC"],
+	["Australia", "Optus", 8, 35, "PPPoE", "LLC"],
+	["Australia", "OzEmail", 8, 35, "PPPoE", "LLC"],
+	["Australia", "Pacific Internet", 8, 35, "PPPoE", "LLC"],
+	["Australia", "TelPacific", 8, 35, "PPPoE", "LLC"],
+	["Australia", "Telstra BigPond(1)", 8, 35, "PPPoE", "LLC"],
+	["Australia", "TPG", 8, 35, "PPPoE", "LLC"],
+	["Australia", "Telstra BigPond(2)", 8, 35, "PPPoA", "VC-Mux"],
+	["Australia", "Internode ADSL 2", 8, 35, "PPPoA", "VC-Mux"],
+	["Australia", "Iprimus", 8, 35, "PPPoA", "VC-Mux"],
+	["Australia", "Pacnet(Pacific Internet)", 8, 35, "PPPoA", "VC-Mux"],
+	["Australia", "Exetel-PPPoA", 8, 35, "PPPoA", "VC-Mux"],
+	["Australia", "Exetel-PPPoE", 8, 35, "PPPoE", "LLC"],
+	["Australia", "Gotalk", 8, 35, "PPPoE", "LLC"],
+	["Australia", "Grapevine", 8, 35, "PPPoE", "LLC"],
+	["Australia", "Adam Internet", 8, 35, "PPPoE", "LLC"],
+	["Australia", "Other", 8, 35, "PPPoE", "LLC"],
+
+	["Austria", "AON", 8, 48, "PPPoA", "VC-Mux"],
+	["Austria", "Other", 8, 48, "PPPoA", "VC-Mux"],
+	["Belgium", "Belgacom/Skynet", 8, 35, "PPPoA", "VC-Mux"],
+	["Belgium", "Scarlet (1)", 0, 35, "PPPoA", "LLC"],
+	["Belgium", "Scarlet (2)", 5, 35, "PPPoA", "VC-Mux"],
+	["Belgium", "Euphony", 8, 35, "PPPoA", "LLC"],
+	["Belgium", "Other", 8, 35, "PPPoA", "LLC"],
+
+	["Brasil", "Brasil Telecom Turbo", 0, 35, "PPPoE", "LLC"],
+	["Brasil", "Brasil Telecom Turbo(RS)", 1, 32, "PPPoE", "LLC"],
+	["Brasil", "Brasil Telecom Turbo Empresas", 0, 35, "PPPoA", "VC-Mux"],
+	["Brasil", "Brasil Telecom Turbo Empresas(RS)", 1, 32, "PPPoA", "VC-Mux"],
+	["Brasil", "CTBC NetSuper", 0, 35, "PPPoE", "LLC"],
+	["Brasil", "CTBC NetSuper-PPPoA", 0, 35, "PPPoA", "VC-Mux"],
+	["Brasil", "GVT TurboNet", 0, 35, "PPPoE", "LLC"],
+	["Brasil", "Telemar Velox", 0, 33, "PPPoE", "LLC"],
+	["Brasil", "Telefonica Speedy", 8, 35, "PPPoE", "LLC"],
+	["Brasil", "Telefonica Speedy Empresas", 8, 35, "IPoA", "LLC"],
+	["Brasil", "Sercomtel Supervia(PPPoE)", 8, 35, "PPPoE", "LLC"],
+	["Brasil", "Sercomtel Supervia(Dynamic IP)", 8, 35, "Dynamic IP", "LLC"],
+	["Brasil", "Sercomtel Supervia(Static IP)", 8, 35, "Static IP", "LLC"],
+	["Brasil", "Other", 8, 35, "Static IP", "LLC"],
+
+	["Cambodia", "Wicam", 0, 35, "PPPoE", "LLC"],
+	["Cambodia", "Online", 0, 35, "PPPoE", "LLC"],
+	["Cambodia", "City Link", 0, 35, "PPPoE", "LLC"],
+	["Cambodia", "Metfone", 8, 35, "PPPoE", "LLC"],
+	["Cambodia", "Camitel", 0, 35, "PPPoE", "LLC"],
+	["Cambodia", "Angkornet", 0, 35, "PPPoE", "LLC"],
+	["Cambodia", "Ezecom", 0, 35, "PPPoE", "LLC"],
+	["Cambodia", "Mfone", 0, 100, "PPPoE", "LLC"],
+	["Cambodia", "Camnet", 0, 35, "PPPoE", "LLC"],
+	["Cambodia", "Other", 0, 35, "PPPoE", "LLC"],
+
+	["Canada", "Look Communications(I.D.Internet Direct)", 0, 35, "PPPoE", "LLC"],
+	["Canada", "iPrimus Canada(west/Dynamic IP)", 0, 33, "Dynamic IP", "LLC"],
+	["Canada", "iPrimus Canada(west/Static IP)", 0, 33, "Static IP", "LLC"],
+	["Canada", "iPrimus Canada(east)", 0, 35, "PPPoE", "LLC"],
+	["Canada", "Telus Quebec", 8, 35, "PPPoE", "LLC"],
+	["Canada", "Unitz", 0, 35, "PPPoE", "LLC"],
+	["Canada", "3WEB(West)(Sybersurf/Dynamic IP)", 0, 33, "Dynamic IP", "LLC"],
+	["Canada", "3WEB(West)(Sybersurf/Static IP)", 0, 33, "Static IP", "LLC"],
+	["Canada", "3WEB(East)(Sybersurf)", 0, 35, "PPPoE", "LLC"],
+	["Canada", "MTS(Internet Service Division)-Primus", 0, 35, "PPPoE", "LLC"],
+	["Canada", "Trytel internet Inc.", 0, 35, "PPPoE", "LLC"],
+	["Canada", "Bell Sympatico", 0, 35, "PPPoE", "LLC"],
+	["Canada", "Telus West(Dynamic IP)", 0, 33, "Dynamic IP", "LLC"],
+	["Canada", "Telus West(Static IP)", 0, 33, "Static IP", "LLC"],
+	["Canada", "IGS(Cybersurf)", 0, 35, "PPPoE", "LLC"],
+	["Canada", "LightSpeed ", 0, 33, "Dynamic IP", "LLC"],
+	["Canada", "LightSpeed Communications", 0, 33, "Static IP", "LLC"],
+	["Canada", "TekSavvy Solutions", 0, 35, "PPPoE", "LLC"],
+	["Canada", "Nucleus Inc(Partner Telus/Dynamic IP)", 0, 33, "Dynamic IP", "LLC"],
+	["Canada", "Nucleus Inc(Partner Telus/Static IP)", 0, 33, "Static IP", "LLC"],
+	["Canada", "Other", 0, 33, "Static IP", "LLC"],
+
+	["Czech", "Cesky Telecom", 8, 48, "PPPoE", "LLC"],
+	["Czech", "Other", 8, 48, "PPPoE", "LLC"],
+
+	["Denmark", "Cybercity", 0, 35, "PPPoA", "VC-Mux"],
+	["Denmark", "Other", 0, 35, "PPPoA", "VC-Mux"],
+
+	["Dominican Republic", "Codetel", "0, 33", "PPPoA", "VC-Mux"],
+	["Dominican Republic", "Other", "0, 33", "PPPoA", "VC-Mux"],
+
+	["Egypt", "Mena Tel", 8, 35, "PPPoE", "VC-Mux"],
+	["Egypt", "TE Data(1483 Router IP LLC(IPoA))", 0, 35, "IPoA", "LLC"],
+	["Egypt", "TE Data(PPPoA VC-Mux)", 0, 35, "PPPoA", "VC-Mux"],
+	["Egypt", "EGYNET(1483 Router IP LLC(IPoA))", 8, 35, "IPoA", "LLC"],
+	["Egypt", "EGYNET(PPPoA VC-Mux)", 8, 35, "PPPoA", "VC-Mux"],
+	["Egypt", "Raya Telecom", 8, 80, "PPPoA", "VC-Mux"],
+	["Egypt", "Raya Telecom(1483 Router IP LLC(IPoA))", 8, 80, "IPoA", "LLC"],
+	["Egypt", "link dot Net(PPPoA VC-Mux)", 0, 35, "PPPoA", "VC-Mux"],
+	["Egypt", "link dot Net(1483 Router IP LLC(IPoA))", 0, 35, "IPoA", "LLC"],
+	["Egypt", "Nile On Line", 0, 35, "PPPoE", "LLC"],
+	["Egypt", "Other", 0, 35, "PPPoE", "LLC"],
+
+	["Finland", "Sonera", 0, 33, "Dynamic IP", "LLC"],
+	["Finland", "Elisa", 0, 100, "Dynamic IP", "LLC"],
+	["Finland", "Saunalahti", 0, 100, "Dynamic IP", "LLC"],
+	["Finland", "DNA", 0, 100, "Dynamic IP", "LLC"],
+	["Finland", "local operators", 0, 100, "Dynamic IP", "LLC"],
+	["Finland", "Other", 0, 100, "Dynamic IP", "LLC"],
+
+	["France", "France Telecom", 8, 35, "PPPoE", "LLC"],
+	["France", "Other", 8, 35, "PPPoE", "LLC"],
+
+	["Germany", "T-Online(Enduser)", 1, 32, "PPPoE", "LLC"],
+	["Germany", "T-Online(Business)(T-Kom)", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Congstar", 1, 32, "PPPoE", "LLC"],
+	["Germany", "GMX", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Web.de", 1, 32, "PPPoE", "LLC"],
+	["Germany", "1 & 1 Internet", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Alice(Hansenet)", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Alice(Hansenet) 8/35", 8, 35, "PPPoE", "LLC"],
+	["Germany", "Arcor", 1, 32, "PPPoE", "LLC"],
+	["Germany", "AOL", 1, 32, "PPPoE", "LLC"],
+	["Germany", "BITel", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Callando", 1, 32, "PPPoE", "LLC"],
+	["Germany", "CNE", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Compuserve", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Comtel", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Dokom", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Envia TEL", 1, 32, "PPPoE", "LLC"],
+	["Germany", "EWETEL", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Freenet", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Hansenet", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Helenet", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Infocity(PPPoE)", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Infocity(Dynamic IP)", 1, 32, "Dynamic IP", "LLC"],
+	["Germany", "Lycos", 1, 32, "PPPoE", "LLC"],
+	["Germany", "M-net", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Mediacom", 1, 32, "PPPoE", "LLC"],
+	["Germany", "multikabel isdn", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Nefcom", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Neocom", 1, 32, "PPPoE", "LLC"],
+	["Germany", "net dsl", 1, 32, "PPPoE", "LLC"],
+	["Germany", "net cologne", 1, 32, "PPPoE", "LLC"],
+	["Germany", "new dsl", 1, 32, "PPPoE", "LLC"],
+	["Germany", "nordkom", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Primacom", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Primacom/Primaspeed", 1, 32, "Dynamic IP", "LLC"],
+	["Germany", "QDSL", 1, 32, "PPPoE", "LLC"],
+	["Germany", "R2 Online", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Schlund & Partner", 1, 32, "PPPoE", "LLC"],
+	["Germany", "T link", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Tiscali", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Versatel", 1, 32, "PPPoE", "LLC"],
+	["Germany", "Arcor", 8, 35, "PPPoE", "LLC"],
+	["Germany", "Other", 8, 35, "PPPoE", "LLC"],
+
+	["Greece", "Otenet(PPPoE)", 8, 35, "PPPoE", "LLC"],
+	["Greece", "HOL(PPPoE)", 8, 35, "PPPoE", "LLC"],
+	["Greece", "Net One(PPPoE)", 8, 35, "PPPoE", "LLC"],
+	["Greece", "Tellas(PPPoE)", 8, 35, "PPPoE", "LLC"],
+	["Greece", "Vodafone(PPPoE)", 8, 35, "PPPoE", "LLC"],
+	["Greece", "Vivodi(PPPoE)", 8, 35, "PPPoE", "LLC"],
+	["Greece", "Forthnet(PPPoE)", 8, 35, "PPPoE", "LLC"],
+	["Greece", "On Telecoms(PPPoE)", 8, 35, "PPPoE", "LLC"],
+	["Greece", "Cyta Hellas(PPPoE)", 8, 35, "PPPoE", "LLC"],
+	["Greece", "Cosmoline(PPPoE)", 8, 35, "PPPoE", "LLC"],
+	["Greece", "Other", 8, 35, "PPPoE", "LLC"],
+
+	["Hungary", "Matav Telecom", 1, 32, "PPPoE", "LLC"],
+	["Hungary", "Other", 1, 32, "PPPoE", "LLC"],
+
+	["Iceland", "Iceland Telecom", 8, 48, "PPPoA", "LLC"],
+	["Iceland", "1Islandssimi 1", 8, 48, "PPPoA", "VC-Mux"],
+	["Iceland", "2Islandssimi 2", 0, 35, "PPPoA", "VC-Mux"],
+	["Iceland", "Other", 0, 35, "PPPoA", "VC-Mux"],
+
+	["India", "BSNL(PPPoE)", 0, 35, "PPPoE", "LLC"],
+	["India", "BSNL(PPPoA)", 0, 35, "PPPoA", "LLC"],
+	["India", "MTNL(PPPoE)", 0, 32, "PPPoE", "LLC"],
+	["India", "MTNL(PPPoA)", 0, 32, "PPPoA", "LLC"],
+	["India", "RELIANCE", 0, 35, "PPPoE", "LLC"],
+	["India", "TATA", 0, 32, "PPPoE", "LLC"],
+	["India", "AIRTEL", 1, 32, "PPPoE", "LLC"],
+	["India", "Other", 1, 32, "PPPoE", "LLC"],
+
+	["Indonesia", "PT Telkom DIVER 1(Sumatra)", 0, 35, "PPPoE", "LLC"],
+	["Indonesia", "PT Telkom DIVER 2(Jakarta)Alcatel", 8, 35, "PPPoA", "LLC"], 
+	["Indonesia", "PT Telkom DIVER 2(Jakarta)Siemens", 1, 33, "PPPoA", "VC-Mux"], 
+	["Indonesia", "PT Telkom DIVER 3(West Java)", 1, 33, "PPPoA", "VC-Mux"], 
+	["Indonesia", "PT Telkom DIVER 4(Central Java)", 8, 35, "PPPoE", "LLC"], 
+	["Indonesia", "PT Telkom DIVER 5(East Java)", 0, 35, "PPPoE", "LLC"], 
+	["Indonesia", "PT Telkom DIVER 7(East Indonesia)", 0, 35, "PPPoE", "LLC"],
+	["Indonesia", "Other", 0, 35, "PPPoE", "LLC"],
+
+	["Iran", "Pars-Online", 0, 35, "Bridge", "LLC"],
+	["Iran", "Other", 0, 35, "Bridge", "LLC"],
+
+	["Ireland", "Eircom", 8, 35, "PPPoE", "LLC"],
+	["Ireland", "BT Business", 8, 35, "PPPoE", "LLC"],
+	["Ireland", "BT Education", 8, 35, "Bridge", "LLC"],
+	["Ireland", "Vodafone Ireland", 8, 35, "PPPoE", "LLC"],
+	["Ireland", "Digiweb", 8, 35, "PPPoE", "LLC"],
+	["Ireland", "Irish Broadband", 8, 35, "PPPoE", "LLC"],
+	["Ireland", "Magnet", 8, 35, "PPPoE", "LLC"],
+	["Ireland", "UTV ROI", 8, 35, "PPPoE", "LLC"],
+	["Ireland", "Other", 8, 35, "PPPoE", "LLC"],
+
+	["Israel", "Israel", 8, 48, "PPPoA", "VC-Mux"],
+	["Israel", "Other", 8, 48, "PPPoA", "VC-Mux"],
+
+	["Italy", "Tiscali(Italy)", 8, 35, "PPPoA", "VC-Mux"],
+	["Italy", "Alice (T.I.)", 8, 35, "PPPoA", "VC-Mux"],
+	["Italy", "Libero (Wind)", 8, 35, "PPPoA", "VC-Mux"],
+	["Italy", "LIBERO/WIND/INFOSTRADA", 8, 35, "PPPoA", "VC-Mux"],
+	["Italy", "TELE 2", 8, 35, "PPPoA", "VC-Mux"],
+	["Italy", "TELECOMITALIA ADSL 10/Smart 15", 8, 35, "PPPoA", "VC-Mux"],
+	["Italy", "AriaTel", 8, 35, "PPPoA", "VC-Mux"],
+	["Italy", "EliTel", 8, 35, "PPPoA", "VC-Mux"],
+	["Italy", "FASTWEB LIGHT(ADSL)", 8, 35, "PPPoA", "VC-Mux"],
+	["Italy", "TIN.IT/VIRGILIO", 8, 35, "PPPoA", "VC-Mux"],
+	["Italy", "Aruba", 8, 35, "PPPoA", "VC-Mux"],
+	["Italy", "Nextra", 8, 35, "PPPoA", "VC-Mux"],
+	["Italy", "Telvia", 8, 35, "PPPoA", "VC-Mux"],
+	["Italy", "MCLink", 8, 35, "PPPoA", "VC-Mux"],
+	["Italy", "Other", 8, 35, "PPPoA", "VC-Mux"],
+
+	["Kazakhstan(MegaLine)", "Kazakhtelecom", 0, 40, "PPPoE", "LLC"],
+	["Kazakhstan(MegaLine)", "Other", 0, 40, "PPPoE", "LLC"],
+
+	["Luxembourg", "Online ANALOGUE", 8, 35, "PPPoA", "VC-Mux"],
+	["Luxembourg", "Online ISDN", 8, 35, "PPPoA", "LLC"],
+	["Luxembourg", "Other", 8, 35, "PPPoA", "LLC"],
+
+	["Malaysia", "Streamyx(Telecom  Malaysia-TMNet)PPPoE", 0, 35, "PPPoE", "LLC"],
+	["Malaysia", "Streamyx(Telecom Malaysia-TMNet)PPPoA", 0, 35, "PPPoA", "VC-Mux"],
+	["Malaysia", "Maxis", 0, 35, "PPPoA", "VC-Mux"],
+	["Malaysia", "Other", 0, 35, "PPPoA", "VC-Mux"],
+
+	["New Zealand", "New Zealand Telecom", 0, 100, "PPPoA", "VC-Mux"],
+	["New Zealand", "Telecom Xtra", 0, 100, "PPPoA", "VC-Mux"],
+	["New Zealand", "IHUG", 0, 100, "PPPoA", "VC-Mux"],
+	["New Zealand", "IGRIN Internet", 0, 100, "PPPoA", "VC-Mux"],
+	["New Zealand", "Actrix", 0, 100, "PPPoA", "VC-Mux"],
+	["New Zealand", "Other", 0, 100, "PPPoA", "VC-Mux"],
+
+	["Norway", "Telenor 1", 0, 100, "PPPoE", "LLC"],
+	["Norway", "Telenor 2", 8, 35, "PPPoE", "LLC"],
+	["Norway", "Other", 8, 35, "PPPoE", "LLC"],
+
+	["Poland", "Neostrada", 0, 35, "PPPoA", "VC-Mux"],
+	["Poland", "DialnetDSL", 1, 32, "Bridge", "LLC"],
+	["Poland", "Net24", 8, 35, "PPPoE", "LLC"],
+	["Poland", "Orange/TPSA (PPPoA)", 0, 35, "PPPoA", "VC-Mux"],
+	["Poland", "Orange/TPSA (PPPoE)", 0, 35, "PPPoE", "LLC"],
+	["Poland", "GTS Energis", 0, 35, "PPPoE", "LLC"],
+	["Poland", "Netia(PPPoE)", 8, 35, "PPPoE", "LLC"],
+	["Poland", "Netia(PPPoA)", 0, 35, "PPPoA", "VC-Mux"],
+	["Poland", "Dialog(PPPoE)", 0, 35, "PPPoE", "LLC"],
+	["Poland", "Dialog(Bridge)", 1, 32, "Bridge", "LLC"],
+	["Poland", "Tele2", 0, 35, "PPPoE", "LLC"],
+	["Poland", "Other", 0, 35, "PPPoE", "LLC"],
+
+	["Portugal", "ONI", 0, 35, "PPPoE", "LLC"],
+	["Portugal", "PT", 0, 35, "PPPoE", "LLC"],
+	["Portugal", "Other", 0, 35, "PPPoE", "LLC"],
+
+	["Russia", "Stream", 1, 50, "PPPoE", "LLC"],
+	["Russia", "Infoline", 2, 32, "PPPoE", "LLC"],
+	["Russia", "WebPlus(Dynamic IP)", 1, 32, "Dynamic IP", "LLC"],
+	["Russia", "VoronezhSvyazlnform(Dynamic IP)", 10, 40, "Dynamic IP", "LLC"],
+	["Russia", "InformSvyaaz-Chernozemie", 0, 33, "PPPoE", "LLC"],
+	["Russia", "Kominkom-Voronezh", 0, 33, "PPPoE", "LLC"],
+	["Russia", "Intercon", 0, 33, "PPPoE", "LLC"],
+	["Russia", "Volga Telecom(Nijniy Novgorod)", 0, 33, "PPPoE", "LLC"],
+	["Russia", "Vostok Telecom", 0, 35, "Bridge", "LLC"],
+	["Russia", "DalSvyaz", 0, 35, "Bridge", "LLC"],
+	["Russia", "Bashinformsvyaz UGTS", 8, 35, "PPPoE", "LLC"],
+	["Russia", "UTK:Krasnodar", 0, 35, "PPPoE", "LLC"],
+	["Russia", "UTK:Adygeya", 0, 35, "PPPoE", "LLC"],
+	["Russia", "UTK:Astrakhan", 0, 35, "PPPoE", "LLC"],
+	["Russia", "UTK:Volgograd", 8, 35, "PPPoE", "LLC"],
+	["Russia", "UTK:Kabardino-Balkariya", 0, 67, "PPPoE", "LLC"],
+	["Russia", "UTK:Karachaevo-Cherkesiya", 0, 35, "PPPoE", "LLC"],
+	["Russia", "UTK:Sev.Osetiya.Alayniya", 0, 35, "PPPoE", "LLC"],
+	["Russia", "UTK:Stavropol", 8, 35, "PPPoA", "LLC"],
+	["Russia", "AAA-internet(Rostov)", 0, 33, "PPPoE", "LLC"],
+	["Russia", "AgentstvoDelovoySvyazi(Dynamic IP)", 8, 35, "Dynamic IP", "LLC"],
+	["Russia", "VolgaTelecom(Samara)", 1, 100, "PPPoE", "LLC"],
+	["Russia", "Sandy", 0, 33, "Bridge", "LLC"],
+	["Russia", "VeresADSL", 10, 40, "PPPoE", "LLC"],
+	["Russia", "UralSvyazInform", 8, 35, "PPPoE", "LLC"],
+	["Russia", "Delovaya Set-Irkutsk", 0, 35, "Bridge", "LLC"],
+	["Russia", "Sibirtelecom Irkutskaya oblast", 0, 100, "PPPoE", "LLC"],
+	["Russia", "Megapolis-Telecom", 8, 35, "PPPoE", "LLC"],
+	["Russia", "WebPlus(Static IP)", 1, 32, "Static IP", "LLC"],
+	["Russia", "VoronezhSvyazlnform(Static IP)", 10, 40, "Dynamic IP", "LLC"],
+	["Russia", "AgentstvoDelovoySvyazi(Static IP)", 8, 35, "Static IP", "LLC"],
+	["Russia", "Other", 8, 35, "Static IP", "LLC"],
+
+	["Saudi Arabia", "STC", 0, 35, "PPPoE", "LLC"],
+	["Saudi Arabia", "Other", 0, 35, "PPPoE", "LLC"],
+
+	["Singapore", "Singnet(PPPoE)", 0, 100, "PPPoE", "LLC"],
+	["Singapore", "Singnet(PPPoA-LLC)", 0, 100, "PPPoA", "LLC"],
+	["Singapore", "Singnet(PPPoA-VC MUX)", 0, 100, "PPPoA", "VC-Mux"],
+	["Singapore", "SingTel Magix", 0, 101, "IPoA", "LLC"],
+	["Singapore", "SingTel MegaPOP(Biz Users)", 8, 35, "IPoA", "LLC"],
+	["Singapore", "Other", 8, 35, "IPoA", "LLC"],
+
+	["Slovakia", "Slovak Telecom", 1, 32, "PPPoE", "LLC"],
+	["Slovakia", "Other", 1, 32, "PPPoE", "LLC"],
+
+	["Spain", "Arrakis", 0, 35, "PPPoA", "VC-Mux"],
+	["Spain", "Arsys", 1, 33, "PPPoA", "VC-Mux"],
+	["Spain", "Auna", 8, 35, "PPPoA", "VC-Mux"],
+	["Spain", "Comunitel", 0, 33, "PPPoA", "VC-Mux"],
+	["Spain", "Eresmas", 8, 35, "PPPoA", "VC-Mux"],
+	["Spain", "EuskalTel", 8, 35, "PPPoA", "VC-Mux"],
+	["Spain", "Jazztel", 8, 35, "PPPoA", "VC-Mux"],
+	["Spain", "Jazztel 20Mb", 8, 35, "PPPoE", "LLC"],
+	["Spain", "Metrored", 1, 32, "PPPoA", "VC-Mux"],
+	["Spain", "OpenforYou", 8, 32, "PPPoA", "VC-Mux"],
+	["Spain", "Orange", 8, 35, "PPPoE", "LLC"],
+	["Spain", "Telefonica-Spain", 8, 32, "PPPoE", "LLC"],
+	["Spain", "Telefonica", 8, 32, "Static", "IP"],
+	["Spain", "Tele 2", 8, 35, "PPPoA", "VC-Mux"],
+	["Spain", "Tele 2 - Comunitel", 0, 33, "PPPoA", "VC-Mux"],
+	["Spain", "Terra", 8, 32, "PPPoE", "LLC"],
+	["Spain", "Terra(IPoA)", 8, 32, "IPoA", "LLC"],
+	["Spain", "Tiscali", 1, 32, "PPPoA", "VC-Mux"],
+	["Spain", "Uni2", 1, 33, "PPPoA", "VC-Mux"],
+	["Spain", "Wanadoo", 8, 35, "PPPoA", "VC-Mux"],
+	["Spain", "Wanadoo(IPoA)", 8, 32, "IPoA", "LLC"],
+	["Spain", "YA.COM ADSL", 8, 32, "PPPoE", "LLC"],
+	["Spain", "YA.COM ADSL(Static IP)", 8, 32, "Static IP", "LLC"],
+	["Spain", "Ya.com(PPPoA)", 8, 32, "PPPoA", "VC-Mux"],
+	["Spain", "Ya.com(Bridge)", 8, 32, "Bridge", "LLC"],
+	["Spain", "Other", 8, 32, "Bridge", "LLC"],
+
+	["Sweden", "Bredbandsbolaget(PPPoE)", 8, 35, "PPPoE", "LLC"],
+	["Sweden", "Bredbandsbolaget(Dynamic IP)", 8, 35, "Dynamic IP", "LLC"],
+	["Sweden", "Bredbandsbolaget(Static IP)", 8, 35, "Static IP", "LLC"],
+	["Sweden", "Bredband2", 8, 35, "Static IP", "LLC"],
+	["Sweden", "Glocalnet(PPPoE)", 8, 35, "PPPoE", "LLC"],
+	["Sweden", "Glocalnet(Dynamic IP)", 8, 35, "Dynamic IP", "LLC"],
+	["Sweden", "Glocalnet(Static IP)", 8, 35, "Static IP", "LLC"],
+	["Sweden", "Net at Once", 8, 35, "Static IP", "LLC"],
+	["Sweden", "No Com", 8, 35, "Static IP", "LLC"],
+	["Sweden", "Ownit(Dynamic IP)", 8, 35, "Dynamic IP", "LLC"],
+	["Sweden", "Ownit(Static IP)", 8, 35, "Static IP", "LLC"],
+	["Sweden", "Skanova", 8, 35, "Static IP", "LLC"],
+	["Sweden", "Spray", 8, 35, "PPPoE", "LLC"],
+	["Sweden", "Tele2(Dynamic IP)", 8, 35, "Dynamic IP", "LLC"],
+	["Sweden", "Tele2(Static IP)", 8, 35, "Static IP", "LLC"],
+	["Sweden", "Telia(Dynamic IP)", 8, 35, "Dynamic IP", "LLC"],
+	["Sweden", "Telia(Static IP)", 8, 35, "Static IP", "LLC"],
+	["Sweden", "Universal Telecom(Dynamic IP)", 8, 35, "Dynamic IP", "LLC"],
+	["Sweden", "Universal Telecom(Static IP)", 8, 35, "Static IP", "LLC"],
+	["Sweden", "Teletek", 8, 35, "Static IP", "LLC"],
+	["Sweden", "Teleman", 8, 35, "Static IP", "LLC"],
+	["Sweden", "AllTele(Dynamic IP)", 8, 35, "Dynamic IP", "LLC"],
+	["Sweden", "AllTele(Static IP)", 8, 35, "Static IP", "LLC"],
+	["Sweden", "AllTele(PPPoE)", 8, 35, "PPPoE", "LLC"],
+	["Sweden", "Bjare Kraft(Dynamic IP)", 8, 35, "Dynamic IP", "LLC"],
+	["Sweden", "Bjare Kraft(Static IP)", 8, 35, "Static IP", "LLC"],
+	["Sweden", "Other", 8, 35, "Static IP", "LLC"],
+
+	["Syria", "STE", 0, 33, "PPPoE", "LLC"],
+	["Syria", "Other", 0, 33, "PPPoE", "LLC"],
+
+	["Taiwan", "Hinet", 0, 33, "PPPoE", "LLC"],
+	["Taiwan", "Other", 0, 33, "PPPoE", "LLC"],
+
+	["Thailand", "ADC", 0, 35, "PPPoE", "LLC"],
+	["Thailand", "Ucom(Bblife)", 0, 100, "PPPoE", "LLC"],
+	["Thailand", "CSLOXINFO", 0, 35, "PPPoE", "LLC"],
+	["Thailand", "Qnet", 0, 40, "PPPoE", "LLC"],
+	["Thailand", "Samart", 0, 35, "PPPoE", "LLC"],
+	["Thailand", "TOT", 1, 32, "PPPoE", "LLC"],
+	["Thailand", "True(Huaweii)", 0, 100, "PPPoE", "LLC"],
+	["Thailand", "True(Nokia)", 0, 100, "PPPoA", "VC-Mux"],
+	["Thailand", "TT_T(Normal)", 0, 33, "PPPoE", "LLC"],
+	["Thailand", "TT_T(Hinet)", 0, 66, "PPPoE", "LLC"],
+	["Thailand", "UBT", 0, 100, "PPPoE", "LLC"],
+	["Thailand", "CAT", 0, 35, "PPPoE", "LLC"],
+	["Thailand", "TRUE", 0, 100, "PPPoE", "LLC"],
+	["Thailand", "Other", 0, 100, "PPPoE", "LLC"],
+
+	["Tunisia", "Global Net", 0, 35, "PPPoA", "LLC"],
+	["Tunisia", "Other", 0, 35, "PPPoA", "LLC"],
+
+	["Turkey", "Turkey Telecom(Alcatel)", 8, 35, "PPPoE", "LLC"],
+	["Turkey", "Turkey Telekom(Nec)", 8, 35, "PPPoA", "VC-Mux"],
+	["Turkey", "Other", 8, 35, "PPPoA", "VC-Mux"],
+
+	["UK", "BT", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "AOL", 0, 38, "PPPoE", "LLC"],
+	["UK", "Karoo", 1, 50, "PPPoA", "LLC"],
+	["UK", "Bulldog", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "Demon", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "Force 9", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "Nildram", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "O2(BE Broadband)", 0, 101, "Dynamic IP", "LLC"],
+	["UK", "Pipex", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "PlusNet", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "UTV NI", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "UTV UK", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "Sky Broadband(BSkyB)", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "Supanet", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "Talk Talk", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "Tesco", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "Tiscali/Lineone", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "Virgin", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "Wanadoo/Orange", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "Zen", 0, 38, "PPPoA", "VC-Mux"],
+	["UK", "Other", 0, 38, "PPPoA", "VC-Mux"],
+
+	["Ukraine", "Matrix", 0, 33, "Bridge", "LLC"],
+	["Ukraine", "Inter-Telecom", 8, 35, "PPPoE", "LLC"],
+	["Ukraine", "Укртелеком - ОГО!", 1, 32, "PPPoE", "LLC"],
+	["Ukraine", "Vega", 0, 33, "PPPoE", "LLC"],
+	["Ukraine", "Cyfra", 8, 35, "PPPoE", "LLC"],
+	["Ukraine", "Other", 8, 35, "PPPoE", "LLC"],
+
+	["USA", "All Tel(0/35 PPPoE LLC)", 0, 35, "PPPoE", "LLC"],
+	["USA", "All Tel(0/35 Dynamic IP LLC)", 0, 35, "Dynamic IP", "LLC"],
+	["USA", "AT&T[SBC/Bellsouth](0/35 PPPoE LLC)", 0, 35, "PPPoE", "LLC"],
+	["USA", "AT&T[SBC/Bellsouth](0/35 Dynamic IP LLC)", 0, 35, "Dynamic IP", "LLC"],
+	["USA", "AT&T[SBC/Bellsouth](8/35 PPPoE LLC)", 8, 35, "PPPoE", "LLC"],
+	["USA", "AT&T[SBC/Bellsouth](8/35 Dynamic IP LLC)", 8, 35, "Dynamic IP", "LLC"],
+	["USA", "Augest.net(8/35 Dynamic IP LLC)", 8, 35, "Dynamic IP", "LLC"],
+	["USA", "Augest.net(0/35 Dynamic IP LLC)", 0, 35, "Dynamic IP", "LLC"],
+	["USA", "Bellsouth", 8, 35, "PPPoE", "LLC"],
+	["USA", "Casstle.net", 0, 96, "Dynamic IP", "LLC"],
+	["USA", "CenturyLink(8/35 PPPoE LLC)", 8, 35, "PPPoE", "LLC"],
+	["USA", "CenturyLink(0/35 Dynamic IP LLC)", 0, 35, "Dynamic IP", "LLC"],
+	["USA", "CentryTel(0/35 PPPoE LLC)", 0, 35, "PPPoE", "LLC"],
+	["USA", "CentryTel(8/35 Dynamic IP LLC)", 8, 35, "Dynamic IP", "LLC"],
+	["USA", "Coqui.net", 0, 35, "PPPoA", "LLC"],
+	["USA", "Covad", 0, 35, "PPPoE", "LLC"],
+	["USA", "Earthlink(0/35 PPPoE LLC)", 0, 35, "PPPoE", "LLC"],
+	["USA", "Earthlink(8/35 PPPoE LLC)", 8, 35, "PPPoE", "LLC"],
+	["USA", "Earthlink(8/35 PPPoE VC-MUX)", 8, 35, "PPPoE", "VC-Mux"],
+	["USA", "Eastex", 0, 100, "PPPoA", "LLC"],
+	["USA", "Embarq", 8, 35, "Dynamic IP", "LLC"],
+	["USA", "4DV.net", 0, 32, "PPPoA", "VC-Mux"],
+	["USA", "Grande Communications", 1, 34, "PPPoE", "LLC"],
+	["USA", "GWI", 0, 35, "Dynamic IP", "LLC"],
+	["USA", "Hotwire", 0, 35, "Dynamic IP", "LLC"],
+	["USA", "InReach(8/35 Dynamic IP LLC)", 8, 35, "Dynamic IP", "LLC"],
+	["USA", "InReach(0/35 Dynamic IP LLC)", 0, 35, "Dynamic IP", "LLC"],
+	["USA", "Internet Junction", 0, 35, "Dynamic IP", "LLC"],
+	["USA", "Qwest(0/32 PPPoA VC-MUX)", 0, 32, "PPPoA", "VC-Mux"],
+	["USA", "Qwest(0/32 PPPoA LLC)", 0, 32, "PPPoA", "LLC"],
+	["USA", "Qwest(0/32 PPPoE LLC)", 0, 32, "PPPoE", "LLC"],
+	["USA", "Qwest(0/32 Dynamic IP LLC)", 0, 32, "Dynamic IP", "LLC"],
+	["USA", "Socket(8/35 Dynamic IP LLC)", 8, 35, "Dynamic IP", "LLC"],
+	["USA", "Socket(0/35 Dynamic IP LLC)", 0, 35, "Dynamic IP", "LLC"],
+	["USA", "Socket(0/35 PPPoE LLC)", 0, 35, "PPPoE", "LLC"],
+	["USA", "Sonic", 0, 35, "Dynamic IP", "LLC"],
+	["USA", "South Western Bell", 0, 35, "Dynamic IP", "LLC"],
+	["USA", "Sprint(0/35 PPPoA LLC)", 0, 35, "PPPoA", "LLC"],
+	["USA", "Sprint(8/35 PPPoE LLC)", 8, 35, "PPPoE", "LLC"],
+	["USA", "SureWest Communications(0/34 Dynamic IP LLC)", 0, 34, "Dynamic IP", "LLC"],
+	["USA", "SureWest Communications(0/32 PPPoE LLC)", 0, 32, "PPPoE", "LLC"],
+	["USA", "SureWest Communications(0/32 PPPoA LLC)", 0, 32, "PPPoA", "LLC"],
+	["USA", "Toast.Net", 0, 35, "PPPoE", "LLC"],
+	["USA", "Uniserve", 0, 33, "Dynamic IP", "LLC"],
+	["USA", "US West", 0, 32, "PPPoA", "VC-Mux"],
+	["USA", "Verizon(0/35 PPPoE LLC)", 0, 35, "PPPoE", "LLC"],
+	["USA", "Verizon(0/35 Dynamic IP LLC)", 0, 35, "Dynamic IP", "LLC"],
+	["USA", "Windstream(0/35 PPPoE LLC)", 0, 35, "PPPoE", "LLC"],
+	["USA", "Windstream(0/35 Dynamic IP LLC)", 0, 35, "Dynamic IP", "LLC"],
+	["USA", "Other", 0, 35, "Dynamic IP", "LLC"],
+
+	["Venezuela", "CANTV", 0, 33, "Dynamic IP", "LLC"],
+	["Venezuela", "Other", 0, 33, "Dynamic IP", "LLC"],
+
+	["Vietnam", "Viettel", 8, 35, "PPPoE", "LLC"],
+	["Vietnam", "VNN Mega", 8, 35, "PPPoE", "LLC"],
+	["Vietnam", "FPT", 0, 33, "PPPoE", "LLC"],
+	["Vietnam", "Cybercity Bitstream", 0, 101, "PPPoA", "VC-Mux"],
+	["Vietnam", "Tiscali", 0, 35, "PPPoA", "VC-Mux"],
+	["Vietnam", "FullADSL", 8, 35, "PPPoA", "VC-Mux"],
+	["Vietnam", "Scarlet", 8, 35, "PPPoE", "LLC"],
+	["Vietnam", "Skynet", 8, 35, "PPPoE", "LLC"],
+	["Vietnam", "Signpost", 8, 35, "PPPoA", "VC-Mux"],
+	["Vietnam", "Versatel PPP", 8, 35, "PPPoA", "VC-Mux"],
+	["Vietnam", "Cesky Telecom PPPoA", 8, 48, "PPPoA", "VC-Mux"],
+	["Vietnam", "VNPT", 0, 32, "PPPoE", "LLC"],
+	["Vietnam", "VNPT_HN", 0, 35, "PPPoE", "LLC"],
+	["Vietnam", "VNPT_HCM", 0, 35, "PPPoE", "LLC"],
+	["Vietnam", "VNPT_Quang_Tri", 0, 35, "PPPoE", "LLC"],
+	["Vietnam", "SPT", 0, 33, "PPPoE", "LLC"],
+	["Vietnam", "Netnam", 0, 33, "PPPoE", "LLC"],
+	["Vietnam", "Other", 0, 33, "PPPoE", "LLC"],
+
+	["Other", "Other", 8, 35, "PPPoE", "LLC"]
+);
+
+function doCountryChange()
+{
+	var i = 0;
+	var j = 0;
+	var selectedIndex = -1;
+	var ISPs;
+	
+	selectedCountry = document.getElementById("country");
+	ISPs = document.getElementById("isp");
+	var len = ISPs.length;
+	for (j = 0; j < len; ++j)
+	{
+		ISPs.remove(0);
+	}
+	for (i = 0; i < countryAndISP.length; i++)
+	{
+		if (selectedCountry.value == countryAndISP[i][0])
+		{
+			if (selectedIndex == -1)
+				selectedIndex = i;
+			var opt2 = document.createElement("option");
+			opt2.value = countryAndISP[i][1];
+			opt2.text = countryAndISP[i][1];
+			try{ISPs.add(opt2, null);}catch(e){ISPs.add(opt2);}
+		}
+	}
+		
+		doISPChange(countryAndISP[selectedIndex][1]);
+	}
+
+function doISPChange(selectedISP)
+{
+	var i = 0;
+	var j = 0;
+	var goodIsp = 0;
+	var DF = document.forms[0];
+
+	selectedCountry = document.getElementById("country");
+	
+	if ("Other" == selectedCountry.value)
+	{
+		/* If other country and isp, use default VPI/VCI, encapsulation, and network protocol. */
+		DF.atmVpi.value = '<%ejGet(atmVpi)%>';
+		DF.atmVci.value = '<%ejGet(atmVci)%>';
+		DF.encSel.value = '<%ejGet(encapMode)%>';
+		DF.ntwkPrtcl.value = '<%ejGet(ntwkPrtcl)%>';
+		changePrtcl();
+		doHideISP();
+		return;
+	}
+	
+	/* To init the ISP list of this country. */
+	for (i = 0; i < countryAndISP.length; i++)
+	{
+		if (countryAndISP[i][0] == selectedCountry.value 
+			&& countryAndISP[i][1] == selectedISP)
+		{
+			break;
+		}
+	}
+	
+	/* The ISP default to be the first in the array of this country. */
+	document.getElementById("atmVpi").value = countryAndISP[i][2];
+	document.getElementById("atmVci").value = countryAndISP[i][3];
+
+	/* Set encapsulation. */
+	//alert(countryAndISP[i]);
+	if (countryAndISP[i][5] == "LLC")
+	{
+		document.getElementById("encSel").selectedIndex = 0;
+	}
+	else if (countryAndISP[i][5] == "VC-Mux")
+	{
+		//alert(countryAndISP[i][5]);
+		document.getElementById("encSel").selectedIndex = 1;
+	}
+
+	/* Set network protocol. */
+	if ("PPPoE" == countryAndISP[i][4])
+	{
+		document.getElementById("ntwkPrtcl").selectedIndex = 0;
+	}
+	else if ("PPPoA" == countryAndISP[i][4])
+	{
+		document.getElementById("ntwkPrtcl").selectedIndex = 1;
+		/* Set encapsulation. */
+		if (countryAndISP[i][5] == "LLC")
+		{
+			document.getElementById("encSel").selectedIndex = 1;
+		}
+		else if (countryAndISP[i][5] == "VC-Mux")
+		{
+			document.getElementById("encSel").selectedIndex = 0;
+		}
+	}
+	else if ("Static IP" == countryAndISP[i][4])
+	{
+		document.getElementById("ntwkPrtcl").selectedIndex = 2;
+		DF.ip_addr_type[0].checked = false;
+		DF.ip_addr_type[1].checked = true;
+	}
+	else if ("Dynamic IP" == countryAndISP[i][4])
+	{
+		document.getElementById("ntwkPrtcl").selectedIndex = 2;
+		DF.ip_addr_type[0].checked = true;
+		DF.ip_addr_type[1].checked = false;
+	}
+	else if ("IPoA" == countryAndISP[i][4])
+	{
+		document.getElementById("ntwkPrtcl").selectedIndex = 3;
+	}
+	else if ("Bridge" == countryAndISP[i][4])
+	{
+		document.getElementById("ntwkPrtcl").selectedIndex = 4;
+	}
+	changePrtcl();
+	doHideISP();
+}
+
+function selectISPChange()
+{
+	doISPChange(document.getElementById("isp").value);
+}
+
+function style_display_on()
+{
+	if (window.ActiveXObject)
+	{ // IE
+		return "block";
+	}
+	else if (window.XMLHttpRequest)
+	{ // Mozilla, Safari,...
+		return "table-row";
+	}
+}
+
+function wan6Click() {
+   with ( document.forms[0] ) {
+      if ( wan6[0].checked == true )
+         disableWan6Info();
+      else
+         enableWan6Info();
+   }
+}
+
+function disableWan6Info() {
+   with ( document.forms[0] ) {
+      wanAddress6.disabled = 1;
+      wanGateway6.disabled = 1;
+      //dhcp6.disabled = 0;
+      wanAddress6.value = addr6;
+      wanGateway6.value = gtwy6;
+     /* if ( dhcp6cForAddr == '1' )
+         dhcp6.checked = true;
+      else
+         dhcp6.checked = false;*/
+   }
+}
+
+function enableWan6Info() {
+   with ( document.forms[0] ) {
+      wanAddress6.disabled = 0;
+      wanGateway6.disabled = 0;
+      //dhcp6.disabled = 1;
+      wanAddress6.value = addr6;
+      wanGateway6.value = gtwy6;
+      /*if ( dhcp6cForAddr == '1' )
+         dhcp6.checked = true;
+      else
+         dhcp6.checked = false;*/
+   }
+}
+
+
+function btnSave()
+{
+	var DF = document.forms[0];
+	var loc ='qsetupcfg.cmd?&q_step=input_wan';
+	
+	var qsWanType = '<%ejGet(qsWanType)%>';
+	// modified by pj for usb 3g
+	if(qsWanType == '1')
+	{
+		qsWanType = 1;
+	}
+	if(qsWanType == '2')
+	{
+		qsWanType = 2;
+	}
+	if(qsWanType == '3')
+	{
+		qsWanType = 3;
+	}
+	// end adding
+	//div_atm
+	if (qsWanType == 1)
+	{
+		var pvc_vpi = DF.atmVpi.value;
+		var pvc_vci = DF.atmVci.value;
+		var pvc_ecpmode = DF.encSel.value;
+		if ( isNaN(parseInt(pvc_vpi)) == true )
+		{
+			alertAndFocus(DF.atmVpi, 'VPI "' + pvc_vpi + '" is invalid.');
+			return;
+      	}
+		if ( isNaN(parseInt(pvc_vci)) == true )
+		{
+			alertAndFocus(DF.atmVci, 'VCI "' + pvc_vci + '" is invalid.');
+			return;
+		}
+		if ( parseInt(pvc_vpi) < 0 || parseInt(pvc_vpi) > 255 ) {
+			alertAndFocus(DF.atmVpi, 'VPI "' + pvc_vpi + '" is out of range [0-255].');
+			return;
+		}
+
+		if ( parseInt(pvc_vci) < 32 || parseInt(pvc_vci) > 65535 ) {
+			alertAndFocus(DF.atmVci, 'VCI "' + pvc_vci + '" is out of range [32-65535].');
+			return;
+		}
+		loc += '&qsetup_vpi=' + pvc_vpi;
+		loc += '&qsetup_vci=' + pvc_vci;
+		loc += '&qsetup_ecpmode=' + pvc_ecpmode;
+	}
+	// added by pj for usb 3g
+	if(qsWanType == 3)
+	{
+		var usb3g_locationIdx = document.getElementById("location_sel").value;
+	       var usb3g_ispIdx = document.getElementById("isp_sel").value;
+	       var usb3g_dialNumber = document.getElementById("dial_num").value;	
+		var usb3g_APN = document.getElementById("apn").value;   
+		var pattern = /[^0-9\*#]/ig;
+	
+		if (usb3g_dialNumber.match(pattern) != null) {
+	            alert("Error: Invalid dial number!");
+	            document.getElementById("dial_num").focus();
+	            document.getElementById("dial_num").select();
+		     return;
+        	}
+
+		loc += '&usb3gAutoIspInfo=' + autoISPInfo;
+		loc += '&APN=' + usb3g_APN;
+		loc += '&locationIdx=' + usb3g_locationIdx;
+		loc += '&ispIdx=' + usb3g_ispIdx;
+		loc += '&usb3gDialNumber=' +encodeUrl(usb3g_dialNumber);
+	}
+	//end adding 
+	//div_eth, nothing need todo
+	
+	// wan type
+	loc += '&qsetup_cnttype=' + DF.ntwkPrtcl.value;
+	
+	//div_ppp
+	if ((DF.ntwkPrtcl.value == 0) || (DF.ntwkPrtcl.value == 1))
+	{
+		var pvc_username = DF.pppUserName.value;
+		var pvc_psw = DF.pppPassword.value;
+		// modified by pj : 3g username and password are allowed empty
+		if( qsWanType != 3 && ((pvc_username == '') || (pvc_psw == '')))
+		{
+			msg = 'The UserName or Password should not be empty!';
+			alertAndFocus(DF.pppUserName, msg);
+			return;
+		}
+
+		//yuanshang add to avoid space
+		if ( pvc_username.indexOf(" ") != -1 || pvc_psw.indexOf(" ") != -1)
+		{
+			msg = 'The UserName or Password should not have space!';
+			alertAndFocus(DF.pppUserName, msg);
+			return;
+		}
+		var len = DF.pppUserName.value.length;
+		if ( len > 64 )
+		{
+			msg = 'The length of UserName (' + len + ') is too long [0-64].';
+			alertAndFocus(DF.pppUserName, msg);
+			return;
+		}
+		// validate password
+		len = DF.pppPassword.value.length;
+		if ( len > 32 )
+		{
+			msg = 'The length of Password (' + len + ') is too long [0-32].';
+			alertAndFocus(DF.pppPassword, msg);
+			return;
+		}
+		loc += '&qsetup_username=' + encodeUrl(pvc_username);
+		loc += '&qsetup_psw=' + encodeUrl(pvc_psw);
+		if (DF.ntwkPrtcl.value == 0)
+		{
+			len = DF.pppServerName.value.length;
+			if ( len > 32 ) {
+				msg = 'The length of PPPoE Service Name (' + len + ') is too long [0-32].';
+				alertAndFocus(DF.pppServerName, msg);
+				return;
+			}
+			if ( DF.pppServerName.value.indexOf(" ") != -1)
+			{
+				msg = 'The ServerName should not have space!';
+				alertAndFocus(DF.pppServerName, msg);
+				return;
+			}
+			loc += '&qsetup_pppsrcname=' + encodeUrl(DF.pppServerName.value);
+		}
+		if (1)
+		{
+			if ( isNaN(parseInt(DF.pppMtu.value)) == true )
+			{
+				msg = 'MTU "' + DF.pppMtu.value + '" is invalid.';
+				alertAndFocus(DF.pppMtu, msg);
+				return;
+			}
+			var mtuNum = parseInt(DF.pppMtu.value);
+			if ( (mtuNum < 576 || mtuNum > 1492) && (DF.ntwkPrtcl.value == 0) )
+			{
+				msg = 'PPPoE\'s MTU "' + DF.pppMtu.value +'" is out of range [576-1492].';
+				alertAndFocus(DF.pppMtu, msg);
+				return;
+			}
+			else if ( (mtuNum < 576 || mtuNum > 1500) && (DF.ntwkPrtcl.value == 1) )
+			{
+				msg = 'PPPoA\'s MTU "' + DF.pppMtu.value +'" is out of range [576-1500].';
+				alertAndFocus(DF.pppMtu, msg);
+				return;
+			}
+			loc += '&qsetup_pppmtu=' + DF.pppMtu.value;
+		}
+	}
+	
+	//div_ip
+	if ((DF.ntwkPrtcl.value == 5) 
+		|| (DF.ntwkPrtcl.value == 2))
+	{
+		// IPoA or Static IPoE
+		if((DF.ip_addr_type[1].checked == true))
+		{
+		loc += '&qsetup_dhcp=0';
+		if ( isValidIpAddress(DF.pvc_wanip.value) == false ) {
+			alertAndFocus(DF.pvc_wanip, 'WAN IP address "' + DF.pvc_wanip.value + '" is invalid.');
+			return;
+		}
+		if ( isValidSubnetMask(DF.pvc_wanmask.value) == false ) {
+			alertAndFocus(DF.pvc_wanmask, 'WAN Subnet Mask "' + DF.pvc_wanmask.value + '" is invalid.');
+			return;
+		}
+		//is wan ip conflict with lan
+		var netid;
+		if( (lanips != "Helloword----cgiGetWanIps")
+			&& (lanips != ""))
+		{
+			netid = lanips.split('|');
+			for (i = 0 ;i< netid.length ; i++)
+			{
+				netip = netid[i].split('*');
+				var tIp, tMask;
+				tIp = 0;
+				tMask = 0;
+				for (j = 0; j < 4; j++)
+				{
+					num1 = parseInt(((DF.pvc_wanip.value).split('.'))[j]);
+					num2 = parseInt(((DF.pvc_wanmask.value).split('.'))[j]);
+					if (j == 0)
+					{
+						tIp += (num1*256*256*256);
+						tMask += (num2*256*256*256);
+					}
+					if (j == 1)
+					{
+						tIp += (num1*256*256);
+						tMask += (num2*256*256);
+					}
+					if (j == 2)
+					{
+						tIp += (num1*256);
+						tMask += (num2*256);
+					}
+					if (j == 3)
+					{
+						tIp += (num1);
+						tMask += (num2);
+					}
+				}
+				//((addr1 ^ addr2) & netmask1 & netmask2) == 0
+				if (((parseInt(netip[0]) & parseInt(tMask)) == (parseInt(tIp) & parseInt(tMask)))
+				|| ((parseInt(netip[0]) & parseInt(netip[1])) == (parseInt(tIp) & parseInt(netip[1]))))
+				{
+					msg = "The Wan IP address (" + DF.pvc_wanip.value + ") is in the same Subnet with Lan IP address!";
+					alertAndFocus(DF.pvc_wanip, msg);
+					return;
+				}
+			}
+		}
+		loc += '&qsetup_wanip=' + DF.pvc_wanip.value;
+		loc += '&qsetup_wanmask=' + DF.pvc_wanmask.value;
+		if (DF.ntwkPrtcl.value == 2)
+		{
+			if ( isValidIpAddress(DF.pvc_wangateway.value) == false ) {
+				alertAndFocus(DF.pvc_wangateway, 'WAN Gateway "' + DF.pvc_wangateway.value + '" is invalid IP address.');
+				return;
+			}
+			loc += '&qsetup_wangateway=' + DF.pvc_wangateway.value;
+		}
+	}
+		else
+		{
+				loc += '&qsetup_dhcp=1';		
+		}
+	/*added by zhangshen for mtu*/
+	if ((DF.ntwkPrtcl.value == 5) || (DF.ntwkPrtcl.value == 2))
+	{
+		if (isNaN(parseInt(DF.ethMtu.value)) == true )
+		{
+			msg = 'MTU "' + DF.ethMtu.value + '" is invalid.';
+			alertAndFocus(DF.ethMtu, msg);
+			return;
+		}
+		var ethmtu = parseInt(DF.ethMtu.value);
+		if (ethmtu < 576 || ethmtu > 1500)
+		{
+			msg = 'MTU "' + DF.ethMtu.value +'" is out of range [576-1500].';
+			alertAndFocus(DF.ethMtu, msg);
+			return;
+		}
+		loc += '&qsetup_ethmtu=' + DF.ethMtu.value;
+	}
+	/*end added*/
+		if(DF.wan6[0].checked == true)
+		{
+			loc += '&qsetup_wanAddr6Type=DHCP';   // DHCP WAN address
+		}
+		else
+		{
+			loc += '&qsetup_wanAddr6Type=Static';   //static  WAN address 
+			//added by zyb for ipv6
+	        if (DF.wanAddress6.value == '') {
+			   alertAndFocus(DF.wanAddress6, 'Please enter the static WAN IPv6 address.');
+	           return;
+	        }
+	        if (isValidIpAddress6(DF.wanAddress6.value) == false) {
+			   alertAndFocus(DF.wanAddress6, 'Invalid WAN IPv6 address.');
+	           return;
+	        }
+	        if (DF.wanAddress6.value.indexOf('/') == -1) {
+	           //use default prefix length 64.
+	           DF.wanAddress6.value = DF.wanAddress6.value + '/64';
+	        }
+	        loc += '&qsetup_wanAddr6=' + DF.wanAddress6.value;
+
+			if (DF.ntwkPrtcl.value == 2)
+			{
+				if (DF.wanGateway6.value.indexOf('/') != -1) {
+					alertAndFocus(DF.wanGateway6, 'Next-hop gateway address shall not have network prefix length.');
+					return;
+				}         
+				if ((DF.wanGateway6.value != '') && isValidIpAddress6(DF.wanGateway6.value) == false) {
+					alertAndFocus(DF.wanGateway6, 'Invalid next-hop IPv6 address.');
+					return;
+				}
+			}
+			loc += '&qsetup_wanGtwy6=' + DF.wanGateway6.value;
+		}
+		
+	}
+	/*else if (DF.ntwkPrtcl.value == 2)
+	{
+		// Dynamic IPoE
+		loc += '&qsetup_dhcp=1';
+		if(DF.wan6[0].checked == true)
+		{
+			loc += '&qsetup_wanAddr6Type=DHCP';   // DHCP WAN address
+		}
+		else
+		{
+			loc += '&qsetup_wanAddr6Type=Static';   //static  WAN address 
+	}
+	}*/
+	if ((DF.ntwkPrtcl.value == 5) 
+		|| ((DF.ntwkPrtcl.value == 2) && (DF.dns_type[1].checked == true)))
+	{
+		if ( isValidIpAddress(DF.pvc_wandns1.value) == false ) {
+			alertAndFocus(DF.pvc_wandns1, 'Primary DNS "' + DF.pvc_wandns1.value + '" has invalid IP address.');
+            return;
+         }
+         loc += '&qsetup_dns1=' + DF.pvc_wandns1.value;
+		 if ((DF.pvc_wandns2.value != '') && (DF.pvc_wandns2.value != '0.0.0.0')) {
+            if ( isValidIpAddress(DF.pvc_wandns2.value) == false ) {
+			   alertAndFocus(DF.pvc_wandns2, 'Secondary DNS "' + DF.pvc_wandns2.value + '" has invalid IP address.');
+               return;
+            }
+            loc += '&qsetup_dns2=' + DF.pvc_wandns2.value;
+         }
+		 else
+		 {
+			loc += '&qsetup_dns2=0.0.0.0';
+		 }
+		 loc += '&qsetup_dns=1'
+	}
+	else
+	{
+		loc += '&qsetup_dns=0';
+	}
+	
+	/*country & isp*/
+	loc += '&qsetup_country=' + encodeUrl(document.getElementById("country").value);
+	loc += '&qsetup_isp=' + encodeUrl(document.getElementById("isp").value);
+	var code = 'location="' + loc + '"';
+	eval(code);
+
+}
+
+function encClick(wan_prctl)
+{
+	with ( document.forms[0] )
+	{
+		if (wan_prctl == 1 ) {
+			encSel.options[0].text = "VC/MUX";
+			encSel.options[1].text = "LLC/ENCAPSULATION";
+		} else if (wan_prctl == 5 ) {
+			encSel.options[0].text = "LLC/SNAP-ROUTING";
+			encSel.options[1].text = "VC/MUX";
+		} else {
+			encSel.options[0].text = "LLC/SNAP-BRIDGING";
+			encSel.options[1].text = "VC/MUX";
+		}
+	}
+}
+
+function changeWanIpType(ipType)
+{
+	var DF = document.forms[0];
+	if (ipType == 0)
+	{
+		DF.pvc_wanip.value='';
+		DF.pvc_wanip.disabled=true;
+		DF.pvc_wanmask.value='';
+		DF.pvc_wanmask.disabled=true;
+		DF.pvc_wangateway.value='';
+		DF.pvc_wangateway.disabled=true;
+		
+		DF.dns_type[0].disabled=false;
+		// added by xieping
+		DF.dns_type[0].checked=true;
+		changeDnsType(0);
+	}
+	else
+	{
+		DF.pvc_wanip.disabled=false;
+		DF.pvc_wanmask.disabled=false;
+		DF.pvc_wangateway.disabled=false;
+		
+		DF.dns_type[1].checked=true;
+		//modified by xieping for Bug 46969 131223
+		//DF.dns_type[0].disabled=true; 
+		
+		changeDnsType(1);
+	}
+	
+	if(addr6Type == "DHCP")
+	{
+		DF.wan6[0].checked = true;
+		DF.wanAddress6.disabled=true;
+		DF.wanGateway6.disabled=true;
+	}
+	else
+	{
+		DF.wan6[1].checked = true;
+		DF.wanAddress6.disabled=false;
+		DF.wanGateway6.disabled=false;
+	}
+}
+
+function changeDnsType(dnsType)
+{
+	var DF = document.forms[0];
+	if (dnsType == 0)
+	{
+		DF.pvc_wandns1.value='';
+		DF.pvc_wandns1.disabled=true;
+		DF.pvc_wandns2.value='';
+		DF.pvc_wandns2.disabled=true;
+	}
+	else
+	{
+		DF.pvc_wandns1.disabled=false;
+		DF.pvc_wandns2.disabled=false;
+	}
+}
+	
+function changePrtcl()
+{
+	var DF = document.forms[0];
+	
+	var str=style_display_on();
+	
+	if (DF.ntwkPrtcl.value == 0)/* pppoe */
+	{
+		document.getElementById("div_ppp").style.display="block";
+		document.getElementById("pppoe_svr_name").style.display=str;
+		document.getElementById("div_ip").style.display="none";
+		document.getElementById("div_dns").style.display="none";
+		document.getElementById("div_ipoe_ipv6").style.display="none";
+		DF.dns_type[0].disabled=false;
+	}
+	if (DF.ntwkPrtcl.value == 1)/* pppoa */
+	{
+		document.getElementById("div_ppp").style.display="block";
+		document.getElementById("pppoe_svr_name").style.display="none";
+		document.getElementById("div_ip").style.display="none";
+		document.getElementById("div_dns").style.display="none";
+		document.getElementById("div_ipoe_ipv6").style.display="none";
+		DF.dns_type[0].disabled=false;
+	}
+	if (DF.ntwkPrtcl.value == 2)/* ipoe(mer) */
+	{
+		document.getElementById("div_ppp").style.display="none";
+		document.getElementById("div_ip").style.display="block";
+		document.getElementById("wan_gw").style.display=str;
+		document.getElementById("div_dns").style.display="block";
+
+		/*added by zyb for ipv6*/
+		if(enblv6 == 1)
+		{
+			document.getElementById("div_ipoe_ipv6").style.display="block";
+		}
+		else if(enblv6 == 0)
+		{
+			document.getElementById("div_ipoe_ipv6").style.display="none";
+		}
+		
+		changeWanIpType(DF.ip_addr_type[0].checked==true?0:1);
+		DF.ip_addr_type[0].disabled=false;
+	}
+	if (DF.ntwkPrtcl.value == 5)/* ipoa */
+	{
+		document.getElementById("div_ppp").style.display="none";
+		document.getElementById("div_ip").style.display="block";
+		document.getElementById("wan_gw").style.display="none";
+		document.getElementById("div_dns").style.display="block";
+		document.getElementById("div_ipoe_ipv6").style.display="none";
+		DF.ip_addr_type[1].checked=true;
+		DF.ip_addr_type[0].disabled=true;
+		DF.ip_addr_type[1].checked=true;
+		DF.ip_addr_type[0].disabled=true;
+		changeWanIpType(1);
+	}
+	if (DF.ntwkPrtcl.value == 3)/* Bridge */
+	{
+		document.getElementById("div_ppp").style.display="none";
+		document.getElementById("div_ip").style.display="none";
+		document.getElementById("div_dns").style.display="none";
+		document.getElementById("div_ipoe_ipv6").style.display="none";
+	}
+	
+	encClick(DF.ntwkPrtcl.value);
+}
+function formInit()
+{
+	var DF = document.forms[0];
+	// modified by pj : add 3g type
+	var qsWanType = '<%ejGet(qsWanType)%>';
+	//var qsWanType = '2';
+	var countries;
+	var ISPs;
+	var i = 0;
+	var j = 0;
+	var k = 0;
+	var selectedIndex = 0;
+	var ispSelectedIndex = 0;
+	var globalIndex = 0;
+	var ispList;
+	var lastCountry;
+
+	if (qsWanType == '2')
+	{
+		//ETH WAN
+		document.getElementById("div_atm").style.display="none";
+		document.getElementById("div_eth").style.display="block";
+		document.getElementById("div_3g").style.display='none';
+		DF.ntwkPrtcl.value = '<%ejGet(ntwkPrtcl)%>';
+	}
+	// added by pj for 3g wan type
+	if(qsWanType == '3')
+	{
+		// USB 3G WAN
+		document.getElementById('div_3g').style.display = 'block';
+		document.getElementById('div_atm').style.display = 'none';
+		document.getElementById('div_eth').style.display = 'none';
+		DF.ntwkPrtcl.value = 0;
+		showAutoIsp();
+		showLocation();	
+		document.getElementById("location_sel").value = locationIdx;
+		showISP();
+		document.getElementById("isp_sel").value = ispIdx;
+		showParam(autoISPInfo);
+	}
+	// end adding
+	if(qsWanType == '1')
+	{
+		<!--Init Country and ISP, YangCaiyong, 04Sep12-->
+		countries = document.getElementById("country");
+		j = 0;
+		for (i = 0; countryAndISP[i]; ++i)
+		{
+			if (lastCountry != countryAndISP[i][0])
+			{
+				lastCountry = countryAndISP[i][0];
+				var opt1 = document.createElement("option");
+				opt1.value = countryAndISP[i][0];
+				opt1.text = countryAndISP[i][0];
+				try{countries.add(opt1, null);}catch(e){countries.add(opt1);}
+				++j;
+				if (countryAndISP[i][0] == quickSetupCountry)
+				{
+					selectedIndex = j - 1;
+					ispList = i;
+				}
+			}
+		}
+		countries.selectedIndex = selectedIndex;
+		
+		ISPs = document.getElementById("isp");
+			/* To init the ISP list of this country. */
+			var idx = ispList;
+			while (countryAndISP[idx] && (countryAndISP[ispList][0] == countryAndISP[idx][0]))
+			{
+				var opt2 = document.createElement("option");
+				opt2.value = countryAndISP[idx][1];
+				opt2.text = countryAndISP[idx][1];
+				try{ISPs.add(opt2, null);}catch(e){ISPs.add(opt2);}
+		        if (countryAndISP[idx][1] == quickSetupISP)
+		        {
+				ispSelectedIndex = k;
+				globalIndex = idx;
+			}
+				++idx;
+			k++;
+			}
+			
+		ISPs.selectedIndex = ispSelectedIndex;
+		
+		if (quickSetupISP == "Other")
+		{
+			DF.atmVpi.value = '<%ejGet(atmVpi)%>';
+			DF.atmVci.value = '<%ejGet(atmVci)%>';
+			DF.encSel.value = '<%ejGet(encapMode)%>';
+			DF.ntwkPrtcl.value = '<%ejGet(ntwkPrtcl)%>';
+		}
+		else
+		{
+			
+			/* The ISP default to be the first in the array of this country. */
+			document.getElementById("atmVpi").value = countryAndISP[globalIndex][2];
+			document.getElementById("atmVci").value = countryAndISP[globalIndex][3];
+			
+			/* Set encapsulation. */
+			if (countryAndISP[globalIndex][5] == "LLC")
+			{
+				document.getElementById("encSel").selectedIndex = 0;
+			}
+			else if (countryAndISP[globalIndex][5] == "VC-Mux")
+			{
+				document.getElementById("encSel").selectedIndex = 1;
+			}
+			
+			/* Set network protocol. */
+			if ("PPPoE" == countryAndISP[globalIndex][4])
+			{
+				document.getElementById("ntwkPrtcl").selectedIndex = 0;
+			}
+			else if ("PPPoA" == countryAndISP[globalIndex][4])
+			{
+				document.getElementById("ntwkPrtcl").selectedIndex = 1;
+				/* Set encapsulation. */
+				if (countryAndISP[globalIndex][5] == "LLC")
+				{
+					document.getElementById("encSel").selectedIndex = 1;
+				}
+				else if (countryAndISP[globalIndex][5] == "VC-Mux")
+				{
+					document.getElementById("encSel").selectedIndex = 0;
+				}
+			}
+			else if ("Static IP" == countryAndISP[globalIndex][4])
+			{
+				document.getElementById("ntwkPrtcl").selectedIndex = 2;
+				DF.ip_addr_type[0].checked = false;
+				DF.ip_addr_type[1].checked = true;
+			}
+			else if ("Dynamic IP" == countryAndISP[globalIndex][4])
+			{
+				document.getElementById("ntwkPrtcl").selectedIndex = 2;
+				DF.ip_addr_type[0].checked = true;
+				DF.ip_addr_type[1].checked = false;
+			}
+			else if ("IPoA" == countryAndISP[globalIndex][4])
+			{
+				document.getElementById("ntwkPrtcl").selectedIndex = 3;
+			}
+			else if ("Bridge" == countryAndISP[globalIndex][4])
+		{
+				document.getElementById("ntwkPrtcl").selectedIndex = 4;
+		        }
+		}
+		
+		document.getElementById("div_atm").style.display="block";
+		document.getElementById("div_eth").style.display="none";
+		//added by pj : hide 3g div
+		document.getElementById("div_3g").style.display="none";
+		doHideISP();
+	}
+	changePrtcl();
+	if (DF.ntwkPrtcl.value == 3) /* Bridge */
+	{
+		changeDnsType(0);
+		changeWanIpType(0);
+		return;
+	}
+	
+	// div_ppp
+	DF.pppMtu.value = '<%ejGet(pppMtu)%>'; //Need to set default value
+	if ((DF.ntwkPrtcl.value == 0) || (DF.ntwkPrtcl.value == 1))
+	{
+		/* PPPOE or PPPOA*/
+		DF.pppUserName.value = '<%ejGet(pppUserName)%>';
+		DF.pppPassword.value = '<%ejGet(pppPassword)%>';
+		DF.pppMtu.value = '<%ejGet(pppMtu)%>';
+		if (DF.ntwkPrtcl.value == 0)
+		{
+			DF.pppServerName.value = '<%ejGet(pppServerName)%>';
+		}
+	}
+	
+	// div_ip
+	DF.ip_addr_type[0].checked = ('<%ejGet(enblDhcpClnt)%>' == '0'?false:true);
+	DF.ip_addr_type[1].checked = ('<%ejGet(enblDhcpClnt)%>' == '0'?true:false);
+	if (DF.ip_addr_type[1].checked)
+	{
+		DF.pvc_wanip.value='<%ejGet(wanIpAddress)%>';
+		DF.pvc_wanmask.value='<%ejGet(wanSubnetMask)%>';
+		DF.pvc_wangateway.value='<%ejGet(wanIntfGateway)%>';
+	}
+	changeWanIpType(DF.ip_addr_type[1].checked == true);
+	DF.ethMtu.value = '<%ejGet(ethMtu)%>';	
+	if(addr6Type == "Static")
+	{
+		DF.wanAddress6.value=addr6;
+		DF.wanGateway6.value=gtwy6;
+	}
+	
+	// div_dns, TODO
+	/*changeDnsType(DF.dns_type[1].checked == true);*/
+	var dns1 = '<%ejGetOther(sysInfo, dnsPrimary)%>'; if ( dns1 == '&nbsp' ) dns1 = '';
+	var dns2 = '<%ejGetOther(sysInfo, dnsSecondary)%>'; if ( dns2 == '&nbsp' ) dns2 = '';
+	var dnsIfcs = '<%ejGetOther(sysInfo, dnsIfcs)%>'; if (dnsIfcs == '&nbsp') dnsIfcs= '';
+	if (dnsIfcs != '') {
+         DF.dns_type[0].checked = true;
+		changeDnsType(0);
+      } else {
+         DF.dns_type[1].checked = true;
+         DF.pvc_wandns1.value = dns1;
+         DF.pvc_wandns2.value = dns2;
+		changeDnsType(1);
+      }
+}
+	
+function btnBack()
+{
+	var loc = 'quicksetupview.cmd';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function doSkip()
+{
+	var sysMode ='<%ejGet(usb3gSysMode)%>';
+	var enbl3gBackup = '<%ejGet(usb3gBackup)%>';	
+	
+	if('1' == enbl3gBackup)
+	{
+		go('qs3gsetup.cgi?qsWanSkip=1', sessionKey);//TODO, change to qs 3G	
+	}
+	else
+	{
+		go('wlqsetup.cgi?qsWanSkip=1', sessionKey);//TODO, change to qsetupWifi	
+	}
+}
+	
+function doHideISP()
+{
+	var currentISP = document.getElementById("isp").value;
+	if (currentISP != "Other")
+	{
+		document.getElementById("ntwkPrtcl").disabled = true;
+		document.getElementById("encSel").disabled = true;
+		document.getElementById("atmVpi").disabled = true;
+		document.getElementById("atmVci").disabled = true;
+	}
+	else
+	{
+		document.getElementById("ntwkPrtcl").disabled = false;
+		document.getElementById("encSel").disabled = false;
+		document.getElementById("atmVpi").disabled = false;
+		document.getElementById("atmVci").disabled = false;
+	}
+}
+function showLocation() {
+    var i = 0;
+    var selLocObj = document.getElementById("location_sel");
+
+    if (selLocObj.options.length > 0) {
+        selLocObj.options.remove(0);
+    }
+
+    for (tag in w3gisp_js) {
+        i = parseInt(tag.substring(8, 16));
+        var locOption = document.createElement("option");
+
+        locOption.value = i;
+        locOption.text = w3gisp_js[tag]["location_name"];
+        try {
+            selLocObj.add(locOption, null);
+        } catch (e) {
+            selLocObj.add(locOption);
+        }
+    }
+}
+
+function showISP() {
+    var location = "location" + document.getElementById("location_sel").value;
+    var selIspObj = document.getElementById("isp_sel");
+
+    while ((i = selIspObj.options.length) > 0) {
+        selIspObj.remove(0);
+    }
+	
+    i = 0;
+    for (tag in w3gisp_js[location]) {
+        if (w3gisp_js[location][tag]["isp_name"] == undefined) {
+            continue;
+        }
+        var ispOption = document.createElement("option");
+        ispOption.value = i;
+        ispOption.text = w3gisp_js[location][tag]["isp_name"];
+        try {
+            selIspObj.add(ispOption, null);
+        } catch (e) {
+            selIspObj.add(ispOption);
+        }
+        i++;
+    }
+}
+
+function showParam(autoIsp) {
+    var location = "location" + document.getElementById("location_sel").value;
+    var isp = "isp" + document.getElementById("isp_sel").value;
+
+    if (autoIsp == '1') {
+	 var usr = document.getElementById("pppUserName");
+	 var pswd = document.getElementById("pppPassword");
+        usr.value = w3gisp_js[location][isp]["username"];
+        pswd.value = w3gisp_js[location][isp]["password"];
+        document.getElementById("apn").value = w3gisp_js[location][isp]["apn"];
+        document.getElementById("dial_num").value = w3gisp_js[location][isp]["dial_num"];
+	
+    }
+    else{
+        document.getElementById("apn").value = APN;
+        document.getElementById("dial_num").value = dialNumber;
+	 document.getElementById("pppUserName").value = '<%ejGet(pppUserName)%>';
+	 document.getElementById("pppPassword").value = '<%ejGet(pppPassword)%>';
+    }
+}
+
+function autoGetIspInfo(item) {
+	 if ( item.checked == true ) 
+	 {
+	 	autoISPInfo = 1;
+		document.getElementById("location_sel").disabled = false;
+		document.getElementById("isp_sel").disabled = false;
+		document.getElementById("dial_num").disabled = true;
+		document.getElementById("apn").disabled = true;
+		document.getElementById("pppUserName").disabled = true;
+		document.getElementById("pppPassword").disabled = true;	
+	 }
+	 else
+	 {
+	 	autoISPInfo = 0;
+		document.getElementById("location_sel").disabled = true;
+		document.getElementById("isp_sel").disabled = true;
+		document.getElementById("dial_num").disabled = false;
+		document.getElementById("apn").disabled = false;
+		document.getElementById("pppUserName").disabled = false;
+		document.getElementById("pppPassword").disabled = false;	
+	 }
+
+	 showParam(autoISPInfo);
+}
+
+function showAutoIsp()
+{
+	if (autoISPInfo == '1')
+	{
+		document.getElementById('autoIspInfo').checked = true;
+		
+		document.getElementById("location_sel").disabled = false;
+		document.getElementById("isp_sel").disabled = false;
+		document.getElementById("dial_num").disabled = true;
+		document.getElementById("apn").disabled = true;
+		document.getElementById("pppUserName").disabled = true;
+		document.getElementById("pppPassword").disabled = true;	
+	}
+	else
+	{
+		document.getElementById('autoIspInfo').checked = false;
+		
+		document.getElementById("location_sel").disabled = true;
+		document.getElementById("isp_sel").disabled = true;
+		document.getElementById("dial_num").disabled = false;
+		document.getElementById("apn").disabled = false;
+		document.getElementById("pppUserName").disabled = false;
+		document.getElementById("pppPassword").disabled = false;	
+	}		
+}
+
+function changeISP() {
+    showParam(autoISPInfo);
+}
+
+function changeLocation() {
+    showISP();
+    changeISP();
+}	
+</script>
+</head>
+<body onload='formInit();'>
+<!--Author:yuanshang@tp-link.com.cn-->
+<center>
+	<form>
+		<table>
+			<tr><td class=h1 style="height:28px">Quick Setup - WAN Configurations</td></tr>
+            <tr><td class=blue></td></tr>
+            <!--<tr><td>&nbsp;</td></tr>-->
+		</table>
+		<!-- added by pj for 3g wan type -->
+		<div id='div_3g'>
+		<table>
+			<tr>
+				<td width='30' height='30' class=item><input type='checkbox' id='autoIspInfo' onClick='autoGetIspInfo(this)'></td>
+				<td>Automatically fill ISP Information</td>
+			</tr>
+			<tr>
+				<td width='180' class='item'>Location:</td>
+				<td><select id='location_sel' onchange='changeLocation()'></select></td>
+			</tr>
+			<tr>
+				<td width='180' class='item'>Mobile ISP:</td>
+				<td><select id='isp_sel' onchange='changeISP()'></select></td>
+			</tr>
+		
+			<tr>
+				<td width='180' class='item'>Dial Number:</td>
+				<td><input id='dial_num' type='text' maxlength='31'/></td>
+			</tr>
+			<tr>
+				<td width='180' class='item'>APN:</td>
+				<td><input id='apn' type='text'  maxlength='31'/></td>
+			</tr>	
+		</table>
+		</div>
+		<!-- end adding-->
+		<div id='div_atm'>
+		<table cellSpacing='4' cellPadding='0' border='0'>
+			<!--Country, YangCaiyong, 04Sep12-->
+			<tr><td width=180 class='item'>Country:</td>
+				<td><select name='country' id='country' onChange="doCountryChange()">
+				</select></td>
+			</tr>
+			<!--Country, YangCaiyong, 04Sep12-->
+			<tr><td width=180 class='item'>ISP:</td>
+				<td><select name='isp' id='isp' onChange="selectISPChange()">
+				</select></td>
+			</tr>
+			<!--set vpi&vci-->			
+			<tr>
+				<td width=180 class='item'>VPI/VCI:</td>
+				<td>
+					<input type='text' size='4' name='atmVpi' id='atmVpi'>&nbsp;/&nbsp;
+					<input type='text' size='4' name='atmVci' id='atmVci'>&nbsp;([0-255]&nbsp;/&nbsp;[32-65535])
+				</td>
+			</tr>
+			<!--Encapsulation Mode-->
+			<tr><td width=180 class='item'>Encapsulation Mode:</td>
+				<td><select name='encSel' id='encSel'>
+                        <option value="0">LLC/SNAP-BRIDGING</option>
+                        <option value="1">VC/MUX</option>
+				</select>&nbsp;(optional)</td>
+			</tr>
+		</table>
+			
+		</div>
+		<div id='div_eth'>
+		<table cellSpacing='4' cellPadding='0' border='0'>
+			<!--show EWAN Port-->
+			<tr>
+				<td width=180 class='item'>Ethernet WAN Port:</td>
+				<script language="javascript">
+					if (1)
+					{
+						var brdId = '<%ejGet(boardID)%>';
+						var intfDisp = '';
+						var brdIntf = '';
+						brdIntf = brdId + '|' + '<%ejGet(qsL2IfName)%>';
+						intfDisp = getUNameByLName(brdIntf);
+						document.write('<td>' + intfDisp + '</td>');
+					}
+					else
+					{
+						document.write('<td>eth3&nbsp;/&nbsp;(LAN4/WAN)</td>');
+					}
+				</script>
+			</tr>
+		</table>
+		</div>
+		<table>
+		<tr><td class=blue></td></tr>
+		</table>
+		<!--set L3 Wan type-->
+		<table id='ntwkPrtcl_tbl' cellSpacing='4' cellPadding='0' border='0'>
+			<tr>
+				<td width=180 class='item'>WAN Link Type:</td>
+				<td><select name='ntwkPrtcl' id='ntwkPrtcl' onChange='changePrtcl()'>
+					<script language="javascript">
+					// added by pj : 3g only has pppoe
+					if('<%ejGet(qsWanType)%>' == '3')
+					{
+						/* 3G */
+						document.getElementById('ntwkPrtcl_tbl').style.display = 'none';
+						document.write('<option value="0">PPPoE(PPP over Ethernet)</option>');
+					}
+					// end adding
+					else if ('<%ejGet(qsWanType)%>' == '2')
+					{
+						/*ETH*/
+						document.write('<option value="0">PPPoE(PPP over Ethernet)</option>');
+						document.write('<option value="2">IPoE(Dynamic or Static IP over Ethernet)</option>');
+					}
+					else
+					{
+						/*ATM*/
+						document.write('<option value="0">PPPoE(PPP over Ethernet)</option>');
+						document.write('<option value="1">PPPoA(PPP over ATM)</option>');
+						document.write('<option value="2">IPoE(MER or IPoEoA)</option>');
+						document.write('<option value="5">IPoA(Static IP over ATM)</option>');
+						document.write('<option value="3">Bridge</option>');
+					}
+					</script>
+					</select>
+				</td>
+			</tr>
+		</table>
+		
+		<!--ppp basic section-->
+		<div id='div_ppp'>
+		<table border="0" cellpadding="0" cellSpacing='4'>
+			<tr>
+				<td width="180" class='item'>PPP Username:</td>
+				<td><input type='text' name='pppUserName' id='pppUserName'></td>
+			</tr>
+			<tr>
+				<td width="180" class='item'>PPP Password:</td>
+				<td><input type='password' name='pppPassword' id='pppPassword'></td>
+			</tr>
+			<tr id='pppoe_svr_name'>
+				<td width='180' class='item'>PPPoE Service Name:</td>
+				<td><input type='text' name='pppServerName'>&nbsp;(optional)</td>	
+			</tr>
+			<tr>
+				<td width="180" class='item'>MTU (bytes):</td>
+				<td><input type='text' name='pppMtu'>&nbsp;(optional)</td>
+			</tr>
+		</table>
+		</div>
+		<!-- ip section-->
+		<div id="div_ip">
+		<table border="0" cellpadding="0" cellspacing="4">
+			<tr>
+				<td width="180" class=item>WAN IP Address Settings:</td>
+				<td>
+					<input name="ip_addr_type" type="radio" value="0" Checked onclick='changeWanIpType(0)'>Dynamic IP&nbsp;&nbsp;
+					<input name="ip_addr_type" type="radio" value="1" onclick='changeWanIpType(1)'>Static IP
+				</td>
+			</tr>
+			<tr><td width="180" class=item>WAN IP Address:</td><td><input type='text' name='pvc_wanip'></td></tr>
+			<tr><td width="180" class=item>WAN Subnet Mask:</td><td><input type='text' name='pvc_wanmask'></td></tr>
+			<tr id='wan_gw'><td width="180" class=item>WAN gateway IP Address:</td><td><input type='text' name='pvc_wangateway'></td></tr>
+			<tr>
+				<td width="180" class='item'>MTU (bytes):</td>
+				<td><input type='text' name='ethMtu'>&nbsp;(optional)</td>
+			</tr>
+		</table>
+		</div>
+		<!-- dns section-->
+		<div id="div_dns">
+		<table border="0" cellpadding="0" cellspacing="4">
+			<tr>
+				<td width="180" class=item>DNS Settings:</td>
+				<td><input name="dns_type" type="radio" value="0" Checked onclick='changeDnsType(0)'>Obtain Automatically&nbsp;&nbsp;<input name="dns_type" type="radio" value="1" onclick='changeDnsType(1)'>Set DNS Manually</td>
+			</tr>
+			<tr><td width="180" class=item>Primary DNS:</td><td><input type='text' name='pvc_wandns1'></td></tr>
+			<tr><td width="180" class=item>Secondary DNS:</td><td><input type='text' name='pvc_wandns2'>&nbsp;(optional)</td></tr>
+		</table>
+		<!--save-->
+		</div>
+		<div id="div_ipoe_ipv6">
+				<!--added by zhangyubing for ipv6-->
+			<table>
+				<tr><td class=blue></td></tr>
+			</table>
+			<table border="0" cellpadding="0" cellspacing="4">
+			     <tr>
+			     	<td width="180" class=item>WAN IP Address Settings:</td>
+			     	<td>
+			        	<input type="radio" name="wan6" checked onClick='wan6Click()'>Obtain automatically
+			        	<input type="radio" name="wan6" onClick='wan6Click()'>&nbsp;&nbsp;Static IPv6 address
+			        </td>
+			     </tr>
+			     <tr>
+			        <td width="180" class=item>WAN IPv6 Address/Prefix Length:</td>
+			        <td><input type='text' name='wanAddress6'></td>
+			     </tr>
+			     <tr>
+			        <td width="180" class='item'>WAN Next-Hop IPv6 Address:</td>
+			        <td><input type='text' name='wanGateway6'></td>
+			     </tr>
+			</table>
+		</div>
+		<table border="0" cellpadding="0" cellspacing="4">
+		<tr><td class=blue></td></tr>
+            <tr><td>
+            <center>
+            	<input type='button' onClick='btnBack()' value='Back' class='buttonL'>&nbsp;&nbsp;
+				<input type="button" onClick='doSkip()' value="Skip WAN" class='buttonL'>&nbsp;&nbsp;
+				<input type='button' onClick='btnSave()' value='Next' class='buttonL'>
+            </center>
+            </td></tr>
+		</table>
+	</form>
+</center>
+</body>
+</html>

@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/plugins/pppoe
+END
+pppoe_relay.c
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/plugins/pppoe/pppoe_relay.c
+END
+utils.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/plugins/pppoe/utils.c
+END
+pppoe_client.c
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/plugins/pppoe/pppoe_client.c
+END
+pppd_utils.c
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/plugins/pppoe/pppd_utils.c
+END
+pppoe.c
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/plugins/pppoe/pppoe.c
+END
+pppoefwd.c
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/plugins/pppoe/pppoefwd.c
+END
+pppoed.c
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/plugins/pppoe/pppoed.c
+END
+pppoehash.c
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/plugins/pppoe/pppoehash.c
+END
+pppoe.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/plugins/pppoe/pppoe.h
+END
+pppoe_server.c
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/plugins/pppoe/pppoe_server.c
+END
+Makefile.linux
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/plugins/pppoe/Makefile.linux
+END
+libpppoe.c
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppd/plugins/pppoe/libpppoe.c
+END

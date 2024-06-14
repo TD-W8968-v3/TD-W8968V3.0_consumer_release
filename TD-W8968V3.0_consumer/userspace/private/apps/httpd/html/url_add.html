@@ -1,0 +1,130 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+
+var editTodUrl = [<%ejGetOther(memInfo, editTodUrl)%>];
+//var editTodUrl = [1,1,'192.168.1.10','192.168.1.20',80,'www.baidu.com,www.qq.com'];
+
+function frmLoad() {
+	if (editTodUrl.length > 0) {
+		with ( document.forms[0] ) {
+			startIP.value = editTodUrl[2];
+			endIP.value = editTodUrl[3];
+			portNumber.value = editTodUrl[4];
+			var urls = editTodUrl[5].split(',');
+			urlAddress.value = urls[0];
+			for (var i = 1; i < urls.length; i++) {
+				AddMore();
+				urlAddress.value = urls[i];
+			}
+		}
+	}
+}
+
+function isValidDomain(domain) {
+	return domain.length <= 32 && /^[a-zA-Z0-9-\.]+(:\d+)?$/.test(domain);
+}
+
+function AddMore() {
+	var domain = document.forms[0].urlAddress.value;
+	if (!isValidDomain(domain)) {
+		alert('"' + domain +'" is an invalid address.');
+		document.forms[0].urlAddress.focus();
+		return;
+	}
+	var tr = document.getElementById('url');
+	tr = tr.parentNode.insertRow(tr.rowIndex);
+	tr.insertCell(0).innerHTML = '<input type="text" name="extraUrl" size="23" maxlength="32" value="'+domain+'">';
+	td = tr.insertCell(0);
+	td.className = 'item';
+	td.innerHTML = 'Address:';
+	document.forms[0].urlAddress.value = '';
+}
+
+function btnApply() {
+	var loc = 'urlfilter.cmd?action=set_url';
+	if (editTodUrl.length > 0) loc += '&entry=' + editTodUrl[0];
+	with ( document.forms[0] ) {
+		var value = stripStr(startIP.value);
+		if (value != '' && !isValidIpAddress(value)) {
+			alert('The start IP address "' + value + '" is invalid IP address.');
+			startIP.focus(); return;
+		}
+		loc += '&startIP=' + value;
+		value = stripStr(endIP.value);
+		if (value != '' && !isValidIpAddress(value)) {
+			alert('The end IP address "' + value + '" is invalid IP address.');
+			endIP.focus(); return;
+		}
+		loc += '&endIP=' + value;
+		value = stripStr(portNumber.value);
+		if (value == '') value = 80;
+		if (!(value > 0 && value <= 65535)) {
+			alert('The port number "' + value + '" is invalid port number.');
+			portNumber.focus(); return;			
+		}
+		loc += '&portNumber=' + value;
+		var urls = [];
+		if (document.forms[0].extraUrl != undefined) {
+			var moreUrl = extraUrl;
+			if (moreUrl.length === undefined) moreUrl = [extraUrl];
+			for (i = 0; i < moreUrl.length; i++) {
+				value = stripStr(moreUrl[i].value);
+				if (isValidDomain(value)) urls.push(value);
+			}
+		}
+		value = stripStr(urlAddress.value);
+		if (isValidDomain(value)) urls.push(value);
+		if (urls.length == 0) {
+			alert('You must enter at least one valid address.');
+			urlAddress.focus(); return;
+		}
+		loc += '&urlAddress=' + urls.join(',');
+	}
+	go(loc, '<%ejGetOther(sessionKey)%>');
+}
+
+// done hiding -->
+</script>
+  </head>
+
+   <body onload="frmLoad()">
+<center><form><table>
+            <tr><td class=h1 colspan=2>Parental Control -- URL Filter <script language="javascript"><!-- hide
+		document.write(editTodUrl.length > 0 ? 'Edit' : 'Add');
+			// done hiding --></script></td></tr>
+            <tr><td class=blue colspan=2></td></tr>
+	<tr><td colspan=2 class = text>Enter the address then click "Save/Apply" to <script language="javascript"><!-- hide
+		document.write(editTodUrl.length > 0 ? 'edit' : 'add');
+	// done hiding --></script> the entry to the URL filter. LAN IP is optional if you want to configure for specific LAN PC.</td></tr>
+               <tr><td colspan=2>&nbsp;</td></tr>
+               <tr>
+		<td class="item">LAN IP Range:</td>
+		<td>
+			<input type="text" name="startIP" size="15" maxlength="15">
+			- <input type="text" name="endIP" size="15" maxlength="15"> (optional)
+		</td>
+	<tr>
+	<tr>
+		<td class="item">Port Number:</td>
+		<td>
+			<input type="text" name="portNumber" size="15" maxlength="5"> (Default 80 will be applied if leave blank.)
+		</td>
+               <tr>
+	<tr id="url">
+		<td class="item">Address:</td>
+		<td><input type="text" name="urlAddress" size="23" maxlength="32"> <input type="button" onClick="AddMore()" value="Add More"></td>
+               </tr>
+	<tr><td class="blue" colspan="2"></td></tr>
+	<tr><td colspan="2"><center>
+		<input type="button" onClick="btnApply()" value="Save/Apply" class="buttonL">
+	</center></td></tr>
+</table></form></center>
+	</body>
+</html>
+  

@@ -1,0 +1,12 @@
+prefix=
+exec_prefix=
+libdir=${pcfiledir}
+includedir=/root/newdisk/Broadcom/8960_v5/bcm963xx/userspace/gpl/apps/ffmpeg-0.6
+
+Name: libavdevice
+Description: FFmpeg device handling library
+Version: 52.2.0
+Requires: libavformat = 52.64.2
+Conflicts:
+Libs: ${libdir}/libavdevice.a   -lm
+Cflags: -I${includedir}

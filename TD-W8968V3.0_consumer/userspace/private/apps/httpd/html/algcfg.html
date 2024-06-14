@@ -1,0 +1,87 @@
+<html>
+<head>
+	<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+	<link rel="stylesheet" href='stylemain.css' type='text/css'>
+	<link rel="stylesheet" href='colors.css' type='text/css'>
+	<script language="javascript"><!-- hide
+
+/*EJ_PLACEHOLDER*/
+if (algInfo === undefined) {
+	var sessionKey = '123456789';
+	var algInfo = [1,1,0,1,1,0];
+}
+
+function frmLoad() {
+	with ( document.forms[0] ) {
+		ftp.checked = (algInfo[0] == 1);
+		tftp.checked = (algInfo[1] == 1);
+		sip.checked = (algInfo[2] == 1);
+		h323.checked = (algInfo[3] == 1);
+		rtsp.checked = (algInfo[4] == 1);
+		irc.checked = (algInfo[5] == 1);
+	}
+}
+
+function applyClick() {
+	var loc = 'algcfg.cmd?action=set&sessionKey=' + sessionKey;
+	with ( document.forms[0] ) {
+		loc += '&ftp=' + (ftp.checked ? 1 : 0);
+		loc += '&tftp=' + (tftp.checked ? 1 : 0);
+		loc += '&sip=' + (sip.checked ? 1 : 0);
+		loc += '&h323=' + (h323.checked ? 1 : 0);
+		loc += '&rtsp=' + (rtsp.checked ? 1 : 0);
+		loc += '&irc=' + (irc.checked ? 1 : 0);
+	}
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+	// done hiding --></script>
+</head>
+
+<body onLoad='frmLoad()'>
+<center>
+<form>
+	<table border="0">
+		<tr><td class="h1">ALG</td></tr>
+		<tr><td class="blue"></td></tr>
+		<tr><td>Select the ALG below.</tr></td>
+	</table><br>
+
+	<table border="0">
+		<tr>
+			<td width="20">&nbsp;</td>
+			<td><input type="checkbox" name="ftp"> FTP Enabled</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td><input type="checkbox" name="tftp"> TFTP Enabled</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td><input type="checkbox" name="sip"> SIP Enabled</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td><input type="checkbox" name="h323"> H.323 Enabled</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td><input type="checkbox" name="rtsp"> RTSP Enabled</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td><input type="checkbox" name="irc"> IRC Enabled</td>
+		</tr>
+	</table>
+
+	<table border="0">
+		<tr><td class="blue"></td></tr>
+		<tr><td><center>
+			<input type='button' onClick='applyClick()' value='Save/Apply'>
+		</center></tr></td>
+	</table>
+</form>
+</center>
+</body>
+</html>

@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppdump
+END
+ppp-comp.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppdump/ppp-comp.h
+END
+zlib.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppdump/zlib.c
+END
+bsd-comp.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppdump/bsd-comp.c
+END
+deflate.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppdump/deflate.c
+END
+pppdump.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppdump/pppdump.c
+END
+zlib.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppdump/zlib.h
+END
+Makefile.sunos4
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppdump/Makefile.sunos4
+END
+Makefile.linux
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppdump/Makefile.linux
+END
+Makefile.sol2
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppdump/Makefile.sol2
+END
+pppdump.8
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppdump/pppdump.8
+END

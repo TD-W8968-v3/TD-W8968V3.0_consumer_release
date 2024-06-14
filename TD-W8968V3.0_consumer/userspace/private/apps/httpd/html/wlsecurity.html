@@ -1,0 +1,1151 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var syncNvram = '<%ejGetWl(wlSyncNvram)%>';
+var ssidIdx = '<%ejGetWl(wlSsidIdx)%>';
+var enblWireless = '<%ejGetWl(wlEnbl_wl0v0)%>';
+var radiusServerIP = '<%ejGetWl(wlRadiusServerIP)%>';
+var mode = '<%ejGetWl(wlAuthMode)%>';
+var bit = '<%ejGetWl(wlKeyBit)%>';
+var keyIdx = '<%ejGetWl(wlKeyIndex)%>';
+var keys = new Array( "<%ejGetWl(wlKey1)%>", "<%ejGetWl(wlKey2)%>",
+                      "<%ejGetWl(wlKey3)%>", "<%ejGetWl(wlKey4)%>" );
+var wpaPskKey = '<%ejGetWl(wlWpaPsk)%>';
+var wpaGTKRekey = '<%ejGetWl(wlWpaGTKRekey)%>';
+var radiusPort = '<%ejGetWl(wlRadiusPort)%>';
+var radiusKey = '<%ejGetWl(wlRadiusKey)%>';
+var wep = '<%ejGetWl(wlWep)%>';
+var wpa = '<%ejGetWl(wlWpa)%>';
+var auth = '<%ejGetWl(wlAuth)%>';
+var wlCorerev = '<%ejGetWl(wlCoreRev)%>';
+
+var nmode = '<%ejGetWl(wlNmode)%>';
+var nreqd = '<%ejGetWl(wlNReqd)%>';
+
+var wlRefresh = '<%ejGetWl(wlRefresh)%>';
+var varPreauth = '<%ejGetWl(wlPreauth)%>';
+var varNetReauth = '<%ejGetWl(wlNetReauth)%>';
+
+var WscDevPin    = '<%ejGetWl(wlWscDevPin)%>';
+var WscStaPin     = '<%ejGetWl(wlWscStaPin)%>';
+var WscMode       = '<%ejGetWl(wlWscMode)%>';
+var WscIRMode   = '<%ejGetWl(wlWscIRMode)%>';
+var WscAPMode  = '<%ejGetWl(wlWscAPMode)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var WscAddER    = '<%ejGetWl(wlWscAddER)%>';
+var WscConfig = '<%ejGetWl(wlWscConfig)%>';
+
+if ( wlRefresh == '1' ) {
+   var code = 'location="wlsecrefresh.wl?wlRefresh=0"';
+   eval(code);
+}
+
+function isDigit(digit) {
+   var DigitVals = new Array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+   var len = DigitVals.length;
+   var i = 0;
+   var ret = false;
+
+   for ( i = 0; i < len; i++ )
+      if ( digit == DigitVals[i] ) break;
+
+   if ( i < len )
+      ret = true;
+
+   return ret;
+}
+
+function isStringDigit(value){
+	var len=value.length;
+
+	for( i = 0; i < len; i++){
+		if(isDigit(value.charAt(i)) == false)
+			return false;
+    }
+	return true;
+}
+function checkPIN(value)
+{
+	var PIN = parseInt(value);
+	var accum = 0;
+	
+	accum += 3 * (Math.floor((PIN / 10000000)) % 10); 
+	accum += 1 * (Math.floor((PIN / 1000000)) % 10);
+	accum += 3 * (Math.floor((PIN / 100000)) % 10);
+	accum += 1 * (Math.floor((PIN / 10000)) % 10);
+	accum += 3 * (Math.floor((PIN / 1000)) % 10);
+	accum += 1 * (Math.floor((PIN / 100)) % 10);
+	accum += 3 * (Math.floor((PIN / 10)) % 10);
+	accum += 1 * (Math.floor((PIN / 1)) % 10); 
+
+	if (0 == (accum % 10)){
+		return true;
+	}
+	else{
+		return false;
+	}
+    }
+
+function ValidPIN(value){
+	if(value.length == 0){
+		alert("You should input the pin first!");
+		return false;
+	}
+	if(value.length != 8){
+		alert("The pin you input is wrong. Pin's length should be 8");
+		return false;
+	}
+	if(isStringDigit(value) == false){
+		alert("The pin you input is wrong. Pin are digits only");
+		return false;
+	}
+	if(checkPIN(value) == false){
+		alert("The pin you input is wrong. Check the pin agin");
+		return false;
+	}
+	return true;
+}
+
+function getPreauth(wlPreauth) {
+   var ret;
+
+   if ( wlPreauth == "on" )
+      ret = 1;
+   else
+      ret = 0;
+   return ret;
+}
+
+function isValidWPAPskKey(val) {
+   var ret = false;
+   var len = val.length;
+   var maxSize = 64;
+   var minSize = 8;
+
+   if ( len >= minSize && len < maxSize )
+      ret = true;
+   else if ( len == maxSize ) {
+      for ( i = 0; i < maxSize; i++ )
+         if ( isHexaDigit(val.charAt(i)) == false )
+            break;
+      if ( i == maxSize )
+         ret = true;
+   } else
+      ret = false;
+
+   return ret;
+}
+
+function hideAllElements()
+{
+   showhide("wlWpaD", 0);
+   showhide("wpaPreShareKey", 0);
+   showhide("wpaGTKRekey", 0);
+   showhide("wlRadius", 0);
+   showhide("Preauth", 0);
+   showhide("NetReauth", 0);
+   //showhide("wlWepD", 0);
+   //showhide("keyInfo", 0);
+//   showhide("divWscConfigAp", 0);
+//   showhide("divWscDevPin", 0);
+//   showhide("divWscAddClient", 0);
+//   showhide("divWscStaPin", 0);
+}
+
+function encrypChange()
+{
+   with ( document.forms[0] ) {
+      var cwep = getSelect(wlWep);
+      var authMode = getSelect(wlAuthMode)
+      var myKeyIdx = parseInt(keyIdx);	  
+      if(myKeyIdx<1 ||myKeyIdx>4)
+	  	myKeyIdx = 1;
+
+      if (cwep == "enabled") {
+         showhide("keyInfo", 1);
+         if (authMode != "open" && authMode != "shared") {
+            wlKeys[0].disabled = 1;
+            wlKeys[1].disabled = 0;
+            wlKeys[2].disabled = 0;
+            wlKeys[3].disabled = 1;
+            wlKeyIndex.length = 0;
+            wlKeyIndex[0] = new Option("2", "2");
+            wlKeyIndex[1] = new Option("3", "3");
+            if (keyIdx != "2" && keyIdx != "3") {
+                keyIdx = "2";
+            }
+            wlKeyIndex.selectedIndex = myKeyIdx - 2;
+         }
+         else {
+            wlKeys[0].disabled = 0;
+            wlKeys[1].disabled = 0;
+            wlKeys[2].disabled = 0;
+            wlKeys[3].disabled = 0;
+            wlKeyIndex.length = 0;
+            wlKeyIndex[0] = new Option("1", "1");
+            wlKeyIndex[1] = new Option("2", "2");
+            wlKeyIndex[2] = new Option("3", "3");
+            wlKeyIndex[3] = new Option("4", "4");
+            wlKeyIndex.selectedIndex = myKeyIdx - 1;
+         }
+      } 
+      else {
+         showhide("keyInfo", 0);
+      }
+   }
+}
+	
+function authModeChange(OnPageLoad) {
+
+   with ( document.forms[0] ) {
+      var authMode = getSelect(wlAuthMode);
+      var i, algos;
+      var disableWepD = false;
+
+      //alert('authModeChange:authMode= "' + authMode+ '" (EOM).');
+
+      hideAllElements();
+
+      //show adequate forms for each mode
+      switch ( authMode ) {
+
+      case 'shared':
+             wlWscMode.disabled = true;
+             setSelect(wlWscMode, 'disabled');
+//document.forms[0].mytext.value = 'shared';		 
+         showhide("wlWepD", 1);
+         showhide("keyInfo", 1);
+         break;
+      case 'open':
+         wlWscMode.disabled = false;
+//document.forms[0].mytext.value = 'open';
+         setSelect(wlWscMode, WscMode );
+		 
+         showhide("wlWepD", 1);
+         showhide("keyInfo", 1);
+         break;
+      case 'radius':
+         wlWscMode.disabled = true;
+//document.forms[0].mytext.value = 'radius';
+         setSelect(wlWscMode, 'disabled');
+         showhide("wlRadius", 1);
+         showhide("wlWepD", 1);
+         break;
+
+      case 'wpa2':
+      case 'wpa wpa2':
+         wlWscMode.disabled = true;
+         setSelect(wlWscMode, 'disabled');
+//document.forms[0].mytext.value = 'wpa2';
+         showhide("Preauth", 1);
+         showhide("NetReauth", 1);
+      case 'wpa':
+         wlWscMode.disabled = true;
+         setSelect(wlWscMode, 'disabled');
+//document.forms[0].mytext.value = 'wpa';
+         showhide("wlWpaD", 1);
+         showhide("wlRadius", 1);
+         showhide("wpaGTKRekey", 1);
+         disableWepD = true;
+         break;
+
+      case 'psk2':
+      case 'psk psk2':
+      case 'psk':
+            wlWscMode.disabled = false;
+            setSelect(wlWscMode, WscMode );
+         showhide("wlWpaD", 1);
+         showhide("wpaGTKRekey", 1);
+         showhide("wpaPreShareKey", 1);
+         disableWepD = true;
+//document.forms[0].mytext.value = 'psk';		 
+         break;
+      } 
+
+      if(OnPageLoad==1){
+     // Define new algorithms
+           if (wlCorerev >= 3)
+           {
+           	if(!(nmode=='auto'&&nreqd=='1'))
+				{
+					if(nmode=='auto')
+						algos = new Array("AES","TKIP+AES");
+	            else
+						algos = new Array("AES","TKIP","TKIP+AES");
+		}
+	            else
+			algos = new Array("AES");
+         }
+		else
+           {
+           	if(!(nmode=='auto'&&nreqd=='1'))
+	            algos = new Array("TKIP");
+         }
+         // Reconstruct algorithm array from new algorithms
+         wlWpa.length = algos.length;
+
+         for (var i in algos) {
+            wlWpa[i] = new Option(algos[i], algos[i].toLowerCase());
+            wlWpa[i].value = algos[i].toLowerCase();
+
+            if (algos[i].toLowerCase() == wpa)
+                wlWpa[i].selected = true;
+         }
+      }  
+     
+      //advice default cipher selection,remove if not desired
+      if (OnPageLoad == 0) {
+          if(authMode == "wpa" || authMode == "psk")
+            wlWpa.selectedIndex=0;
+          if(authMode == "wpa2" || authMode == "psk2")
+         wlWpa.selectedIndex=0;  	
+          if(authMode == "wpa wpa2" || authMode == "psk psk2")
+         wlWpa.selectedIndex=0;
+
+         wpa=wlWpa[wlWpa.selectedIndex].value;
+      }
+
+      // wep options
+      wlWep.length = 0;
+      if (authMode == "shared" || authMode == "radius") {  // shared and radius must have wep on
+         wlWep[0] = new Option("Enabled", "enabled");
+         wlWep[0].selected = true;
+      }
+      else {
+         wlWep[0] = new Option("Disabled", "disabled");
+	 if(!(nmode=='auto'&&nreqd=='1'))
+         wlWep[1] = new Option("Enabled", "enabled");
+	 else
+	 	disableWepD = true;			// added by lileiguang 2012-05-09
+         if ((authMode.indexOf("wpa")!= -1 || authMode.indexOf("psk")!= -1) && (mode == "open" || mode == "shared" || mode == "radius")) { // set wep off if switch to wpa modes
+            wlWep[0].selected = true;
+         }
+         else if (wep == "enabled") {
+            wlWep[1].selected = true;
+         }
+         else {
+            wlWep[0].selected = true;
+         }
+      }
+
+      /* -start: not coexist with WPA-*/
+      if(disableWepD) {
+         setSelect(wlWep, "disabled");
+         wlWep.disabled = 1;
+      } else {
+         wlWep.disabled = 0;
+      }
+      /* -end: not coexist with WPA-*/
+   }
+
+    wscModeChange(0);
+    wscAPModeChange(0);
+      
+    encrypChange();
+}
+
+function wscModeChange(OnPageLoad) {
+
+   with ( document.forms[0] ) {
+      var wscMode = getSelect(wlWscMode);
+      var authMode = getSelect(wlAuthMode);
+
+      mytext.value += wscMode;
+
+      switch ( wscMode ) {
+
+      case 'enabled': // WSC Enable
+	 if(WscMode=='enabled')
+	 {
+         showhide("divWscIRMode", 0); //IR always enabled and hide
+         showhide("divWscDevPin", 1);
+         showhide("divWscConfigAp", 0);//always hide zengdk
+         showhide("divWscAPMode", 0);//always hide zengdk
+         showhide("divWscAddClient", 1);
+	 showhide("divWscStaPin",1);
+
+         if ( WscAddER == '1' ) {	
+             showhide("divWscAddER", 0);//always hide zengdk
+             showhide( 'divWscAddERDone', 0);
+         }
+         else {
+             showhide("divWscAddER", 0);
+             showhide( 'divWscAddERDone', 0);//always hide zengdk
+         }		 	
+	 }
+	 else
+	 {
+		showhide("divWscIRMode", 0);
+         	showhide("divWscAddClient", 0);
+         showhide("divWscStaPin", 0);
+         	showhide("divWscDevPin", 0);
+         	showhide("divWscConfigAp", 0 );
+         	showhide("divWscAPMode", 0 );
+         	showhide("divWscAddER", 0);
+         	showhide( 'divWscAddERDone', 0 );
+		}
+	  break;
+	  
+      case  'disabled':  //WSC Disable
+         showhide("divWscIRMode", 0);
+         showhide("divWscAddClient", 0);
+         showhide("divWscStaPin", 0);
+         showhide("divWscDevPin", 0);
+         showhide("divWscConfigAp", 0 );
+         showhide("divWscAPMode", 0 );
+         showhide("divWscAddER", 0);
+         showhide( 'divWscAddERDone', 0 );
+	  break;
+      	}
+   }
+}
+
+function wscAPModeChange(OnPageLoad) {
+
+   with ( document.forms[0] ) {
+      var wscApMode = getSelect(wlWscAPMode);
+      var wscMode = getSelect(wlWscMode);
+
+      if ( wscMode == "enabled") {
+              if ( wscApMode == "0" ) {   //WSC enabled and AP unconfigured
+                   showhide("divWscDevPin", 1);
+                   showhide("divWscConfigAp", 0);//always hide zengdk
+  	            raApMethod[1].checked = true;
+/*                   showhide("divWscAddClient", 0);
+                   showhide("divWscStaPin", 0);
+*/
+                    showhide( 'divWscAddERDone', 0 );
+                    showhide( 'divWscAddER', 0 );
+	      }
+	      else {          //WSC enabled and AP configured
+                   showhide("divWscDevPin", 1);
+                   showhide("divWscConfigAp", 0 );
+/*                   showhide("divWscAddClient", 1);
+  	            raClientMethod[1].checked = true;  //select PIN method as default
+		     showhide('divWscStaPin', 1)
+*/
+                  if ( WscAddER == '1' ) {	
+                          showhide( 'divWscAddERDone', 0);
+                          showhide( 'divWscAddER', 0 );
+	      	     }
+                   else {
+                          showhide( 'divWscAddERDone', 0 );
+                          showhide( 'divWscAddER', 0);
+ 	          }
+ 
+              }
+
+             showhide("divWscAddClient", 1);
+             raClientMethod[1].checked = true;  //select PIN method as default
+             showhide('divWscStaPin', 1)
+
+      	}
+   }
+}
+
+
+function wscIRModeChange(OnPageLoad) {
+
+   with ( document.forms[0] ) {
+      var wscApMode = getSelect(wlWscIRMode);
+
+/*      switch ( wscApMode ) {
+      case 'enabled':
+         showhide("divWscAddER", 0);
+           break;
+      case  'disabled':
+         showhide("divWscAddER", 1);
+	  break;
+      	}
+*/
+   }
+}
+
+function pin_window(pin)
+{
+   with(document.forms[0])
+   {
+      var w = window.open("", "", "toolbar=no,width=500,height=100");
+      w.document.write('<font size=5><b><center>' + pin + '</center></b></font>');
+      w.document.close();
+    }
+}
+
+function devpin_window(pin)
+{
+   with(document.forms[0])
+   {
+      var w = window.open("", "", "toolbar=no,width=500,height=100");
+      w.document.write('Device Pin Input to Client<br>');
+      w.document.close();
+    }
+}
+
+function help_window()
+{
+   with(document.forms[0])
+   {
+      var w = window.open("", "", "toolbar=no,width=500,height=100");
+      w.document.write('Input Station Pin from Client<br>');
+      w.document.close();
+    }
+}
+
+function SetAuthModeOption()
+{
+     with ( document.forms[0] ) {
+	 	var i = 0;
+		wlAuthMode[i++] = new Option("Open (insecurity)","open");
+		if(!(nmode=='auto'&&nreqd=='1')){
+			wlAuthMode[i++] = new Option("Shared (good)","shared");
+	  }
+		wlAuthMode[i++] = new Option("WPA-Enterprise (good)","wpa");
+		wlAuthMode[i++] = new Option("WPA-Personal (better/recommended)","psk");
+		wlAuthMode[i++] = new Option("WPA2-Enterprise (better)","wpa2");
+		wlAuthMode[i++] = new Option("WPA2-Personal (best/recommended)","psk2");
+		wlAuthMode[i++] = new Option("Mixed WPA2/WPA Enterprise (adaptive)","wpa wpa2");
+        wlAuthMode[i++] = new Option("Mixed WPA2/WPA-PSK Personal(adaptive)","psk psk2");
+    }
+		 
+
+}
+
+function frmLoad() {
+     SetAuthModeOption();	
+     with ( document.forms[0] ) {
+         setSelect(wlSsidIdx, ssidIdx);
+         setSelect(wlAuthMode, mode);
+         wlWpaPsk.value = wpaPskKey;
+         wlWpaGtkRekey.value = wpaGTKRekey;
+         wlRadiusIPAddr.value = radiusServerIP;
+         wlRadiusPort.value = radiusPort;
+         wlRadiusKey.value = radiusKey;
+         wlKeyBit.selectedIndex = parseInt(bit);
+         wlPreauth.selectedIndex = parseInt(varPreauth);
+         wlNetReauth.value = varNetReauth;
+
+	if(wep != 'disabled'){
+         for ( i = 0; i < 4; i++ ) {
+            wlKeys[i].value = keys[i];
+         }
+	}
+
+         wlWscDevPin.value = WscDevPin;
+         wlWscDevPin.readOnly = true;
+         wlWscStaPin.value = WscStaPin;
+         wlWscStaPin.readOnly = false;
+         if ( WscMode != 'enabled' && WscMode!= 'disabled' ) {
+                WscMode = 'disabled';
+                showhide("divWscMode", 0);
+                showhide("divwsctext", 0);
+         }
+
+         setSelect(wlWscMode, WscMode );
+         setSelect(wlWscIRMode, WscIRMode);
+         setSelect(wlWscAPMode, WscAPMode );
+      }
+
+      authModeChange(1);
+      wscModeChange(1);
+      wscAPModeChange(1);
+
+      showhide( 'divtext', 0 );  
+      document.forms[0].mytext.value = 'wlAuthMode='+ mode+' |WscDevPin='+WscDevPin+'|WscStaPin= '+WscStaPin
+      document.forms[0].mytext.value+='|WscMode='+WscMode+'|WscIRMode='+WscIRMode+' |WscAPMode='+WscAPMode+'|WscAddER='+WscAddER;	  
+
+}
+
+function btnApply(place) {
+   var swep = getSelect(document.forms[0].wlWep);
+   var swpa = getSelect(document.forms[0].wlWpa);
+   var wscApMode = getSelect(document.forms[0].wlWscAPMode);
+
+   if ( enblWireless == '0' ) {
+      if ( place == 'wlsecurity.wl' )
+         alert('Cannot apply the change since wireless is currently disabled.');
+      else
+         alert('Cannot set encryption keys since wireless is currently disabled.');
+      return;
+   }
+
+   var loc = '';
+
+   switch ( place ) {
+      case 'wlWscAddClient.wl':
+   
+   	if(document.forms[0].raClientMethod[1].checked == true){//check pin value first;
+		if(ValidPIN(document.forms[0].wlWscStaPin.value) == false){
+			document.forms[0].wlWscStaPin.focus();
+			document.forms[0].wlWscStaPin.select();
+			return;
+		}
+	}
+	
+         loc += 'wlsecurity.wl?';
+
+         if ( wscApMode == "0" )   {  //WSC enabled and AP unconfigured
+             
+
+            if (document.forms[0].raClientMethod[0].checked == true) {
+                loc += 'wlWscStaPin=';
+   	         loc += '&wsc_addER=0';
+                loc += '&wlWscConfig=client-pbc-reset';
+            }
+            else {
+                loc += 'wlWscStaPin=' + encodeUrl(document.forms[0].wlWscStaPin.value);
+                loc += '&wsc_addER=0';
+                loc += '&wlWscConfig=client-pin-reset';
+//	            loc += '&wsc_proc_status=0';
+//              loc += '&wsc_method=1';
+//              loc += '&wsc_config_command=1';
+            }
+
+     
+    	     loc += '&wsc_force_restart=y';
+		   
+            }
+       else {
+
+            if (document.forms[0].raClientMethod[0].checked == true) {
+                  loc += 'wlWscStaPin=';
+	           loc += '&wsc_addER=0';
+
+                  loc += '&wlWscConfig=client-pbc';
+
+                  loc += '&wsc_event=a';
+                  loc += '&wsc_force_restart=n';
+
+
+//                loc += '&wsc_proc_status=0';
+                  loc += '&wsc_method=2';
+                  loc += '&wsc_config_command=1';
+	  
+                  } 
+            else {
+                      loc += 'wlWscStaPin=' + encodeUrl(document.forms[0].wlWscStaPin.value);
+	           loc += '&wsc_addER=0';
+                  loc += '&wlWscConfig=client-pin';
+
+                  loc += '&wsc_force_restart=n';
+
+
+                  loc += '&wsc_proc_status=0';
+                  loc += '&wsc_method=1';
+                  loc += '&wsc_config_command=1';
+            }
+                  }
+	 
+         loc += '&';
+         break;
+	case 'wlWscConfigAp.wl':
+         loc += 'wlsecurity.wl?';
+         loc += 'wlWscDevPin=' + encodeUrl(document.forms[0].wlWscDevPin.value);
+
+	    loc += '&wsc_addER=0';
+          if (document.forms[0].raApMethod[1].checked == true) {
+                loc += '&wlWscConfig=ap-pbc';
+
+	         loc += '&wsc_proc_status=0';
+                loc += '&wsc_method=2';
+                loc += '&wsc_config_command=1';
+            }
+          else {
+         loc += '&wlWscConfig=ap-pin';
+
+         loc += '&wsc_proc_status=0';
+         loc += '&wsc_method=1';
+         loc += '&wsc_config_command=1';
+         }
+ 
+         loc += '&wsc_config_state=0';
+           loc += '&wsc_force_restart=y';
+ 
+         loc += '&';
+         break;
+      case 'wlWscAddER.wl':
+           loc += 'wlsecurity.wl?';
+	    loc += 'wsc_addER=1';
+
+	    loc += '&wlWscConfig=ap-er';
+
+	    loc += '&wsc_proc_status=0';
+//           loc += '&wsc_method=2';
+//           loc += '&wsc_config_command=1';
+
+		
+	    loc += '&wsc_force_restart=y';
+	    loc += '&';
+           break;
+	case 'wlWscAddERDone.wl':
+           loc += 'wlsecurity.wl?';
+	    loc += '&wsc_addER=0';
+           loc += '&wlWscConfig=er-done';
+           loc += '&wsc_force_restart=y';
+	    loc += '&';
+ 
+	    break;
+	case 'NewPIN':
+		loc += 'wlsecurity.wl?';
+		loc += 'newPIN=' + encodeUrl("12345670");
+         loc += '&';
+         break;
+	default:
+          loc += place + '?';
+	   break;  
+   }
+
+   
+   with ( document.forms[0] ) {
+      var authMode = getSelect(wlAuthMode);
+      var value;
+
+      var vwscMode = getSelect(wlWscMode);
+      var vwscIRMode = getSelect(wlWscIRMode);
+      var vwscAPMode  =getSelect(wlWscAPMode);
+      loc += 'wl_wsc_mode='+vwscMode;
+      loc += '&wl_wsc_reg='+vwscIRMode;
+      //loc += '&wsc_config_state='+vwscAPMode;
+	  if(vwscAPMode == 0  && (authMode != mode || swep != wep || swpa != wpa))
+   	  	loc += '&wsc_config_state=1';
+      loc += '&wlAuthMode=';
+      loc += authMode;
+      if (authMode == 'shared') {
+         loc += '&wlAuth=1';
+      }
+      else {
+         loc += '&wlAuth=0';
+      }
+
+      if (authMode.indexOf("psk")!= -1) {
+         value = wlWpaPsk.value;
+         if ( isValidWPAPskKey(value) == false ) {
+            alert('WPA Pre-Shared Key should be between 8 and 63 ASCII characters or 64 hexadecimal digits.');
+            return;
+         }
+         loc += '&wlWpaPsk=' + encodeUrl(wlWpaPsk.value);
+      }
+
+      if (authMode.indexOf("wpa")!= -1 || authMode.indexOf("psk")!= -1){
+         //check GTK interval
+         value = parseInt(wlWpaGtkRekey.value);
+         if (  isNaN(value) == true || value < 0 || value > 0xffffffff ) {
+            alert('WPA Group Rekey Interval "' + wlWpaGtkRekey.value + '" should be between 0 and 4294967295.');
+            return;
+         }
+
+         loc += '&wlWpaGtkRekey=' + wlWpaGtkRekey.value;
+
+         //check Reauth interval
+         value = parseInt(wlNetReauth.value);
+         if (  isNaN(value) == true || value < 0 || value > 0xffffffff ) {
+            alert('WPA Network Reauthentication Interval "' + wlNetReauth.value + '" should be between 0 and 4294967295.');
+            return;
+         }
+
+         loc += '&wlNetReauth=' + wlNetReauth.value;
+      }
+
+      if (authMode.indexOf("wpa")!= -1 || authMode == 'radius') {
+         if ( isValidIpAddress(wlRadiusIPAddr.value) == false ) {
+            alert('RADIUS Server IP Address "' + wlRadiusIPAddr.value + '" is invalid IP address.');
+            return;
+         }
+	 value = parseInt(wlRadiusPort.value);
+	  if (  isNaN(value) == true || value < 1 || value > 0xffff ) {
+		alert('RADIUS Port should be between 1 and 65535.');
+		return;
+	  }
+         loc += '&wlRadiusServerIP=' + wlRadiusIPAddr.value;
+         loc += '&wlRadiusPort=' + wlRadiusPort.value;
+         loc += '&wlRadiusKey=' + encodeUrl(wlRadiusKey.value);
+      }
+
+      loc += submitSelect(wlWep);
+      loc += submitSelect(wlWpa);
+      loc += submitSelect(wlKeyBit);
+      loc += '&wlPreauth=' + getPreauth(wlPreauth.value);
+
+      if (getSelect(wlWep) == "enabled") {
+         var i, val;
+         var cbit = getSelect(wlKeyBit);
+         var num = parseInt(getSelect(wlKeyIndex))-1;
+         val = wlKeys[num].value;
+         if ( val == '' && !(swep == 'enabled' && authMode == 'radius')) {
+            alert('Cannot choose key that has empty value.');
+            return;
+         }
+         if ( val != '' ) {
+            if ( cbit == '0' ) {
+               if ( isValidKey(val, 13) == false ) {
+                  alert('Key "' + val + '" is invalid. Please enter 13 ASCII characters or 26 hexadecimal digits for a 128-bit WEP encryption key.');
+                  return;
+               }
+            } else {
+               if ( isValidKey(val, 5) == false ) {
+                  alert('Key "' + val + '" is invalid. Please enter 5 ASCII characters or 10 hexadecimal digits for a 64-bit WEP encryption key.');
+                  return;
+               }
+            }
+         }
+         loc += submitSelect(wlKeyIndex);
+         loc += '&wlKey1=' + encodeUrl(wlKeys[0].value);
+         loc += '&wlKey2=' + encodeUrl(wlKeys[1].value);
+         loc += '&wlKey3=' + encodeUrl(wlKeys[2].value);
+         loc += '&wlKey4=' + encodeUrl(wlKeys[3].value);
+
+		 loc += '&wlObssCoex=' + 1;
+      }
+	  else
+	  {
+		if( authMode !='shared' && authMode !='open' && getSelect(wlWpa) == "tkip+aes")
+			loc += '&wlObssCoex=' + 1;
+		else
+		loc += '&wlObssCoex=' + 0;
+      }
+
+      // the last one to submit - if changing ssid above variables belong to previous ssid
+      loc += submitSelect(wlSsidIdx);
+
+      mytext.value += loc;
+
+      loc += '&wlSyncNvram=1';
+	  
+      loc += '&sessionKey=' + sessionKey;
+      var code = 'location="' + loc + '"';
+      //send to server
+	  //alert(code);
+      eval(code);
+   }
+}
+
+// done hiding -->
+   </script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <center>
+         <form>
+         <table>
+		<tr><td class="h1">Wireless -- Security</td></tr>
+		<tr><td class="blue"></td></tr>
+		<tr><td>
+            This page allows you to configure security features of the wireless LAN
+            interface.<br>
+            You may setup configuration manually or through Wi-Fi Protected Setup(WPS)
+		</td></tr>
+			<tr><td class="blue"></td></tr>
+
+		<tr><td>
+            
+           <div id="divtext">
+                  <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                        <td width='180'></td>
+                        <td>
+                                  <input type='text' name='mytext' size='200' maxlength='400'> &nbsp;&nbsp;
+                        </td>
+                  </tr>
+                  </table>
+             </div>
+
+            <div id="divWscMode">
+             <tr><td class="h3">WPS</td></tr>
+             </td></tr>
+             <tr><td>
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+             <td width='180' class="item"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enable <b>WPS:</b></td>
+                  <td><select name='wlWscMode' size="1" onChange='wscModeChange(0)'> 
+                     <option value="enabled">Enabled</option>
+                     <option value="disabled">Disabled</option>    
+                     </select></td>
+            </tr>
+            </table>
+            <br>
+            </div>
+            
+            <div id="divWscIRMode">
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+             <td width='180' class="item"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enable <b>Build-In Registrar:</b></td>
+             
+             <td><select name='wlWscIRMode' size="1" onChange='wscIRModeChange(0)'>
+                     <option value="enabled">Enabled</option>    
+                     <option value="disabled">Disabled</option>
+                     </select></td>
+            </tr>
+            </table>
+            </div>
+
+
+            <div id="divWscAddClient">
+              <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add <b>Client</b> (This feature is available only when WPA-PSK, WPA2-PSK or OPEN mode  is configured)<br>
+                 <table border="0" cellpadding="0" cellspacing="0">
+                 <tr>
+				<td width='180' class="item"></td>
+                      <td width="162">
+                          <input name='raClientMethod' type='radio' onClick="showhide('divWscStaPin', 0)"></input>Push-Button
+                          <input name='raClientMethod' type='radio' onClick="showhide('divWscStaPin', 1)"></input>PIN&nbsp;&nbsp;&nbsp;&nbsp;
+                      </td>
+                      <td>
+                           <input type='button' onClick='btnApply("wlWscAddClient.wl")' value=' Add Enrollee '>
+                      </td>
+                </tr>
+                </table>
+            </div>
+            
+             <div id="divWscStaPin">
+                  <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+				<td width='180' class="item"></td>
+                        <td width="163">
+                                  <input type='text' name='wlWscStaPin' size='20' maxlength='8'> &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                  <A HREF="javascript:help_window()">Help</A> 
+                        </td>
+			   </tr>
+               </table>
+            </div>
+
+       
+
+           <div id="divWscAPMode">
+           <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+             <td width='180' class="item"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set <b>WSC AP Mode</b></td>
+                  <td><select name='wlWscAPMode' size="1" onChange='wscAPModeChange(0)'> 
+                     <option value="1">Configured</option>
+                     <option value="0">Unconfigured</option>    
+                     </select></td>
+            </tr>
+            </table>
+            </div>
+
+            <div id="divWscConfigAp">
+            <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Setup <b>AP</b> (Configure all security settings with an external registar) <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+               <td width='180' class="item"> </td>
+               <td width="177">
+                  <input name='raApMethod' type='radio' onClick="showhide('divWscDevPin', 1)"></input>Push-Button
+                  <input name='raApMethod' type='radio' onClick="showhide('divWscDevPin', 1)"></input>PIN&nbsp;&nbsp;&nbsp;&nbsp;
+               </td>
+               <td>
+                  &nbsp;&nbsp;<input type='button' onClick='btnApply("wlWscConfigAp.wl")' value=' Config AP '>
+               </td>
+           </tr>
+            </table>
+            <br>
+            </div>
+
+             <div id="divWscDevPin">
+                  <table border="0" cellpadding="0" cellspacing="0">
+                   <tr>
+                        <td width='180' class="item"> <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Device PIN:</b></td>
+                        <td width="164">
+                                  <input type='text' name='wlWscDevPin' size='20' maxlength='8'>
+                        </td>
+                        <td width="133" ><input type='button' onClick='btnApply("NewPIN")' value='Gen new PIN'>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td>
+                                   <A HREF="javascript:devpin_window()">Help </A>
+                        </td>
+                  </tr>
+                  </table>
+            </div>
+
+            <div id="divWscAddER">
+             <br>
+            <table border="0" cellpadding="0" cellspacing="0">
+			<tr>
+               <td width='180' class="item"> <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WSC Add External Registrar</b></td>
+               <td>
+                  &nbsp;&nbsp;<input type='button' onClick='btnApply("wlWscAddER.wl")' value='Start AddER'>
+               </td>
+           </tr>
+                 </table>
+            </div>
+
+            <div id="divWscAddERDone">
+
+            <table border="0" cellpadding="0" cellspacing="0">
+		<tr>
+               <td width='180' class="item"> <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WSC Add External Registrar</b></td>
+               <td>
+                  &nbsp;&nbsp;<input type='button' onClick='btnApply("wlWscAddERDone.wl")' value='Finish AddER'>
+               </td>
+           </tr>
+            </table>
+            </div>
+			<tr><td class="blue"></td></tr>
+			<tr><td class="h3">Manual Setup AP</td></tr>
+            <tr><td>
+            <br><B>In order to protect your network from hackers and unauthorized users, it is highly recommended you choose one of the following wireless network security settings. 
+			</B></br>
+            You can set the network authentication method, selecting data
+            encryption, specify whether a network key is required to authenticate to this
+            wireless network and specify the encryption strength.<br>
+            <font color="#FF0000">Warning: we suggest you not to set WEP 
+			encryption to &quot;Enabled&quot; when the device runs in 11n mode. The 
+			device's wireless highest speed is 54Mbps in that encryption type.<br>
+			</font>Tips: 11n only mode are not supported when WEP encryption is &quot;Enabled&quot; or 
+			WPA Encryption type is "TKIP".<font color="#FF0000"><br>
+			</font>Tips: &quot;WPA Encryption&quot; are not allowed to set to &quot;TKIP&quot; 
+			when the device runs in 11n mode.<font color="#FF0000"> </font><br>
+            Click "Save/Apply" when done.</td></tr>
+            <tr><td>
+            <br>
+              <table border="0" cellpadding="0" cellspacing="0">
+               <tr style="display:none">
+			      <td class="item" >Select SSID:</td>
+                  <td><select name="wlSsidIdx" onChange="btnApply('wlsecrefresh.wl')">
+                  <%ejGetWl(wlSsidList)%>
+                  </select></td>
+               </tr>
+               <tr>
+				<td width='180' class="item">Network Authentication:</td>
+                  <td><select name='wlAuthMode' size="1" onChange='authModeChange(0)'>
+                  </select>
+                  </td>
+               </tr>
+            </table>
+            <br>
+            <div id="Preauth">
+               <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+				<td width='180' class="item">WPA2 Preauthentication:</td>
+                      <td><select name='wlPreauth' size="1">
+                        <option value="off">Disabled</option>
+                     <option value="on">Enabled</option>    
+                     </select></td>
+                  </tr>
+               </table>
+            </div>
+            <div id="NetReauth">
+               <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+				<td width='180' class="item">Network Re-auth Interval:</td>
+                     <td><input type='text' name='wlNetReauth' size='20' maxlength='10'>  (optional)</td>
+                  </tr>
+               </table>
+            </div>
+            <div id="wpaPreShareKey">
+               <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                     <td width='180' class="item">Wireless Network Key:</td>
+                     <td width="400"><input type='password' name='wlWpaPsk' size='20' maxlength='64'>  (Also called WPA Pre-Shared Key)</td>
+              <td width="10">&nbsp;&nbsp;</td></tr>
+              <tr><td width='180' class="item"></td><td> <A HREF="javascript:pin_window(document.forms[0].wlWpaPsk.value)">Click here to display</A></td>             
+                  </tr>
+			<tr>
+                  <td width='180' class="item"></td>
+                  <td>(You can enter ASCII characters between 8 and 63 characters or 8 to 64 Hexadecimal characters.)
+					</td>
+                  </tr>
+               </table>
+            </div>
+            <div id="wpaGTKRekey">
+               <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+				<td width='180' class="item">WPA Group Rekey Interval:</td>
+                     <td><input type='text' name='wlWpaGtkRekey' size='20' maxlength='10'>  (optional)</td>
+                  </tr>
+               </table>
+            </div>
+            <div id="wlRadius">
+               <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+				<td width='180' class="item">RADIUS Server IP Address:</td>
+                     <td><input type='text' name='wlRadiusIPAddr' size='20' maxlength='15'></td>
+                  </tr>
+                  <tr>
+				<td class="item">RADIUS Port:</td>
+                     <td><input type='text' name='wlRadiusPort' size='20' maxlength='5'>  (1-65535)</td>
+                  </tr>
+                  <tr>
+				<td class="item">RADIUS Key:</td>
+                     <td><input type='password' name='wlRadiusKey' size='20' maxlength='64'>  (optional)</td>
+                     
+                  </tr>
+                  <tr><td class="item"></td>
+                  	 <td>(You can enter ASCII characters between 0 and 63 characters or 0 to 64 Hexadecimal characters.)</td>
+                  </tr>
+               </table>
+            </div>
+            <div id="wlWpaD"><table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                     <td width='180' class="item">WPA Encryption:</td>
+                     <td><select name="wlWpa" onChange='encrypChange()'>
+                        </select>
+                     </td>
+                  </tr>
+               </table>
+            </div>
+            <div id="wlWepD"><table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+				<td width='180' class="item">WEP Encryption:</td>
+                     <td><select name="wlWep" onChange='encrypChange()'>
+                        </select>
+                     </td>
+                  </tr>
+               </table>
+            </div>
+            <div id='keyInfo'>
+               <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+				<td width='180' class="item">Encryption Strength:</td>
+                     <td><select name='wlKeyBit' size='1'>
+                           <option value="0" selected>128-bit</option>
+                           <option value="1">64-bit</option>
+                        </select></td>
+                  </tr>
+                  <tr>
+				<td width='180' class="item">Current Network Key:</td>
+                     <td><select name='wlKeyIndex' size='1'></select></td>
+                  </tr>
+                  <tr>
+				<td class="item">Network Key 1:</td>
+                     <td><input type='text' name='wlKeys' size='30' maxlength=26></td>
+                  </tr>
+                  <tr>
+				<td class="item">Network Key 2:</td>
+                     <td><input type='text' name='wlKeys' size='30' maxlength=26></td>
+                     </tr>
+                  <tr>
+				<td class="item">Network Key 3:</td>
+                     <td><input type='text' name='wlKeys' size='30' maxlength=26></td>
+                  </tr>
+                  <tr>
+				<td class="item">Network Key 4:</td>
+                     <td><input type='text' name='wlKeys' size='30' maxlength=26></td>
+                  </tr>
+                  <tr>
+                     <td></td><td>Enter 13 ASCII characters or 26 hexadecimal digits for 128-bit encryption keys</td>
+                  </tr><tr>
+                     <td></td><td>Enter 5 ASCII characters or 10 hexadecimal digits for 64-bit encryption keys</td>
+                  </tr>
+
+
+
+               </table>
+            </div>
+            </td></tr>
+               <table>
+				<tr><td class="blue"></td></tr>
+                  <tr>
+                     <td>
+                        <center><input type='button' onClick='btnApply("wlsecurity.wl")' value='Save/Apply'></center>
+                     </td>
+                  </tr>
+               </table>
+         </td></tr>      
+               </table>
+         </form>
+     </center>
+   </body>
+</html>

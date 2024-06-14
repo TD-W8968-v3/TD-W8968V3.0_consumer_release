@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts
+END
+ipv6-up.sample
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/ipv6-up.sample
+END
+redialer
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/redialer
+END
+callback
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/callback
+END
+ip-down.local.add
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/ip-down.local.add
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/README
+END
+secure-card
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/secure-card
+END
+options-rsh-loc
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/options-rsh-loc
+END
+options-ssh-loc
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/options-ssh-loc
+END
+ppp-on-rsh
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/ppp-on-rsh
+END
+ppp-on-ssh
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/ppp-on-ssh
+END
+options-rsh-rem
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/options-rsh-rem
+END
+ppp-on-dialer
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/ppp-on-dialer
+END
+ppp-off
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/ppp-off
+END
+options-ssh-rem
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/options-ssh-rem
+END
+ipv6-down.sample
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/ipv6-down.sample
+END
+ppp-on
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/ppp-on
+END
+chat-callback
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/chat-callback
+END
+ip-up.local.add
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/scripts/ip-up.local.add
+END

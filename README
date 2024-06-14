@@ -1,0 +1,5 @@
+TD-W8968 V3.0 Open Source Release
+This release contains all of the files needed to build a TD-W8968 V3.0 GPL image.
+Install tools and source code:
+#./consumer_install
+

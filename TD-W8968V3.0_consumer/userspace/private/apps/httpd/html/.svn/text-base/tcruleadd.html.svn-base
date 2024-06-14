@@ -1,0 +1,223 @@
+<html>
+<head>
+	<meta http-equiv="Pragma" content="no-cache">
+	<link rel="stylesheet" href="stylemain.css" type="text/css">
+	<link rel="stylesheet" href="colors.css" type="text/css">
+	<script src="util.js" type="text/javascript"></script>
+	<script type="text/javascript"><!-- hide
+/*EJ_PLACEHOLDER*/
+if (sessionKey === undefined) {
+	var sessionKey = '123456789';
+	var entry = [3,0,'192.168.1.10','',80,-1,'TCP or UDP',6,10,20,30,40];
+}
+
+function frmLoad() {
+	with ( document.forms[0] ) {
+		if (entry) { // edit
+			radioCheck(enable, entry[1]);
+			startIP.value = entry[2];
+			endIP.value = entry[3] ? entry[3] : startIP.value;
+			startPort.value = (entry[4] >= 0) ? entry[4] : '';
+			endPort.value = (entry[5] >= 0) ? entry[5] : startPort.value;
+			protocol.value = entry[6];
+			priority.value = entry[7];
+			minUpBW.value = entry[8];
+			maxUpBW.value = entry[9] ? entry[9] : '';
+			minDownBW.value = entry[10];
+			maxDownBW.value = entry[11] ? entry[11] : '';
+		} else { // add
+			radioCheck(enable, 1);
+			protocol.value = 'TCP or UDP';
+			priority.value = 4;
+		}
+	}
+}
+
+function setInput(input1, input2) {
+	var val1 = stripStr(input1.value);
+	var val2 = stripStr(input2.value);
+	if (val1 == '') {
+		val1 = val2;
+	} else if (val2 == '') {
+		val2 = val1;
+	}
+	input1.value = val1;
+	input2.value = val2;
+}
+
+function checkNumber(value) {
+	value = parseInt(stripStr(value));
+	return (isNaN(value) || value <= 0) ? false : value;
+}
+
+function applyClick() {
+	var value, value0;
+	var loc = 'tcmgmt.cmd?action=save';
+	if (entry) loc += '&entry=' + entry[0]; // edit
+	with ( document.forms[0] ) {
+		setInput(startIP, endIP);
+		setInput(startPort, endPort);
+		// enable
+		loc += '&enable=' + radioCheck(enable);
+		// startIP
+		value0 = value = startIP.value;
+		if (value != '' && !isValidIpAddress(value)) {
+			alert('The start IP address "' + value + '" is invalid IP address.');
+			startIP.focus(); return;
+		}
+		loc += '&startIP=' + value;
+		// endIP
+		value = endIP.value;
+		if (value != '' && !isValidIpAddress(value)) {
+			alert('The end IP address "' + value + '" is invalid IP address.');
+			endIP.focus(); return;
+		}
+		loc += '&endIP=' + value;
+		// startPort
+		value = startPort.value;
+		if (value != '' && !isValidPort(value)) {
+			alert('The start port "' + value + '" is invalid port.');
+			startPort.focus(); return;
+		}
+		if (value0 == '' && value == '') {
+			alert('Both IP address and port number are blank! Please input at least one of them.');
+			startIP.focus(); return;
+		}
+		loc += '&startPort=' + (value ? value : -1);
+		// endPort
+		value = endPort.value;
+		if (value != '' && !isValidPort(value)) {
+			alert('The end port "' + value + '" is invalid port.');
+			endPort.focus(); return;
+		}
+		loc += '&endPort=' + (value ? value : -1);
+		// protocol
+		loc += '&protocol=' + protocol.value;
+		// priority
+		loc += '&priority=' + priority.value;
+		// minUpBW
+		value0 = value = checkNumber(minUpBW.value);
+		if (value == false) {
+			alert('Min Upstream Bandwidth should be a positive integer.');
+			minUpBW.focus(); return;
+		}
+		loc += '&minUpBW=' + value;
+		// maxUpBW
+		value = stripStr(maxUpBW.value);
+		if (value != '' && value != 0) {
+			value = checkNumber(value);
+			if (value == false) {
+				alert('Max Upstream Bandwidth should be a positive integer or not set.');
+				maxUpBW.focus(); return;
+			}
+			if (value0 > value) {
+				alert('The max bandwidth should not less than the min bandwidth.');
+				maxUpBW.focus(); return;
+			}
+		}
+		loc += '&maxUpBW=' + value;
+		// minDownBW
+		value0 = value = checkNumber(minDownBW.value);
+		if (value == false) {
+			alert('Min Downstream Bandwidth should be a positive integer.');
+			minDownBW.focus(); return;
+		}
+		loc += '&minDownBW=' + value;
+		// maxDownBW
+		value = stripStr(maxDownBW.value);
+		if (value != '' && value != 0) {
+			value = checkNumber(value);
+			if (value == false) {
+				alert('Max Downstream Bandwidth should be a positive integer or not set.');
+				maxDownBW.focus(); return;
+			}
+			if (value0 > value) {
+				alert('The max bandwidth should not less than the min bandwidth.');
+				maxDownBW.focus(); return;
+			}
+		}
+		loc += '&maxDownBW=' + value;
+	}
+	go(loc, sessionKey);
+}
+	// done hiding --></script>
+</head>
+
+<body onload="frmLoad()">
+<center><form><table>
+	<tr><td class="h1">Bandwidth Control Rule Configuration</td></tr>
+	<tr><td class="blue"></td></tr>
+	<tr><td>
+		This page allows you to configure a Bandwidth Control rule entry. Each of the rules can be configured for a specific priority. The rule entry configured here will be used to control the rates of upstream and downstream packets.<br/>
+		Click "Save/Apply" to save the rule.
+	</td></tr>
+	<tr><td>&nbsp;</td></tr>
+	<tr><td><table border="0" style="width:100%">
+		<tr>
+			<td class="item">Rule Status:</td>
+			<td>
+				<input type="radio" name="enable" value="1"> Enable
+				&nbsp;&nbsp;<input type="radio" name="enable" value="0"> Disable
+			</td>
+		</tr>
+		<tr>
+			<td class="item">IP Range:</td>
+			<td>
+				<input type="text" name="startIP" size="15" maxlength="15">
+				- <input type="text" name="endIP" size="15" maxlength="15">
+			</td>
+		</tr>
+		<tr>
+			<td class="item">Port Range:</td>
+			<td>
+				<input type="text" name="startPort" size="6" maxlength="5">
+				- <input type="text" name="endPort" size="6" maxlength="5">
+			</td>
+		</tr>
+		<tr>
+			<td class="item">Protocol:</td>
+			<td><select name="protocol">
+				<option value="TCP">TCP</option>
+				<option value="UDP">UDP</option>
+				<option value="TCP or UDP">TCP/UDP</option>
+			</select></td>
+		</tr>
+		<tr>
+			<td class="item">Priority:</td>
+			<td><select name="priority">
+				<option value="0">Highest</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">Lowest</option>
+			</select></td>
+		</tr>
+		<tr>
+			<td class="item"></td>
+			<td><b>Min Rate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Max Rate</b></td>
+		</tr>
+		<tr>
+			<td class="item">Upstream:</td>
+			<td>
+				<input type="text" name="minUpBW" size="6" maxlength="6">
+				- <input type="text" name="maxUpBW" size="6" maxlength="6"> Kbps
+			</td>
+		</tr>
+		<tr>
+			<td class="item">Downstream:</td>
+			<td>
+				<input type="text" name="minDownBW" size="6" maxlength="6">
+				- <input type="text" name="maxDownBW" size="6" maxlength="6"> Kbps
+			</td>
+		</tr>
+	</table></td></tr>
+	<tr><td class="blue"></td></tr>
+	<tr><td><center>
+		<input type="button" onclick="applyClick()" value="Save/Apply">
+	</center></td></tr>
+</table></form></center>
+</body>
+</html>

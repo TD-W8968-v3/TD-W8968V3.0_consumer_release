@@ -1,0 +1,130 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var ifCount = 0;
+
+function btnApply() {
+   var loc = 'scmacflt.cmd?action=add';
+   var okChk = 0;
+   
+   with ( document.forms[0] ) {
+      loc += '&protocol=' + protocol.value;
+      if (destMac.value != '') {
+         if (isValidMacAddress(destMac.value) == false ) {
+            alert('MAC address "' + destMac.value + '" is invalid. Eg. 11:22:33:AA:BB:CC');
+            return;
+         }
+         loc += '&destMac=' + destMac.value;
+      }
+      if (srcMac.value != '') {
+         if (isValidMacAddress(srcMac.value) == false ) {
+            alert('MAC address "' + srcMac.value + '" is invalid. Eg. 11:22:33:AA:BB:CC');
+            return;
+         }
+         loc += '&srcMac=' + srcMac.value;
+      }
+      if (protocol.value == 0 && destMac.value == '' && srcMac.value == '') {
+         alert('At least one condition must be specified.');
+         return;
+      }
+
+      loc += '&wanIf=' + ifChk.value;
+      loc += '&direction=2';
+   }
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body>
+      <center>
+         <form>
+            <table>
+               <tr><td class=h1 colspan=2>Add MAC Filter</td></tr>
+               <tr><td class=blue colspan=2></td></tr>
+			   <tr><td class=text colspan=2>
+               Create a filter to identify the MAC layer frames by specifying at least one 
+               condition below. If multiple conditions are specified, all of them take effect. 
+               Click "Save/Apply" to save and activate the filter.</td></tr>
+			   <tr><td colspan = 2>&nbsp;</td></tr>
+			
+               <tr>
+                  <td width="175" height="31" class=item>Protocol Type:</td>
+                  <td height="31"><select name='protocol' size="1">
+                        <option value="0" selected>
+                        <option value="1">
+                        PPPoE
+                        <option value="2">
+                        IPv4
+                        <option value="3">
+                        IPv6
+                        <option value="4">
+                        AppleTalk
+                        <option value="5">
+                        IPX
+                        <option value="6">
+                        NetBEUI
+                        <option value="7">
+                        IGMP
+                        </option>
+                     </select></td>
+               </tr>
+               <tr>
+                  <td width="175" class=item>Destination MAC Address:</td>
+                  <td><input type='text' name="destMac"></td>
+               </tr>
+               <tr>
+                  <td width="175" class=item>Source MAC Address:</td>
+                  <td><input type='text' name="srcMac"></td>
+               </tr>
+               <!--
+               <tr>
+                  <td width="175" class=item>
+                     Frame Direction:</td>
+                  <td><select name='direction' size="1">
+                        <option value="2" selected>
+                        LAN&lt;=&gt;WAN
+                        <option value="1">
+                        WAN=&gt;LAN
+                        <option value="0">
+                           LAN=&gt;WAN
+                        </option>
+                     </select></td>
+               </tr>
+               -->
+               <tr><td class=item>
+                   WAN Interfaces (Configured in Bridge mode only):</td>
+                  <td><select name='ifChk'>
+<script language="javascript">
+<!-- hide
+{
+   var i = 0;
+   var interfaceInfo = '<%ejGetOther(wanInterfaceInfo, bridge)%>';
+   var interfaces = interfaceInfo.split('|');
+
+   for ( i = 0; i < interfaces.length; i++ ) {
+      var names = interfaces[i].split('/');
+      document.write("  <option value='" + names[1] + "'>");
+      document.writeln(interfaces[i]);
+   } 
+}
+// done hiding -->
+</script>
+               </tr>
+            </table>
+            <table>
+			<tr><td class=blue></td></tr>
+            <tr><td><center><input type='button' onClick='btnApply()' value='Save/Apply'></center></td></tr>
+			</table>
+         </form>
+      </center>
+   </body>
+</html>

@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/solaris
+END
+Makedefs
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/solaris/Makedefs
+END
+ppp_mod.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/solaris/ppp_mod.c
+END
+ppp.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/solaris/ppp.c
+END
+Makefile.sol2-64
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/solaris/Makefile.sol2-64
+END
+ppp.conf
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/solaris/ppp.conf
+END
+ppp_mod.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/solaris/ppp_mod.h
+END
+ppp_ahdlc_mod.c
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/solaris/ppp_ahdlc_mod.c
+END
+Makefile.sol2
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/solaris/Makefile.sol2
+END
+ppp_ahdlc.c
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/solaris/ppp_ahdlc.c
+END
+Makedefs.sol2
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/solaris/Makedefs.sol2
+END
+ppp_comp_mod.c
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/solaris/ppp_comp_mod.c
+END
+Makefile.top
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/solaris/Makefile.top
+END
+ppp_comp.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/solaris/ppp_comp.c
+END

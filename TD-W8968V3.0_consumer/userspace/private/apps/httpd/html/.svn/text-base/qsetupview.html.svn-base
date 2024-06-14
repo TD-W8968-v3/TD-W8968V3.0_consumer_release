@@ -1,0 +1,95 @@
+<html>
+	<head>
+	<meta http-equiv="Pragma" content="no-cache">
+	<LINK href="stylemain.css" type="text/css" rel="stylesheet">
+	<LINK href="colors.css" type="text/css" rel="stylesheet">
+	<script language="javascript" src="util.js"></script>
+	<script language="javascript">						
+	function doNext()
+	{
+		var loc = 'quicksetup.cmd?';
+		var isDsl = document.getElementById("dslWan");
+		if (isDsl.checked)
+		{
+			loc += 'qsWanType=dsl';
+		}
+		else
+		{
+			loc += 'qsWanType=eth';
+		}
+		
+		var enblv6 = document.getElementById("enblv6");
+
+		if(enblv6.checked == true)
+		{
+			loc += '&enblv6=1';
+		}
+		else
+		{
+			loc += '&enblv6=0';
+		}
+		
+		var code = 'location="' + loc + '"';
+		eval(code);
+	}
+	function doSkip()
+	{
+		go('wlqsetup.cgi?qsWanSkip=1', <%ejGetOther(sessionKey)%>);
+	}
+	
+	function init()
+	{
+		var type = '<%ejGetOther(sysInfo, qSetupType)%>';
+		if (type == 'ETH')
+		{
+			var eth = document.getElementById("ethWan");
+			eth.checked = true;
+		}
+		else
+		{
+			var dsl = document.getElementById("dslWan");
+			dsl.checked = true;
+		}
+		return;
+	}
+	</script>
+	</head>
+	<body onload='init();'>
+	<!--Author:yuanshang@tp-link.com.cn-->
+	<center>
+		<table>
+			<tr><td class=h1 style="height:28px" >Quick Setup - WAN Configurations</td></tr>
+			<tr><td class="blue"></td></tr>
+			<tr><td>
+				Please choose the Wan type for Internet access.
+			</td></tr>
+		</table>
+		<table>
+			<tr style="height:28px">
+				<td class="item">Choose WAN Type:</td>
+				<td style="width:120"><input type="radio" id="dslWan" name="wanType" value="dslWan">ADSL WAN</td>
+				<td>For ADSL(Telephone line/RJ11) Service</td>
+			</tr>
+			<tr style="height:28px">
+				<td class="item">&nbsp;</td>
+				<td style="width:120"><input type="radio" id="ethWan" name="wanType" value="ethWan">Ethernet WAN</td>
+				<td>For Ethernet(RJ45) Service</td>
+			</tr>
+			<tr><td class=blue colspan=3></td></tr>
+		</table>
+		<table id="enable_ipv6">
+			<tr>
+				<td class="item">&nbsp;</td>
+				<td ><input id="enblv6" type='checkbox' name='enblv6'>&nbsp;&nbsp;&nbsp;Enable IPv6 for this service</td>
+			</tr>
+			<tr><td class=blue colspan=3></td></tr>
+		</table>
+		<table>
+			<tr><td><center>
+			<input type="button" value="Skip WAN" onClick="doSkip()" class='buttonL'>&nbsp;&nbsp;
+			<input type="button" value="Next" onClick="doNext()" class='buttonL'>
+			</center></td></tr>
+		</table>
+	</center>
+	</body>
+</html>

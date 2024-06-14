@@ -1,0 +1,160 @@
+﻿
+div.con1
+{
+	width: auto !important;
+	/*width: 100% !important;;*//*this will fix IE6 bug, but not very important, not adding now*/
+}
+
+p.ct
+{
+	display: none;
+}
+
+p.tail
+{
+	text-align: center;
+}
+
+p.br
+{
+	height:0.6em;
+	overflow: hidden; /*IE6 bug*/
+	clear: both;
+}
+
+b.item
+{
+	width: 36% !important;
+	padding-right: 16px;
+	float: left;
+	text-align: right;
+	cursor: default;
+}
+i
+{
+	font-style: normal;
+	color: red;
+}
+table
+{
+	empty-cells: show;
+	margin: 0 auto;
+	line-height: 18px;
+	border-collapse: collapse;
+/*	table-layout: fixed;*/
+}
+
+td, th
+{
+	padding: 3px 5px;
+}
+th
+{
+	text-align: center;
+}
+select
+{
+	margin: 0 2px;
+	border-width: 1px;
+}
+input
+{
+	margin: 0 2px;
+	padding: 0 3px;
+}
+
+input.L
+{
+	width: 120px;
+}
+input.XL
+{
+	width: 150px;
+}
+select.M
+{
+	width: 110px;
+}
+
+b.L
+{
+	width: 22%;
+}
+
+span.a
+{
+	text-decoration: underline;
+	cursor: pointer;
+	color: blue;
+}
+p
+{
+	margin: 0;
+	padding: 3px 0;
+	padding-left: 6%;
+	padding-right: 6%;
+	clear: both;
+	line-height: 18px;
+}
+
+p.center
+{
+	text-align: center;
+}
+
+
+.nd	
+{
+	display: none !important;
+}
+
+
+.ml
+{
+	margin-left: 20px !important;
+}
+.fl
+{
+	float: left;
+}
+
+table.week th
+{
+	font-family: "Arial";
+	font-weight: normal;
+	padding: 0;
+	width: 40px;
+	background: #ddd;
+	font-size: 12px;
+	line-height: 23px;
+}
+table.cale th
+{
+	border: 1px solid #999;
+	font-family: "Arial";
+	background: #cef;
+	font-weight: normal;
+	font-size: 12px;
+	text-align: center;
+	padding: 0;
+	width: 31px;
+}
+table.cale td
+{
+	border: 1px solid #999;
+	padding: 0;
+	height: 22px;
+	width: 31px;
+}
+table.cale span
+{
+	float: left;
+	height: 20px;
+	padding-left: 14px;
+	margin: 1px 0 1px 1px;
+	background: #ccc;
+}
+table.cale span.sel
+{
+	background: #0052a4;
+}

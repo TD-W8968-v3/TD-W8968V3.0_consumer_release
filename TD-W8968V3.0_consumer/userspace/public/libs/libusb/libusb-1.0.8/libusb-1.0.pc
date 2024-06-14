@@ -1,0 +1,11 @@
+prefix=/home/dev/BRCM/TD-W8968V3.0_consumer_release/TD-W8968Nv3.0_consumer/userspace/public/libs/libusb/libusb-1.0.8/install
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libusb-1.0
+Description: C API for USB device access from Linux userspace
+Version: 1.0.8
+Libs: -L${libdir} -lusb-1.0
+Cflags: -I${includedir}/libusb-1.0
+

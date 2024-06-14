@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppoecd
+END
+utils.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppoecd/utils.c
+END
+auth.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppoecd/auth.c
+END
+pppoe.c
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppoecd/pppoe.c
+END
+main.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppoecd/main.c
+END
+pppd.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppoecd/pppd.h
+END
+pppoe.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppoecd/pppoe.h
+END
+options.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppoecd/options.c
+END
+sys-linux.c
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppoecd/sys-linux.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/pppoecd/Makefile
+END

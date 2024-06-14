@@ -1,0 +1,564 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+<!-- hide
+var dhcpClnt = '<%ejGet(enblDhcpClnt)%>';
+var addr = '<%ejGet(wanIpAddress)%>';
+var mask = '<%ejGet(wanSubnetMask)%>';
+if (mask == '0.0.0.0') mask = '255.255.255.0';
+var gateway = '<%ejGet(wanIntfGateway)%>';
+
+var enblIpVer = '<%ejGet(enblIpVer)%>';
+var addr6Type = '<%ejGet(wanAddr6Type)%>'; if ( addr6Type == '&nbsp' ) addr6Type = '';
+var addr6 = '<%ejGet(wanAddr6)%>'; if (addr6 == '&nbsp') addr6 = '';
+var gtwy6 = '<%ejGet(wanGtwy6)%>'; if (gtwy6 == '&nbsp') gtwy6 = '';
+var dhcp6cForAddr = '<%ejGet(dhcp6cForAddr)%>';
+var dhcp6cForPd = '<%ejGet(dhcp6cForPd)%>';
+
+var op60vid = '<%ejGet(dhcpcOp60VID)%>';
+var op61duid = '<%ejGet(dhcpcOp61DUID)%>';
+var op61iaid = '<%ejGet(dhcpcOp61IAID)%>';
+var op125 = '<%ejGet(dhcpcOp125Enabled)%>';
+/*For now just set to disabled.  This is for later use 
+#var enblAdvDmz = '<%ejGet(enblAdvDmz)%>';
+*/
+var enblAdvDmz = '0'; 
+var lanips = '<%ejGetOther(sysInfo, lanips)%>'; 
+//added by xieping
+var mtu = '<%ejGet(ethMtu)%>';
+
+function disableWanInfo() {
+   with ( document.forms[0] ) {
+      wanIpAddress.disabled = 1;
+      wanIpAddress.value = '';
+      wanSubnetMask.disabled = 1;
+      wanSubnetMask.value = '';
+      wanIntfGateway.disabled = 1;
+      wanIntfGateway.value = '';
+
+	  dhcpcOp60VID.disabled = 0;
+	  dhcpcOp60VID.value = op60vid;
+	  dhcpcOp61DUID.disabled = 0;
+	  dhcpcOp61DUID.value = op61duid;
+	  dhcpcOp61IAID.disabled = 0;
+	  dhcpcOp61IAID.value = op61iaid;
+	  dhcpcOp125.disabled = 0;
+      if ( op125 == '0' ) {
+         dhcpcOp125[0].checked = true;
+      } else {
+         dhcpcOp125[1].checked = true;
+      }
+	  
+   }
+}
+
+function enableWanInfo() {
+   with ( document.forms[0] ) {
+      wanIpAddress.disabled = 0;
+      wanIpAddress.value = addr;
+      wanSubnetMask.disabled = 0;
+      wanSubnetMask.value = mask;
+      wanIntfGateway.disabled = 0
+      wanIntfGateway.value = gateway;
+
+	  dhcpcOp60VID.disabled = 1;
+	  dhcpcOp60VID.value = '';
+	  dhcpcOp61DUID.disabled = 1;
+	  dhcpcOp61DUID.value = '';
+	  dhcpcOp61IAID.disabled = 1;
+	  dhcpcOp61IAID.value = '';
+	  dhcpcOp125.disabled = 1;
+   }
+}
+
+function wanClick() {
+   with ( document.forms[0] ) {
+      if ( wan[0].checked == true )
+         disableWanInfo();
+      else
+         enableWanInfo();
+   }
+}
+
+function disableWan6Info() {
+   with ( document.forms[0] ) {
+      wanAddress6.disabled = 1;
+      wanGateway6.disabled = 1;
+      dhcp6.disabled = 0;
+      dhcp6pd.disabled = 0;
+      wanAddress6.value = addr6;
+      wanGateway6.value = gtwy6;
+      if ( dhcp6cForAddr == '1' )
+         dhcp6.checked = true;
+      else
+         dhcp6.checked = false;
+
+      if ( dhcp6cForPd == '1' )
+         dhcp6pd.checked = true;
+      else
+         dhcp6pd.checked = false;
+   }
+}
+
+function enableWan6Info() {
+   with ( document.forms[0] ) {
+      wanAddress6.disabled = 0;
+      wanGateway6.disabled = 0;
+      dhcp6.disabled = 1;
+      dhcp6pd.disabled = 1;
+      wanAddress6.value = addr6;
+      wanGateway6.value = gtwy6;
+      if ( dhcp6cForAddr == '1' )
+         dhcp6.checked = true;
+      else
+         dhcp6.checked = false;
+
+      if ( dhcp6cForPd == '1' )
+         dhcp6pd.checked = true;
+      else
+         dhcp6pd.checked = false;
+   }
+}
+
+function wan6Click() {
+   with ( document.forms[0] ) {
+      if ( wan6[0].checked == true )
+         disableWan6Info();
+      else
+         enableWan6Info();
+   }
+}
+
+function hideWan6Info(hide) {
+   var status = 'block';
+
+   if ( hide == 1 )
+      status = 'none';
+   if (document.getElementById)  // DOM3 = IE5, NS6
+      document.getElementById('wan6Info').style.display = status;
+   else {
+      if (document.layers == false) // IE4
+         document.all.wan6Info.style.display = status;
+   }
+
+   if (hide == 0) {
+      wan6Click();
+   }
+}
+
+function disableWan4Info() {
+   with ( document.forms[0] ) {
+      wan[0].disabled = 1;
+      wan[1].disabled = 1;
+      wan[0].checked = true;
+      dhcpcOp125[0].checked == false;
+
+      wanIpAddress.disabled = 1;
+      wanSubnetMask.disabled = 1;
+      wanIntfGateway.disabled = 1
+
+      dhcpcOp60VID.disabled = 1;
+      dhcpcOp61DUID.disabled = 1;
+      dhcpcOp61IAID.disabled = 1;
+      dhcpcOp125[0].disabled = 1;
+      dhcpcOp125[1].disabled = 1;
+   }
+}
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+   	
+      if (enblAdvDmz == 1) {
+	    var enblAdvancedDmz = '<%ejGet(enableAdvancedDmz)%>';
+  	    var nonDmzIpAddr = '<%ejGet(nonDmzIpAddress)%>';
+	    var nonDmzIpMsk = '<%ejGet(nonDmzIpMask)%>';
+        if ( enblAdvancedDmz == '1' )
+          enableAdvancedDmz.checked = true;
+        else
+          enableAdvancedDmz.checked = false;	
+        nonDmzIpAddress.value = nonDmzIpAddr;
+        nonDmzIpMask.value = nonDmzIpMsk;		 
+      }
+	
+      if ( enblIpVer == '2' ) {
+         disableWan4Info();
+      }
+      else
+      {
+         if ( dhcpClnt == '1' ) {
+            wan[0].checked = true;
+            disableWanInfo();
+         } else {
+            wan[1].checked = true;
+            enableWanInfo();
+         }
+      }
+      
+      if ( enblIpVer == '0' ) {
+         hideWan6Info(1);
+      } else {
+         if (addr6Type == 'Static')
+            wan6[1].checked = true;
+         else
+            wan6[0].checked = true;
+
+         hideWan6Info(0);
+      }
+	  // added by xieping 
+	  ethMtu.value = mtu;
+	  //end added
+   }
+}
+
+function btnNext() {
+   var loc = 'natcfg2.cgi?';
+
+   with ( document.forms[0] ) {
+      // wan IP address
+      if ( wan[0].checked == true ) {
+         loc += 'enblDhcpClnt=1';   // auto WAN address
+	  if (enblAdvDmz == 1) {
+             // validate non DMZ IP address and Netmask
+            if ( enableAdvancedDmz.checked == true ) {
+               if ( isValidIpAddress(nonDmzIpAddress.value) == false ) {
+                 alertAndFocus(nonDmzIpAddress, 'Address "' + nonDmzIpAddress.value + '" is invalid IP address.');
+                 return;
+               }
+               if ( isValidSubnetMask(nonDmzIpMask.value) == false ) {
+                  alertAndFocus(nonDmzIpMask, 'Address "' + nonDmzIpMask.value + '" is invalid Netmask.');
+                 return;
+               }
+	       loc += '&enableAdvancedDmz=1';
+	       loc += '&nonDmzIpAddress=' + nonDmzIpAddress.value;
+	       loc += '&nonDmzIpMask=' + nonDmzIpMask.value;
+            } else {
+	       loc += '&enableAdvancedDmz=0';
+	    }
+	  }
+         if (dhcpcOp60VID.value.length > 255) {
+            msg = 'Maximum Option 60 Vendor ID cannot exceed 255 characters.';
+            alertAndFocus(dhcpcOp60VID, msg);
+            return;
+         }
+         loc += '&dhcpcOp60VID=' + dhcpcOp60VID.value;
+         if (dhcpcOp61IAID.value.length != 0 && (dhcpcOp61IAID.value.length != 8 || isValidKey(dhcpcOp61IAID.value,4) == false)) {
+            msg = 'Option 61 IAID must be 8 hexadecimal digits.';
+            alertAndFocus(dhcpcOp61IAID, msg);
+            return;
+         }
+         loc += '&dhcpcOp61IAID=' + dhcpcOp61IAID.value;
+         if (dhcpcOp61DUID.value.length > 255) {
+            msg = 'Maximum Option 61 DUID cannot exceed 255 characters.';
+            alertAndFocus(dhcpcOp61DUID, msg);
+            return;
+         }
+         loc += '&dhcpcOp61DUID=' + dhcpcOp61DUID.value;
+	 if((dhcpcOp61DUID.value.length != 0 && dhcpcOp61IAID.value.length == 0) || 
+	 	(dhcpcOp61DUID.value.length == 0 && dhcpcOp61IAID.value.length != 0)    ) {
+            msg = 'Set both IAID and DUID for option 61.';
+            alertAndFocus(dhcpcOp61DUID, msg);
+            return;
+	 }
+
+         if ( dhcpcOp125[0].checked == true )
+            loc += '&dhcpcOp125Enabled=0';  
+	 else
+            loc += '&dhcpcOp125Enabled=1';  
+
+      	}
+		 
+      else {
+         loc += 'enblDhcpClnt=0';   // static WAN address
+         if ( isValidIpAddress(wanIpAddress.value) == false ) {
+            alertAndFocus(wanIpAddress, 'WAN IP address "' + wanIpAddress.value + '" is invalid IP address.');
+            return;
+         }
+         loc += '&wanIpAddress=' + wanIpAddress.value;
+         if ( isValidSubnetMask(wanSubnetMask.value) == false ) {
+            alertAndFocus(wanSubnetMask, 'WAN subnet mask "' + wanSubnetMask.value + '" is invalid IP address.');
+            return;
+         }
+         loc += '&wanSubnetMask=' + wanSubnetMask.value;
+
+         if ( isValidIpAddress(wanIntfGateway.value) == false ) {
+            alertAndFocus(wanIntfGateway, 'WAN subnet mask "' + wanIntfGateway.value + '" is invalid gateway IP address.');
+            return;
+         }
+			var netid;
+			if( lanips != "No_LanIps")
+			{
+				netid = lanips.split('|');
+				for (i = 0 ;i< netid.length ; i++)
+				{
+					netip = netid[i].split('*');
+					var tIp, tMask;
+					tIp = 0;
+					tMask = 0;
+					for (j = 0; j < 4; j++)
+					{
+						num1 = parseInt(((wanIpAddress.value).split('.'))[j]);
+						num2 = parseInt(((wanSubnetMask.value).split('.'))[j]);
+						if (j == 0)
+						{
+							tIp += (num1*256*256*256);
+							tMask += (num2*256*256*256);
+						}
+						if (j == 1)
+						{
+							tIp += (num1*256*256);
+							tMask += (num2*256*256);
+						}
+						if (j == 2)
+						{
+							tIp += (num1*256);
+							tMask += (num2*256);
+						}
+						if (j == 3)
+						{
+							tIp += (num1);
+							tMask += (num2);
+						}
+					}
+					if (4294967295 == tMask)
+					{
+						if ((parseInt(netip[0]) & parseInt(netip[1])) == (parseInt(tIp) & parseInt(netip[1])))
+						{
+							msg = "The Wan IP address (" + wanIpAddress.value + ") is in the same Subnet with Lan IP address!";
+							alertAndFocus(wanIpAddress, msg);
+							return;
+						}
+					}
+					else
+					{
+						if (((parseInt(netip[0]) & parseInt(tMask)) == (parseInt(tIp) & parseInt(tMask)))
+							|| ((parseInt(netip[0]) & parseInt(netip[1])) == (parseInt(tIp) & parseInt(netip[1]))))
+						{
+							msg = "The Wan IP address (" + wanIpAddress.value + ") is in the same Subnet with Lan IP address!";
+							alertAndFocus(wanIpAddress, msg);
+							return;
+						}
+					}
+				}
+			}
+         loc += '&wanIntfGateway=' + wanIntfGateway.value;
+      }
+	  /*added by xieping for mtu*/
+	  if (isNaN(parseInt(ethMtu.value)) == true )
+	  {
+		 msg = 'MTU "' + ethMtu.value + '" is invalid.';
+		 alertAndFocus(ethMtu, msg);
+		 return;
+	  }
+	  mtu = parseInt(ethMtu.value);
+	  if (mtu < 576 || mtu > 1500)
+	  {
+		 msg = 'MTU "' + mtu +'" is out of range [576-1500].';
+		 alertAndFocus(ethMtu, msg);
+		 return;
+	  }
+	  loc += '&ethMtu=' + ethMtu.value;
+	  /*end added*/
+
+      if ( enblIpVer != '0' ) {
+         if ( wan6[0].checked == true )
+         {
+            loc += '&wanAddr6Type=DHCP';   // auto WAN address
+            if ( dhcp6.checked == true )
+               loc += '&dhcp6cForAddr=1';
+            else
+               loc += '&dhcp6cForAddr=0';				
+
+            if ( dhcp6pd.checked == true )
+               loc += '&dhcp6cForPd=1';
+            else
+               loc += '&dhcp6cForPd=0';				
+         }
+         else {
+            loc += '&wanAddr6Type=Static';   // static WAN address
+            if (wanAddress6.value == '') {
+               alertAndFocus(wanAddress6, 'Please enter the static WAN IPv6 address.');
+               return;
+            }
+            if (isValidIpAddress6(wanAddress6.value) == false) {
+               alertAndFocus(wanAddress6, 'Invalid WAN IPv6 address.');
+               return;
+            }
+            if (wanAddress6.value.indexOf('/') == -1) {
+               //use default prefix length 64.
+               wanAddress6.value = wanAddress6.value + '/64';
+            }
+            loc += '&wanAddr6=' + wanAddress6.value;
+
+            if (wanGateway6.value.indexOf('/') != -1) {
+               alertAndFocus(wanGateway6, 'Next-hop gateway address shall not have network prefix length.');
+               return;
+            }         
+            if ((wanGateway6.value != '') && 
+                isValidIpAddress6(wanGateway6.value) == false) {
+               alertAndFocus(wanGateway6, 'Invalid next-hop IPv6 address.');
+               return;
+            }
+            loc += '&wanGtwy6=' + wanGateway6.value;
+         }
+      }
+   }
+
+   loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function advancedDmzClick(cb) {
+   with ( document.forms[0] ) {
+     setDisable(nonDmzIpAddress, cb.checked != true);
+     setDisable(nonDmzIpMask, cb.checked != true);
+   }
+}
+
+function btnBack() {
+   var loc = 'wanifc.cmd';
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+// done hiding -->
+</script>
+   </head>
+   <body onLoad='frmLoad()'>
+      <center>
+         <form>
+            <table>
+			<tr><td class=h1>WAN IP Settings</td></tr>
+			<tr><td class=blue></td></tr>
+			<tr><td>
+            Enter information provided to you by your ISP to configure the WAN IP settings.<br>
+            Notice: If "Obtain an IP address automatically" is chosen, DHCP will be enabled for PVC in IPoE mode.<br>
+            If "Use the following Static IP address" is chosen, enter the WAN IP address, subnet mask and interface gateway.<br><br>
+			</td></tr>
+			</table>
+              <table border="0" cellpadding="0" cellspacing="0">
+                 <tr>
+                    <td colspan="2"><input type="radio" name="wan" onClick='wanClick()'><b>&nbsp;&nbsp;Obtain an IP address automatically</b></td>
+                 </tr>
+                 <tr>
+                    <td width="160" class=item>Option 60 Vendor ID:</td>
+                    <td><input type='text' name='dhcpcOp60VID'></td>
+                 </tr>
+                 <tr>
+                    <td width="160" class=item>Option 61 IAID:</td>
+                    <td><input type='text' name='dhcpcOp61IAID'>&nbsp;&nbsp;(8 hexadecimal digits)</td>
+                 </tr>
+                 <tr>
+                    <td width="160" class=item>Option 61 DUID:</td>
+                    <td><input type='text' name='dhcpcOp61DUID'>&nbsp;&nbsp;(hexadecimal digit)</td>                    
+                 </tr>
+                 <tr>
+                    <td width="160" class=item>Option 125:</td>
+                    <td colspan="2"><input type="radio" name="dhcpcOp125">Disable&nbsp;<input type="radio" name="dhcpcOp125">Enable</td>
+                 </tr>
+                 <tr>
+                    <td colspan="2"><input type="radio" name="wan" onClick='wanClick()'><b>&nbsp;&nbsp;Use the following Static IP address:</b></td>
+                 </tr>
+                 <tr>
+                    <td width="160" class=item>WAN IP Address:</td>
+                    <td><input type='text' name='wanIpAddress'></td>
+                 </tr>
+                 <tr>
+                    <td class=item>WAN Subnet Mask:</td>
+                    <td><input type='text' name='wanSubnetMask'></td>
+                 </tr>
+                 <tr>
+                    <td class=item>WAN gateway IP Address:</td>
+                    <td><input type='text' name='wanIntfGateway'></td>
+                 </tr>
+				 <tr>
+				    <td class='item'>MTU (bytes):</td>
+				    <td><input type='text' name='ethMtu'>&nbsp;(optional)</td>
+			    </tr>
+              </table><br><br>
+
+<script language="javascript">
+<!-- hide
+if (enblAdvDmz == '1')
+{      
+   document.writeln("<div id='advancedDmzInfo'>");
+   document.writeln("<table border='0' cellpadding='0' cellspacing='0'>");
+   document.writeln("<tr>");
+   document.writeln("<td width='30' height='30'><input type='checkbox' name='enableAdvancedDmz' onClick='advancedDmzClick(this)'></td>");
+   document.writeln("<td><b>Advanced DMZ</b></td>");
+   document.writeln("</tr>");
+   document.writeln("</table>");
+
+   document.writeln("</div>");
+   document.writeln("<div id='nonDmzIpAddressInfo'>");
+   document.writeln("<table border='0' cellpadding='0' cellspacing='0'>");
+   document.writeln("<tr>");
+   document.writeln("<td width='140' class=item>Non DMZ IP Address:&nbsp;&nbsp;</td>");
+   document.writeln("<td><input type='text' name='nonDmzIpAddress'></td>");
+   document.writeln("</tr>");
+   document.writeln("<tr>");
+   document.writeln("<td width='140' class=item>Non DMZ Net Mask:&nbsp;&nbsp;</td>");
+   document.writeln("<td><input type='text' name='nonDmzIpMask'></td>");
+   document.writeln("</tr>");
+   document.writeln("</table>");
+   document.writeln("<br>");
+   document.writeln("</div>");
+}
+// done hiding -->
+</script>
+            <div id='wan6Info'>
+			<table>
+			  <tr><td class=blue></td></tr>
+              <tr><td>Enter information provided to you by your ISP to configure the WAN IPv6 settings.<br>
+                 Notice:<br>
+                 If "Obtain an IPv6 address automatically" is chosen, DHCPv6 Client will be enabled on this WAN interface.<br>
+                 If "Use the following Static IPv6 address" is chosen, enter the static WAN IPv6 address. If the address prefix length is not specified, it will be default to /64.<br>
+              </td><tr>
+			</table>
+              <table border="0" cellpadding="0" cellspacing="0">
+                 <tr>
+                    <td colspan="2"><input type="radio" name="wan6" onClick='wan6Click()'><b>&nbsp;&nbsp;Obtain an IPv6 address automatically</b></td>
+                 </tr>
+                 <tr>
+                    <td class=item><input type="checkbox" name="dhcp6">&nbsp;&nbsp;Dhcpv6 Address Assignment (IANA)</td>
+                 </tr>
+                 <tr>
+                    <td class=item><input type="checkbox" name="dhcp6pd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dhcpv6 Prefix Delegation (IAPD)</td>
+                 </tr>
+                 <tr>
+                    <td colspan="2"><input type="radio" name="wan6" onClick='wan6Click()'><b>&nbsp;&nbsp;Use the following Static IPv6 address:</b></td>
+                 </tr>
+                 <tr>
+                    <td width="260" class=item>WAN IPv6 Address/Prefix Length:</td>
+                    <td><input type='text' name='wanAddress6'></td>
+                 </tr>
+              </table><br><br>
+              <table>
+			  <tr><td>Specify the Next-Hop IPv6 address for this WAN interface.<br>
+                 Notice: This address can be either a link local or a global unicast IPv6 address.<br>
+              </td></tr>
+			  </table>
+              <table border="0" cellpadding="0" cellspacing="0">
+                 <tr>
+                    <td width="260" class=item>WAN Next-Hop IPv6 Address:</td>
+                    <td><input type='text' name='wanGateway6'></td>
+                 </tr>
+              </table><br><br>
+            </div>
+			<table>
+			<tr><td class=blue></td></tr>
+			<tr><td>
+            <center>
+               <input type='button' onClick='btnBack()' value='Back'> <input type='button' onClick='btnNext()' value='Next'>
+            </center>
+			</td></tr>
+			</table>
+         </form>
+      </center>
+   </body>
+</html>

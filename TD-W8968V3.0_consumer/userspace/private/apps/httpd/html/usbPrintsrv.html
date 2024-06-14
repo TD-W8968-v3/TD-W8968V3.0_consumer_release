@@ -1,0 +1,58 @@
+<html>
+	<head>
+		<meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+		<link rel="stylesheet" href='stylemain.css' type='text/css'>
+		<link rel="stylesheet" href='colors.css' type='text/css'>
+		<script language="javascript">
+<!-- hide
+/*EJ_PLACEHOLDER*/
+if (usbPrintSrv === undefined)
+{
+	var sessionKey = '123456789';
+	var usbPrintSrv = 1;
+}
+
+function doSetPrintSrv(status)
+{
+	var loc = 'usbPrintSrv.cmd?action=set' + '&sessionKey=' + sessionKey;
+	
+	loc += '&status=' + status;
+	
+	var code = 'location="' + loc + '"';
+	
+	eval(code);
+}
+
+// done hiding-->
+		</script>
+	</head>
+<body>
+    <center>
+	<form>
+	<table>
+	<tr><td class=h1>Print Server Settings</td></tr>
+	<tr><td class=blue></td></tr>
+	<tr>
+		<td><b>Server Status:
+		<script language="javascript">
+<!-- hide
+			if (usbPrintSrv == 0)
+			{
+				document.writeln("Offline</b>");
+				document.writeln("<input type='button' style='width:120' onClick='doSetPrintSrv(1)' value='Start'>");
+			}
+			else
+			{
+				document.writeln("Online</b>");
+				document.writeln("<input type='button' style='width:120' onClick='doSetPrintSrv(0)' value='Stop'>");
+			}
+// done hiding -->
+		</script>
+		</td>
+	</tr>
+	<tr><td class=blue></td></tr>
+	</table>
+	</form>
+	</center>
+</body>
+</html>

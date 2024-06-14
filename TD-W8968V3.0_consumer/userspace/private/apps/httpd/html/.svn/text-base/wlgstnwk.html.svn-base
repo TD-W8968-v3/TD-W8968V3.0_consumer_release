@@ -1,0 +1,538 @@
+
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+            <script language="javascript" src="util.js"></script>
+            <script language="javascript">
+			
+var syncNvram = '<%ejGetWl(wlSyncNvram)%>';
+var gstEnbl = '<%ejGetWl(wlEnbl_2)%>';
+var gstSSIDIdx = '<%ejGetWl(gstSSIDIdx)%>';
+var gstLanAcs = '<%ejGetWl(gstLanAcs)%>';
+var gstUsbAcs = '<%ejGetWl(gstUsbAcs)%>';
+var gstTCEnbl = '<%ejGetWl(gstTCEnbl)%>';
+var gstTCMaxUp = '<%ejGetWl(gstTCMaxUp)%>';
+var gstTCMaxDown = '<%ejGetWl(gstTCMaxDown)%>';
+var gstTCMinUp = '<%ejGetWl(gstTCMinUp)%>';
+var gstTCMinDown = '<%ejGetWl(gstTCMinDown)%>';
+var gstSSID =     '<%ejGetWl(wlSsid_2)%>';
+var prmSSID = '<%ejGetWl(wlSsid_wl0v0)%>';
+var gstAPIsolate = '<%ejGetWl(gstAPIsolate)%>';
+var wpaPskKey = '<%ejGetWl(wlWpaPsk)%>';
+var wpaGTKRekey = '<%ejGetWl(wlWpaGTKRekey)%>';
+var mode = '<%ejGetWl(wlAuthMode)%>';
+var wpa = '<%ejGetWl(wlWpa)%>';
+var gstIsModified = '<%ejGetWl(gstIsModified)%>';
+var wlRefresh = '<%ejGetOther(wlRefresh)%>';
+var sessionKey = '<%ejGetOther(sessionKey)%>';
+//var wlgstBWUp  = '<%ejGet(wlgstBWUp)%>';
+//var wlgstBWDown  = '<%ejGet(wlgstBWDown)%>';
+var entry = [<%ejGetOther(memInfo, tcConfig)%>]; //[enb,dsl,up,down,enbIptvTc,iptvUpMin,iptvUpMax,iptvDownMin,iptvDownMax]
+var tcRuleBW = [<%ejGetOther(memInfo, tcRuleBWSum)%>];
+var wlgstBWUp = tcRuleBW[0];
+var wlgstBWDown = tcRuleBW[1];
+var usbEnbl = '<%ejGetOther(sysInfo, buildStorageService)%>';
+
+if ( wlRefresh == '1' ) {
+   var code = 'location="wlgstrefresh.wl?wlRefresh=0"';
+    eval(code);   
+}	
+function isValidWPAPskKey(val) {
+   var ret = false;
+   var len = val.length;
+   var maxSize = 64;
+   var minSize = 8;
+
+   if ( len >= minSize && len < maxSize )
+      ret = true;
+   else if ( len == maxSize ) {
+      for ( i = 0; i < maxSize; i++ )
+         if ( isHexaDigit(val.charAt(i)) == false )
+            break;
+      if ( i == maxSize )
+         ret = true;
+   } else
+      ret = false;
+
+   return ret;
+}	
+function checkNumber(value) {
+	value = parseInt(stripStr(value));
+	return (isNaN(value) || value < 0) ? false : true;
+}
+function btnApply()	{
+	var loc = 'wlgstnwk.wl?';
+	with ( document.forms[0] ) {
+		var authMode = getSelect(gstSec);
+		var value;
+		
+		if (gstenable[0].checked == false){
+			loc += 'wlEnbl_2=0';
+		}else {
+			loc += 'wlEnbl_2=1';
+		
+		if ( gstSsid.value == '' ) {
+            alert('SSID should not be empty.');
+            return;
+         }
+
+         var str = new String();
+         str = gstSsid.value;
+         if ( str.length > 32 ) {
+            alert('SSID "' + gstSsid.value + '" should not be longer than 32 characters.');
+            return;
+         }
+		 
+			if (prmSSID == gstSsid.value)
+			{
+				alert('The Guest ssid should be different from primary network ssid!');
+				return;
+			}
+			
+		loc += '&wlSsidIdx=' + gstSSIDIdx;
+			loc += '&wlSsid_2=' + encodeUrl(gstSsid.value);
+		
+		if (gstSec.value == '1'){
+			loc += '&wlAuthMode=psk';
+		}else{
+			loc += '&wlAuthMode=open';
+		}
+		if (Encryption.value == '0'){
+			loc += '&wlWpa=aes';
+		}else{
+			loc += '&wlWpa=tkip+aes';
+		}
+
+		//check gstpasswd
+		if (gstSec.value == '1'){
+         value = gstpasswd.value;
+         if ( isValidWPAPskKey(value) == false ) {
+            alert('WPA Pre-Shared Key should be between 8 and 63 ASCII characters or 64 hexadecimal digits.');
+            return;
+           }
+         loc += '&wlWpaPsk=' + encodeUrl(gstpasswd.value);
+         
+         //check GTK interval
+         value = parseInt(gstpswdPrd.value);
+         if (  isNaN(value) == true || value < 0 || value > 0xffffffff ) {
+            alert('WPA Group Rekey Interval "' + gstpswdPrd.value + '" should be between 0 and 4294967295.');
+            return;
+         }
+         loc += '&wlWpaGtkRekey=' + gstpswdPrd.value;
+		}
+      
+		loc += '&gstLanAcs=' + LanAcsEnbl.value;
+		loc += '&gstUsbAcs=' + UsbAcsEnbl.value;
+		
+		//带宽数值合法性检测
+		if (TCEnbl.value == '1') //only check when enable
+		{
+				/* basic check */
+				var val;
+				val = checkNumber(upstreammin.value);
+				if (val == false)
+				{
+					alert('The min rate of upstream should be a positive integer.');
+					return;
+				}
+				val = checkNumber(upstreammax.value);
+				if (val == false)
+				{
+					alert('The max rate of upstream should be a positive integer.');
+					return;
+				}
+				val = checkNumber(downstreammin.value);
+				if (val == false)
+				{
+					alert('The min rate of downstream should be a positive integer.');
+					return;
+				}
+				val = checkNumber(downstreammax.value);
+				if (val == false)
+				{
+					alert('The max rate of downstream should be a positive integer.');
+					return;
+				}/* end basic check */
+				
+		if (Number(downstreammin.value) < 0 || Number(upstreammin.value) < 0)
+		{
+			alert("The rate should be a positive value!");
+			return;
+		}
+		if (Number(downstreammin.value) > Number(downstreammax.value))
+		{
+			alert("The min rate of downstream should be less than the max rate!");
+			return;
+		}
+		if (Number(upstreammin.value) > Number(upstreammax.value))
+		{
+			alert("The min rate of upstream should be less than the max rate!");
+			return;
+		}
+		}
+		if (gstTCEnbl == '0' && TCEnbl.value == '1')   //enable Guest TC
+		{ 
+			if(entry.length > 4 && entry[4] == 1)//support iptv and iptv tc enable
+			{
+				if (Number(entry[2]) < (Number(upstreammin.value) + Number(wlgstBWUp)) + entry[5])
+				{
+					alert("Sum of min upstream bandwidth is greater than total.");
+					return;	
+				}
+				if (Number(entry[3]) < (Number(downstreammin.value) + Number(wlgstBWDown)) + entry[7])
+				{
+					alert("Sum of min downstream bandwidth is greater than total.");
+					return;	
+				}			
+			}
+			else
+			{
+			if (Number(entry[2]) < (Number(upstreammin.value) + Number(wlgstBWUp)) )
+			{
+				alert("Sum of min upstream bandwidth is greater than total.");
+				return;	
+			}
+			if (Number(entry[3]) < (Number(downstreammin.value) + Number(wlgstBWDown)) )
+			{
+				alert("Sum of min downstream bandwidth is greater than total.");
+				return;	
+			}
+		}
+		}
+		else if (gstTCEnbl == '1' && TCEnbl.value == '1')   //modify Guest TC
+		{ 
+			if(entry.length > 4 && entry[4] == 1)//support iptv and iptv tc enable
+			{
+				if (Number(entry[2]) < (Number(upstreammin.value) - Number(gstTCMinUp) + Number(wlgstBWUp)) + entry[5])
+				{
+					alert("Sum of min upstream bandwidth is greater than total.");
+					return;
+				}
+				if (Number(entry[3]) < (Number(downstreammin.value) - Number(gstTCMinDown) + Number(wlgstBWDown)) + + entry[7])
+				{
+					alert("Sum of min downstream bandwidth is greater than total.");
+					return;
+				}	
+			}
+			else//iptv tc disable
+			{			
+			if (Number(entry[2]) < (Number(upstreammin.value) - Number(gstTCMinUp) + Number(wlgstBWUp)) )
+			{
+				alert("Sum of min upstream bandwidth is greater than total.");
+				return;
+			}
+			if (Number(entry[3]) < (Number(downstreammin.value) - Number(gstTCMinDown) + Number(wlgstBWDown)) )
+			{
+				alert("Sum of min downstream bandwidth is greater than total.");
+				return;
+			}	
+		}
+		}
+		else //disable Guest TC
+		 {}
+		 //alert("OK!");
+		if (TCEnbl.value == '1')
+		{
+			if ( (Number(upstreammax.value) > Number(entry[2])) || (Number(downstreammax.value) > Number(entry[3])) )
+			{
+				alert("Max upstream or downstream is greater than total.");
+				return;
+			}
+		}
+		loc += '&gstTCEnbl=' + TCEnbl.value;
+		
+		if ( TCEnbl.value == '1' )  //only update when enable
+		{
+		loc += '&gstTCMaxUp=' + upstreammax.value;
+		loc += '&gstTCMinUp=' + upstreammin.value;
+		loc += '&gstTCMaxDown=' + downstreammax.value;
+		loc += '&gstTCMinDown=' + downstreammin.value;
+		}
+		
+		loc += '&wlAPIsolation_wl0v1=' + gstIslt.value;
+	}
+	}
+	loc += '&wlSyncNvram=1';
+	loc += '&sessionKey=' + sessionKey;
+   	var code = 'location="' + loc + '"';
+    //alert(code);
+   	eval(code);
+	
+}
+
+function gstSecSel(){
+	with ( document.forms[0] ) { 
+	if (gstSec.options[1].selected == true){
+		showhide("EncryptionId", 1);
+		//showhide("gstpasswdId", 1);
+		//showhide("gstpswdPrdId", 1);
+	}
+	else{
+		showhide("EncryptionId", 0);
+		//showhide("gstpasswdId", 0);
+		//showhide("gstpswdPrdId", 0);
+	}	
+  }
+}
+function TCEnblSel(){
+	with ( document.forms[0] ) { 
+	if (TCEnbl.options[1].selected == true){
+		showhide("titleId", 1);
+		//showhide("upDownStrmId", 1);
+	}
+	else{
+		showhide("titleId", 0);
+		//showhide("upDownStrmId", 0);
+	}	
+  }
+}
+function pin_window(pin)
+{
+   with(document.forms[0])
+   {
+      var w = window.open("", "", "toolbar=no,width=500,height=100");
+      w.document.write('<font size=5><b><center>' + pin + '</center></b></font>');
+      w.document.close();
+    }
+}
+function jumpToBW()
+{
+	var loc = 'jumpToBW.cmd?';
+	var code = 'location="' + loc + '"';
+	eval(code);
+	//go('trafficcontrol.html');
+}
+function gstSwitch(value)
+{
+	if(value == true)
+	{
+		showhide("wlLegacyGuestInfo", 1);
+	}
+	else
+	{
+		showhide("wlLegacyGuestInfo", 0);
+	}
+}
+function frmLoad(){
+	with ( document.forms[0] ) {
+		if (usbEnbl == '1')
+			showhide("usbTbl", 1);
+		else
+			showhide("usbTbl", 0);
+		
+		if (gstEnbl == '1'){
+			gstenable[0].checked = true;
+			gstSwitch(true);
+		}else{
+			gstenable[1].checked = true;
+			gstSwitch(false);
+		}	
+		gstSsid.value = gstSSID;
+		gstpasswd.value = wpaPskKey;
+		gstpswdPrd.value = wpaGTKRekey;
+		upstreammin.value = gstTCMinUp;
+		upstreammax.value = gstTCMaxUp;
+		downstreammin.value = gstTCMinDown;
+		downstreammax.value = gstTCMaxDown;
+		
+		if (gstLanAcs == '1')
+			LanAcsEnbl.options[1].selected = true;
+		else
+			LanAcsEnbl.options[0].selected = true;
+			
+		if (gstUsbAcs == '1')
+			UsbAcsEnbl.options[1].selected = true;
+		else
+			UsbAcsEnbl.options[0].selected = true;
+			
+		if (gstTCEnbl == '1')
+			TCEnbl.options[1].selected = true;
+		else
+			TCEnbl.options[0].selected = true;
+			
+		if (gstAPIsolate == '1')
+			gstIslt.options[1].selected =true;
+		else
+			gstIslt.options[0].selected =true;
+			
+		if (wpa == 'aes')
+			Encryption.options[0].selected = true;
+		else
+			Encryption.options[1].selected = true;
+			
+		if (mode == 'psk')
+			gstSec.options[1].selected = true;
+		else
+			gstSec.options[0].selected = true;
+
+		if (entry[0] == 0){
+			TCEnbl.options[0].selected = true;
+			TCEnbl.disabled = true;
+			showhide("BWEnblWarning", 1);
+		}
+		else
+		{
+			showhide("BWEnblWarning", 0);
+		}
+		gstSecSel();
+		TCEnblSel();
+	}
+}	
+// done hiding -->
+ </script>
+   </head>
+   <body onLoad='frmLoad()'>
+		<center>
+         <form onSubmit='return false'>
+			<table>
+            <tr><td class="h1">Wireless -- Guest Network</td></tr>
+      		<tr><td class="blue"></td></tr>		
+			<tr><td>
+            Guest Network can be set on this page.<br><br>
+            </td></tr>
+			<form>
+			
+               <table border="0" cellpadding="0" cellspacing="0">
+                 <tr>
+                      <td width='180' class="item2">Guest Network:</td>
+						  <td width="300"> 
+                          <input name='gstenable' type='radio' onClick='gstSwitch(true)'></input>Enable
+                          <input name='gstenable' type='radio' onClick='gstSwitch(false)'></input>Disable
+                      </td>  
+                </tr>
+                </table>
+			<div id="wlLegacyGuestInfo">
+               <table border="0" cellpadding="4" cellspacing="0">
+				<tr>
+				<td width='180' class="item2"> <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Guest SSID:</b></td>
+                  <td>
+                                  <input type='text' name='gstSsid' size='32' maxlength='32'> &nbsp;&nbsp;
+                        </td>
+            </tr>
+            </table>
+			   <table border="0" cellpadding="4" cellspacing="0">
+				<tr>
+				<td width='180' class="item2"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Authentication Type:</b></td>
+                  <td><select name='gstSec' size="1" onChange='gstSecSel()'>            
+                     <option value="0">Disabled</option>  
+					 <option value="1">WPA-PSK</option>
+                     </select></td>
+            </tr>
+            </table>
+		<!--	<table border="0" cellpadding="4" cellspacing="0" id="authTypeId">
+				<tr>
+				<td width='180' class="item"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Authentication Type:</b></td>
+                  <td><select name='authType' size="1" onChange=''> 
+                     <option value="0">Disabled</option>
+                     <option value="1">Enabled</option>    
+                     </select></td>
+            </tr>
+            </table>-->
+			<div id="EncryptionId">
+			<table border="0" cellpadding="4" cellspacing="0" >
+				<tr>
+				<td width='180' class="item2"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Encryption:</b></td>
+                  <td><select name='Encryption' size="1" onChange=''> 
+                     <option value="0">AES</option>
+                     <option value="1">AES+TKIP</option>    
+                     </select></td>
+            </tr>
+            </table>
+			<table border="0" cellpadding="4" cellspacing="0">
+				<tr>
+				<td width='180' class="item2"> <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Wireless Password:</b></td>
+                  <td>
+                                  <input type='password' name='gstpasswd' size='20' maxlength='64'> 
+					     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Enter ASCII characters between 8 and 63 or Hexadecimal characters between 8 and 64.)
+						</td> 
+					<td width="10">&nbsp;&nbsp;</td></tr>
+              <tr><td width='180' class="item2"></td><td> <A HREF="javascript:pin_window(document.forms[0].gstpasswd.value)">Click here to display</A></td>             
+            </tr>
+			
+            </table>
+			<table border="0" cellpadding="4" cellspacing="0">
+				<tr>
+				<td width='180' class="item2"> <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Group Key Update Period:</b></td>
+                  <td>
+                          <input type='text' name='gstpswdPrd' size='20' maxlength='10'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(second, minimun is 30, 0 means no update.)
+                  </td>		
+				</tr>
+            </table>
+			</div>
+			 <table border="0" cellpadding="4" cellspacing="0">
+				<tr>
+				<td width='180' class="item2"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Allow Guest To Access My Local Network:</b></td>
+                  <td><select name='LanAcsEnbl' size="1" onChange=''> 
+                     <option value="0">Disabled</option>
+                     <option value="1">Enabled</option>    
+                     </select></td>
+            </tr>
+            </table>
+            <div id="usbTbl">
+			<table border="0" cellpadding="4" cellspacing="0">
+				<tr>
+				<td width='180' class="item2"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Allow Guest To Access My USB Storage:</b></td>
+                  <td><select name='UsbAcsEnbl' size="1" onChange=''> 
+                     <option value="0">Disabled</option>
+                     <option value="1">Enabled</option>  
+                     </select></td>
+            </tr>
+            </table>
+            </div>
+			<table border="0" cellpadding="4" cellspacing="0">
+				<tr>
+				<td width='180' class="item2"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Guest Network Isolation:</b></td>
+                  <td><select name='gstIslt' size="1" onChange=''> 
+                     <option value="0">Disabled</option>
+                     <option value="1">Enabled</option>    
+                     </select></td>
+            </tr>
+            </table>
+			<table border="0" cellpadding="4" cellspacing="0">
+				<tr>
+				<td width='180' class="item2"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Guest Network Bandwidth Control:</b></td>
+                  <td><select name='TCEnbl' size="1" onChange='TCEnblSel()'> 
+                     <option value="0">Disabled</option>
+                     <option value="1">Enabled</option>    
+                     </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td id='BWEnblWarning'>Device's Bandwidth Control Function is disabled, Click <A HREF="javascript:jumpToBW()">here</A> to enable it.</td>
+				
+            </tr>
+            </table>
+			<div id="titleId">
+			<table>
+				<tr>
+				    <td class="item2"> &nbsp;</td>
+					<td>	
+					<b>Min Rate(Kbps)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Max Rate(Kbps)</b></td>
+				</tr>
+				<tr>
+				<td width='180' class="item2"> <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Upstream:</b></td>
+                  <td>
+                          <input type='text' name='upstreammin' size='8' maxlength='8'>
+						  <input type='text' name='upstreammax' size='8' maxlength='8'>
+                  </td>		
+				</tr>
+				<tr>
+				<td width='180' class="item2"> <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Downstream:</b></td>
+                  <td>
+                          <input type='text' name='downstreammin' size='8' maxlength='8'>
+						  <input type='text' name='downstreammax' size='8' maxlength='8'>
+                  </td>		
+				</tr>
+            </table>
+			 </div>  
+			 </div>  
+           <div id="divApply">           
+              <table border="0" cellpadding="4" cellspacing="0">
+               <tr><td class="blue"></td></tr>
+				<tr> <td>   
+               <center><input type='button' onClick='btnApply()' value='Save/Apply'>
+               </td> </tr>
+              </table>
+           </div>
+         </form>
+           </center>
+   </body>
+</html>

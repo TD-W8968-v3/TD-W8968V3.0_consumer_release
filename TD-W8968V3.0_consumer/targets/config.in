@@ -1,0 +1,1692 @@
+#
+# For a description of the syntax of this configuration file,
+# see Documentation/kbuild/config-language.txt.
+#
+
+#****************************************************************************
+#
+#  Copyright (c) 2000-2009 Broadcom Corporation
+#
+#  This program is the proprietary software of Broadcom Corporation and/or
+#  its licensors, and may only be used, duplicated, modified or distributed
+#  pursuant to the terms and conditions of a separate, written license
+#  agreement executed between you and Broadcom (an "Authorized License").
+#  Except as set forth in an Authorized License, Broadcom grants no license
+#  (express or implied), right to use, or waiver of any kind with respect to
+#  the Software, and Broadcom expressly reserves all rights in and to the
+#  Software and all intellectual property rights therein.  IF YOU HAVE NO
+#  AUTHORIZED LICENSE, THEN YOU HAVE NO RIGHT TO USE THIS SOFTWARE IN ANY WAY,
+#  AND SHOULD IMMEDIATELY NOTIFY BROADCOM AND DISCONTINUE ALL USE OF THE
+#  SOFTWARE.
+#  SOFTWARE.
+#
+#  Except as expressly set forth in the Authorized License,
+#
+#  1.     This program, including its structure, sequence and organization,
+#  constitutes the valuable trade secrets of Broadcom, and you shall use all
+#  reasonable efforts to protect the confidentiality thereof, and to use this
+#  information only in connection with your use of Broadcom integrated circuit
+#  products.
+#
+#  2.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED
+#  "AS IS" AND WITH ALL FAULTS AND BROADCOM MAKES NO PROMISES, REPRESENTATIONS
+#  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH
+#  RESPECT TO THE SOFTWARE.  BROADCOM SPECIFICALLY DISCLAIMS ANY AND ALL
+#  IMPLIED WARRANTIES OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR
+#  A PARTICULAR PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET
+#  ENJOYMENT, QUIET POSSESSION OR CORRESPONDENCE TO DESCRIPTION. YOU ASSUME
+#  THE ENTIRE RISK ARISING OUT OF USE OR PERFORMANCE OF THE SOFTWARE.
+#
+#  3.     TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL BROADCOM
+#  OR ITS LICENSORS BE LIABLE FOR (i) CONSEQUENTIAL, INCIDENTAL, SPECIAL,
+#  INDIRECT, OR EXEMPLARY DAMAGES WHATSOEVER ARISING OUT OF OR IN ANY WAY
+#  RELATING TO YOUR USE OF OR INABILITY TO USE THE SOFTWARE EVEN IF BROADCOM
+#  HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES; OR (ii) ANY AMOUNT IN
+#  EXCESS OF THE AMOUNT ACTUALLY PAID FOR THE SOFTWARE ITSELF OR U.S. $1,
+#  WHICHEVER IS GREATER. THESE LIMITATIONS SHALL APPLY NOTWITHSTANDING ANY
+#  FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY.
+#
+#****************************************************************************
+
+mainmenu_name "Broadcom CommEngine Software Configuration"
+
+
+mainmenu_option next_comment
+comment 'Chip and Board configuration selection'
+
+mainmenu_option next_comment
+comment 'Chip selection'
+
+choice 'Broadcom Commengine chip' \
+      "6318        BRCM_6318      \
+       63268       BRCM_63268     \
+       6328        BRCM_6328      \
+       6362        BRCM_6362      \
+       6368        BRCM_6368      \
+       6828        BRCM_6828      \
+       6816        BRCM_6816      \
+       6818        BRCM_6818" 6362
+if [ "$BRCM_6318" = "y" ]; then
+    define_string BRCM_CHIP "6318"
+#    unset BRCM_6318
+fi
+if [ "$BRCM_63268" = "y" ]; then
+    define_string BRCM_CHIP "63268"
+#    unset BRCM_63268
+fi
+if [ "$BRCM_6328" = "y" ]; then
+    define_string BRCM_CHIP "6328"
+#    unset BRCM_6328
+fi
+if [ "$BRCM_6362" = "y" ]; then
+    define_string BRCM_CHIP "6362"
+#    unset BRCM_6362
+fi
+if [ "$BRCM_6368" = "y" ]; then
+    define_string BRCM_CHIP "6368"
+#    unset BRCM_6368
+fi
+if [ "$BRCM_6816" = "y" ]; then
+    define_string BRCM_CHIP "6816"
+#    unset BRCM_6816
+fi
+if [ "$BRCM_6818" = "y" ]; then
+    define_string BRCM_CHIP "6818"
+#    unset BRCM_6818
+fi
+if [ "$BRCM_6828" = "y" ]; then
+    define_string BRCM_CHIP "6828"
+#    unset BRCM_6828
+fi
+endmenu
+
+string "Board ID" BRCM_BOARD_ID
+string "Board WLAN Chip ID" BRCM_WLAN_CHIP
+string "Voice Board ID" BRCM_VOICE_BOARD_ID
+
+if [ "$BRCM_6816" = "y" -o "$BRCM_6818" = "y" ]; then
+    bool 'GPON FPGA support' BRCM_GPON_FPGA
+    string "GPON Serial Number" BRCM_GPON_SERIAL_NUMBER
+    string "GPON Password" BRCM_GPON_PASSWORD
+    string "GPON CT LOID" BRCM_GPON_CT_LOID
+    string "GPON CT PASSWORD" BRCM_GPON_CT_PASSWORD
+else
+    define_string BRCM_GPON_SERIAL_NUMBER ""
+    define_string BRCM_GPON_PASSWORD ""
+    define_string BRCM_GPON_CT_LOID ""
+    define_string BRCM_GPON_CT_PASSWORD ""
+fi
+
+int 'Flash memory block size in Kbytes' BRCM_FLASHBLK_SIZE
+int 'Percent of Flash for auxillary file system 0-80' BRCM_AUXFS_PERCENT
+int 'Number of Mac addresses' BRCM_NUM_MAC_ADDRESSES
+string "Base Mac address" BRCM_BASE_MAC_ADDRESS
+int 'PSI Size' BRCM_PSI_SIZE
+int 'Backup Psi Support: 0-not support,1-support' BRCM_BACKUP_PSI
+
+int 'Main Thread Number for CMT core' BRCM_MAIN_TP_NUM
+
+endmenu
+
+#added by wwj 130224
+###################################################################################
+mainmenu_option next_comment
+comment 'TP-LINK Product Params Config'
+
+string "TP-LINK Product Model(like W8960N)" TP_PRODUCT_MODEL
+string "TP-LINK Product ID(like 0x08960000)" TP_PRODUCT_ID
+string "TP-LINK Product Ver(like 0x1)" TP_PRODUCT_VER
+string "TP-LINK Hardware Ver(like 0x00000001)" TP_HARDWARE_VER
+string "TP-LINK Product Description(like 300M Wireless N ADSL2+ Modem Router)" TP_PRODUCT_DESCRIPTION
+int "TP-LINK Software Ver [Major]" TP_SW_VER_MAJOR
+int "TP-LINK Software Ver [Minor]" TP_SW_VER_MINOR
+int "TP-LINK Software Ver [Revision]" TP_SW_VER_REV
+
+endmenu
+###################################################################################
+
+mainmenu_option next_comment
+comment 'Toolchain selection'
+
+choice ' Base Library (choose LIBC for DESKTOP-LINUX compile)' \
+       "   UCLIBC              BRCM_UCLIBC\
+           LIBC                DESKTOP_LINUX"
+
+endmenu
+
+
+
+###################################################################################
+
+mainmenu_option next_comment
+comment 'Root file system selection'
+
+choice 'Root file system '   \
+      "SQUASHFS    BRCM_ROOTFS_SQUASHFS   \
+       JFFS2       BRCM_ROOTFS_JFFS2 \
+       NFS         BRCM_ROOTFS_NFS" SQUASHFS
+
+if [ "$BRCM_ROOTFS_SQUASHFS" = "y" ]; then
+    define_string BRCM_KERNEL_ROOTFS "squashfs"
+    int '    SquashFS block size in bytes (bigger block->less Flash, smaller block->less RAM)' BRCM_SQUASHFS_BLOCK_SIZE 65536
+    int '    SquashFS fragment cache size in # of blocks' BRCM_SQUASHFS_FRAGMENT_CACHE_SIZE 1
+fi
+if [ "$BRCM_ROOTFS_CRAMFS" = "y" ]; then
+    define_string BRCM_KERNEL_ROOTFS "cramfs"
+fi
+if [ "$BRCM_ROOTFS_JFFS2" = "y" ]; then
+    define_string BRCM_KERNEL_ROOTFS "jffs2"
+    bool '    Mount ROOTFS as read-write (required by Modular Software Update and OSGi)' BRCM_ROOTFS_JFFS2_RW
+fi
+if [ "$BRCM_ROOTFS_NFS" = "y" ]; then
+    string 'NFS Root Directory (leave blank to select build directory)' BRCM_NFS_ROOT_DIR
+    define_string BRCM_KERNEL_ROOTFS "nfs"
+    if [ "$BRCM_DRIVER_ETHERNET" = "m" ]; then
+        define_string BRCM_DRIVER_ETHERNET "y"
+    fi
+    if [ "$BRCM_DRIVER_BPM" = "m" ]; then
+        define_string BRCM_DRIVER_BPM "y"
+    fi
+    if [ "$BRCM_6368" = "y" ]; then
+        define_string BUILD_MTDUTILS "y"
+    fi
+fi
+
+endmenu
+
+
+
+###################################################################################
+
+mainmenu_option next_comment
+comment 'Kernel configuration selection'
+
+bool 'Enable kernel SMP support' BRCM_SMP_EN
+bool 'Enable kernel preemption' BRCM_KERNEL_PREEMPT
+int  'Scheduler RT period' BRCM_SCHED_RT_PERIOD 1000000
+int  'Scheduler RT runtime' BRCM_SCHED_RT_RUNTIME 1000000
+bool 'High resolution timer support' BRCM_CONFIG_HIGH_RES_TIMERS
+bool 'Count cycles spent in HardIRQ' BCM_HARDIRQ_COUNT_CYCLES
+bool 'CGROUPS' BCM_CGROUPS
+if [ "$BCM_CGROUPS" = "y" ]; then
+    bool '  Broadcom CGROUPS modifications' BCM_CGROUP_BCM
+fi
+
+mainmenu_option next_comment
+comment 'Kernel Cryptographic selection'
+
+bool "Cryptographic API" BRCM_KERNEL_CRYPTO
+
+dep_bool '  HMAC support' BRCM_KERNEL_CRYPTO_HMAC $BRCM_KERNEL_CRYPTO
+dep_bool '  Null algorithms' BRCM_KERNEL_CRYPTO_NULL $BRCM_KERNEL_CRYPTO
+dep_bool '  MD5 digest algorithms' BRCM_KERNEL_CRYPTO_MD5 $BRCM_KERNEL_CRYPTO
+dep_bool '  SHA1 digest algorithms' BRCM_KERNEL_CRYPTO_SHA1 $BRCM_KERNEL_CRYPTO
+dep_bool '  DES and Triple DES EDE cipher algorithms' BRCM_KERNEL_CRYPTO_DES $BRCM_KERNEL_CRYPTO
+dep_bool '  AES cipher algorithms' BRCM_KERNEL_CRYPTO_AES $BRCM_KERNEL_CRYPTO
+
+endmenu
+
+
+mainmenu_option next_comment
+comment 'Misc Drivers (other drivers are grouped with their features)'
+
+bool 'PCI' BRCM_DRIVER_PCI
+
+if [ "$BRCM_6816" = "y" -o "$BRCM_6818" = "y" ]; then
+   tristate 'I2C' BRCM_DRIVER_I2C
+fi
+
+tristate 'ISDN' BRCM_DRIVER_ISDN
+
+endmenu
+
+
+endmenu
+
+
+
+###################################################################################
+
+mainmenu_option next_comment
+comment 'Major Feature Selection'
+
+bool 'Use Broadcom Configuration Mgmt System (CMS)' BUILD_BRCM_CMS
+tristate2 'Busybox' BUILD_BUSYBOX
+if  [ "$BUILD_BUSYBOX" = "dynamic" -o "$BUILD_BUSYBOX" = "static" ]; then
+  bool '   Support Wget Https in busybox' BUILD_WGET_HTTPS
+fi
+bool 'Enable IPV6' BUILD_IPV6
+tristate2 'Interface Grouping' BUILD_VCONFIG
+bool 'Prompt for internal Broadcom Engineering Parameters' BUILD_BRCM_INTERNAL
+
+endmenu
+
+
+
+###################################################################################
+
+if [ "$BRCM_63268" = "y" -o "$BRCM_6318" = "y" -o "$BRCM_6328" = "y" -o "$BRCM_6362" = "y" -o "$BRCM_6368" = "y" ]; then
+
+    mainmenu_option next_comment
+    comment 'DSL/XTM selection'
+
+    #
+    # These phy selections are mostly not used.  Put here for future cleanup.
+    #
+    if [ "$BRCM_6368" = "y" -o "$BRCM_63268" = "y" ]; then
+       choice 'xDSL PHY '   \
+          "ADSL            BUILD_PHY_ADSL   \
+           VDSL            BUILD_PHY_VDSL \
+           Multi-mode      BUILD_PHY_MULTIMODE" Multi-mode
+    else
+       if [ "$BRCM_6328" = "y" -o "$BRCM_6362" = "y" -o "$BRCM_6318" = "y" ]; then
+           define_string BUILD_PHY_ADSL "y"
+       fi
+    fi
+
+    if [ "$BRCM_63268" = "y" -o "$BRCM_6368" = "y" ]; then
+        bool '    Support xDSL Bonding' BRCM_PHY_BONDING
+        bool '    Support xDSL Multi-PHY' BRCM_MULTI_PHY
+	     bool '    Support xDSL External Bonding' BRCM_EXT_PHY_BONDING
+    fi
+
+    if [ "$BRCM_63268" = "y" ]; then
+        bool '    Support xDSL 5-band Bonding' BRCM_PHY_BONDING5B
+        bool '    Support xDSL G.inp Retransmission' BRCM_PHY_GINP_RTX
+        bool '    Support xDSL Multiple Bonding PHY' BRCM_PHY_BONDING_C0
+    fi
+
+    choice 'xDSL standard'   \
+        "ANNEX_A     BRCM_ADSL_ANNEX_A     \
+         ANNEX_B     BRCM_ADSL_ANNEX_B     \
+         ANNEX_C     BRCM_ADSL_ANNEX_C     \
+         SADSL       BRCM_ADSL_SADSL" ANNEX_A
+
+    if [ "$BRCM_ADSL_ANNEX_A" = "y" ]; then
+        define_string BRCM_ADSL_STANDARD "ANNEX_A"
+        define_string CPE_ANNEX_A "y"
+    fi
+    if [ "$BRCM_ADSL_ANNEX_B" = "y" ]; then
+        define_string BRCM_ADSL_STANDARD "ANNEX_B"
+        define_string CPE_ANNEX_B "y"
+    fi
+    if [ "$BRCM_ADSL_ANNEX_C" = "y" ]; then
+        define_string BRCM_ADSL_STANDARD "ANNEX_C"
+    fi
+    if [ "$BRCM_ADSL_SADSL" = "y" ]; then
+        define_string BRCM_ADSL_STANDARD "SADSL"
+    fi
+
+    tristate 'xDSL Driver' BRCM_DRIVER_ADSL
+
+    # BUILD_DSL is for CMS.  It just means some/any DSL is enabled on the system.
+    if [ "$BRCM_DRIVER_ADSL" = "m" -o "$BRCM_DRIVER_ADSL" = "y" ]; then
+        define_bool BUILD_DSL "y"
+
+        if [ "$BUILD_XDSLCTL" != "static" -a "$BUILD_XDSLCTL" != "dynamic" ]; then
+            define_tristate2 BUILD_XDSLCTL "dynamic"
+        fi
+        bistate2 '    xDSL Control Utility' BUILD_XDSLCTL
+        bool '    DSL Diag daemon' BUILD_DSLDIAGD
+        bool '    DSL Loop Diagnostics' BUILD_DSL_LOOP_DIAG
+        bool '    Support xDSL Phy Loopback' BRCM_PHY_LOOPBACK
+
+
+        if [ "$BRCM_DRIVER_XTM" != "y" -a "$BRCM_DRIVER_XTM" != "m" ]; then
+            define_tristate BRCM_DRIVER_XTM "m"
+        fi
+        bistate 'XTM Driver' BRCM_DRIVER_XTM
+
+        if [ "$BUILD_XTMCTL" != "static" -a "$BUILD_XTMCTL" != "dynamic" ]; then
+            define_tristate2 BUILD_XTMCTL "dynamic"
+        fi
+        bistate2 '    XTM Control Utility' BUILD_XTMCTL
+        bool '    ATM as WAN Interface' BUILD_ATMWAN
+        bool '    PTM as WAN Interface' BUILD_PTMWAN
+        if [ "$BUILD_ATMWAN" = "y" ]; then
+            define_bool BUILD_ATMLOOPBACK "y"
+        else
+            define_bool BUILD_ATMLOOPBACK "n"
+            define_bool BUILD_QUICKSETUP "n"
+        fi
+        if [ "$BUILD_PTMWAN" = "y" ]; then
+            tristate '        IEEE8021AG' BRCM_DRIVER_P8021AG
+        else
+            define_tristate BRCM_DRIVER_P8021AG "n"
+        fi
+        if [ "$BRCM_EXT_PHY_BONDING" = "y" ]; then
+            tristate 'External xDSL Bonding Driver' BRCM_DRIVER_EXT_BONDING
+        else
+            define_tristate BRCM_DRIVER_EXT_BONDING "n"
+        fi
+    else
+        define_bool BUILD_DSL "n"
+        define_tristate2 BUILD_XDSLCTL "n"
+        define_bool BUILD_DSLDIAGD "n"
+        define_bool BUILD_DSL_LOOP_DIAG "n"
+        define_tristate BRCM_DRIVER_XTM "n"
+        define_tristate2 BUILD_XTMCTL "n"
+        define_bool BUILD_ATMWAN "n"
+        define_bool BUILD_PTMWAN "n"
+        define_bool BUILD_ATMLOOPBACK "n"
+        define_tristate BRCM_DRIVER_P8021AG "n"
+        define_bool BUILD_QUICKSETUP "n"
+        define_tristate BRCM_DRIVER_EXT_BONDING "n"
+    fi
+
+    endmenu
+fi
+
+
+
+###################################################################################
+
+if [ "$BRCM_6816" = "y" -o "$BRCM_6818" = "y" -o "$BUILD_BRCM_INTERNAL" = "y" -a "$BRCM_6368" = "y" ]; then
+
+    mainmenu_option next_comment
+    comment 'GPON Selection'
+
+    if [ "$BRCM_6816" = "y" -o "$BRCM_6818" = "y" ]; then
+       tristate 'GPON Driver' BRCM_DRIVER_GPON
+
+       if [ "$BRCM_6818" = "y" ]; then
+           int 'Number of GEM Ports (32-128)' BCM_MAX_GEM_PORTS 128
+       fi
+
+       if [ "$BRCM_DRIVER_GPON" = "m" -o "$BRCM_DRIVER_GPON" = "y" ]; then
+           # BUILD_GPON is for CMS, it just means we have GPON on this system.
+           define_string BUILD_GPON "y"
+           # what are these two for?  Cannot find any files that use these
+           define_string BRCM_GPON "y"
+           define_string BRCM_OMCI "y"
+       fi
+
+       if [ "$BRCM_6816" = "y" ]; then
+           bool '160MHz FFE ' BCM_GPON_160MHz_FFE
+       fi
+
+       if [ "$BRCM_6818" = "y" ]; then
+          bool 'Support GPON DDR Offload' BRCM_GPON_DDRO
+          if [ "$BRCM_GPON_DDRO" = "y" ]; then
+             int '    DDR Offload total queue size in kilo bytes' BRCM_GPON_DDRO_SIZE 16384
+          fi
+       fi
+
+       # maybe this should be moved to the management protocols section
+       bool 'Support GPON OMCI' BUILD_OMCI
+
+       tristate2 'GPONIF Utility' BUILD_GPONIF
+       tristate2 'GPOND Utility' BUILD_GPOND
+       tristate2 'GPONCTL Utility' BUILD_GPONCTL
+
+      choice ' GponRG'   \
+         "GponRGt-OMCI-Light    	USE_GPONRG_OMCI_LIGHT \
+          GponRG-OMCI-Full     	USE_GPONRG_OMCI_FULL \
+          None					USE_GONRG_NONE" \
+          GponRG-OMCI-Light
+      if [ "$USE_GPONRG_OMCI_LIGHT" = "y" ]; then
+        define_string BUILD_GPONRG_OMCI_LIGHT "y"
+      else
+        define_string BUILD_GPONRG_OMCI_LIGHT ""
+      fi
+      if [ "$USE_GPONRG_OMCI_FULL" = "y" ]; then
+        define_string BUILD_GPONRG_OMCI_FULL "y"
+        bool 'Support GPON OMCI TR69 dual stack' BUILD_OMCI_TR69_DUAL_STACK
+      else
+        define_string BUILD_GPONRG_OMCI_FULL ""
+      fi
+      if [ "$USE_GONRG_NONE" = "y" ]; then
+        define_string BUILD_GPON_ONU "y"
+        bool 'Support GPON OMCI TR69 dual stack' BUILD_OMCI_TR69_DUAL_STACK
+      else
+        define_string BUILD_GPON_ONU ""
+      fi
+      if [ "$USE_GPONRG_OMCI_LIGHT" != "y" ]; then
+        bool 'Enable 802.1Q mode ' BCM_GPON_802_1Q_ENABLED
+      fi
+      bool 'Enable GPON-ActiveE Auto Switch' BCM_GPON_AE_AUTO_SWITCH
+    fi
+    if [ "$BRCM_6368" = "y" ]; then
+      bool 'Build GPON OLT tester'  BUILD_GPONOLT_TEST_UTILS
+    fi
+    endmenu
+
+fi
+
+if [ "$BRCM_6828" = "y" -o "$BRCM_6328" = "y" -o "$BRCM_6362" = "y" -o "$BUILD_BRCM_INTERNAL" = "y" ]; then
+
+    mainmenu_option next_comment
+    comment 'EPON Selection'
+
+    if [ "$BRCM_6828" = "y" -o "$BUILD_BRCM_INTERNAL" = "y" ]; then
+        tristate 'EPON LUE Driver' BRCM_DRIVER_EPON
+        tristate 'EPON Control Utility' BUILD_EPONCTL
+    fi
+
+    bool 'EPON SDK' BUILD_EPON_SDK
+
+    if  [ "$BUILD_EPON_SDK" = "y" ]; then
+        bool 'EPON SDK VOICE OAM' BUILD_EPON_SDK_VOICE_OAM
+        bool 'EPON as WAN' BUILD_EPONWAN
+        bool 'Override EPON MAC Address In Personality' OVERRIDE_EPON_MAC_ADDR
+        if [ "$OVERRIDE_EPON_MAC_ADDR" = "y" ]; then
+            bool 'Multiple LLID SUpport' MLLID_SUPPORTED
+        fi
+        choice '  EPON ONU Type' \
+            "SFU    BRCM_EPON_SFU  \
+            SBU    BRCM_EPON_SBU  \
+            HGU    BRCM_EPON_HGU  " SFU
+        if [ "$BRCM_EPON_SFU" = "y" ]; then
+            define_string EPON_ONU_TYPE "EPON_SFU"
+        fi
+        if [ "$BRCM_EPON_SBU" = "y" ]; then
+            define_string EPON_ONU_TYPE "EPON_SBU"
+        fi
+        if [ "$BRCM_EPON_HGU" = "y" ]; then
+            define_string EPON_ONU_TYPE "EPON_HGU"
+        fi
+
+        if [ "$BRCM_6828" = "y" -o "$BUILD_BRCM_INTERNAL" = "y" ]; then
+            bool 'UNI 2 UNI Communication' EPON_UNI_UNI_ENABLED
+            bool 'Unresolved Downstream Forward' EPON_DS_DLF_FORWARD
+        fi
+    fi
+
+    if [ "$BRCM_6828" = "y" ]; then
+        bool 'EPON Laser Support' BRCM_EPON_LASER_SUPPORT
+    fi
+
+    endmenu
+fi
+
+###################################################################################
+
+mainmenu_option next_comment
+comment 'Ethernet and VLAN Selection'
+
+tristate 'Ethernet Driver' BRCM_DRIVER_ETHERNET
+if [ "$BRCM_DRIVER_ETHERNET" = "y" -o "$BRCM_DRIVER_ETHERNET" = "m" ]; then
+    bool '    Support Configuration for Ethernet Speed/Type' BRCM_DRIVER_ETHERNET_CONFIG
+
+    choice 'Switch Scheduling Mode (SP = strict priority, WRR = weighted round robin)' \
+        "SP       BRCM_SWITCH_SCHED_SP  \
+         WRR      BRCM_SWITCH_SCHED_WRR " SP
+
+    bool 'ETHSWCTL Utility' BUILD_ETHSWCTL
+    dep_bool 'SWITCHMDK' BUILD_SWMDK $BUILD_ETHSWCTL
+    if [ "$BUILD_SWMDK" = "y" ]; then
+	bool "External Switch Present" BRCM_EXT_SWITCH
+        if [ "$BRCM_EXT_SWITCH" = "y" ]; then
+           int "External Switch Number" BRCM_EXT_SWITCH_TYPE 53115
+           string "External Switch Revision" BRCM_EXT_SWITCH_REV "a0"
+           if [ "$BRCM_6362" = "y" ]; then
+              bool "Ports on both Internal and External Switch" BRCM_6362_PORTS_INT_EXT_SW
+           else
+               define_bool BRCM_6362_PORTS_INT_EXT_SW "n"
+           fi
+
+	else
+	   define_int BRCM_EXT_SWITCH_TYPE 0
+	   define_string BRCM_EXT_SWITCH_REV ""
+	fi
+        bool "54616 PHY Support" BCM_PHY_54616
+    fi
+    dep_bool 'MDKSHELL' BUILD_MDK_SHELL $BUILD_SWMDK
+
+    bool 'Ethernet as WAN'  BUILD_ETHWAN
+
+    bool 'Support Jumbo Frame'  BCM_ETH_JUMBO_FRAME
+
+    if [ "$BRCM_6816" = "y" -o "$BRCM_6818" = "y" ]; then
+        int 'MIPS Rate Limit (Packets Per Second - 0 to disable)' BRCM_MIPS_RATE_LIMIT 10000
+    fi
+
+    if [ "$BRCM_6362" = "y" ]; then
+        if [ "$BUILD_SWMDK" = "n" -o "$BRCM_EXT_SWITCH" = "n" -o \
+                      "$BRCM_6362_PORTS_INT_EXT_SW" = "y" ]; then
+          if [ "$BRCM_DRIVER_FAP" = "y" -o "$BRCM_DRIVER_FAP" = "m" ]; then
+            bool 'Iudma Rx Splitting' BCM_IUDMA_RX_SPLITTING
+            bool 'Iudma Tx Splitting' BCM_IUDMA_TX_SPLITTING
+          else
+            define_string BCM_IUDMA_RX_SPLITTING ""
+            define_string BCM_IUDMA_TX_SPLITTING ""
+          fi
+        else
+          define_string BCM_IUDMA_RX_SPLITTING ""
+          define_string BCM_IUDMA_TX_SPLITTING ""
+        fi
+    fi
+
+    if [ "$BRCM_6816" = "y" -o "$BRCM_6328" = "y" -o "$BRCM_6818" = "y" ]; then
+      mainmenu_option next_comment
+      comment 'DMA Channel Configuration'
+        int  'Number of RX DMA channels (1-4)' BCM_DEF_NR_RX_DMA_CHANNELS
+        int  'Number of TX DMA channels (1-4)' BCM_DEF_NR_TX_DMA_CHANNELS
+      endmenu
+    fi
+    if [ "$BRCM_6368" = "y" ]; then
+      mainmenu_option next_comment
+      comment 'DMA Channel Configuration'
+        int  'Number of RX DMA channels (1-2)' BCM_DEF_NR_RX_DMA_CHANNELS
+        int  'Number of TX DMA channels (1-2)' BCM_DEF_NR_TX_DMA_CHANNELS
+      endmenu
+    fi
+    if [ "$BRCM_6362" = "y" ]; then
+      if [ "$BCM_IUDMA_RX_SPLITTING" = "y" ]; then
+        define_int BCM_DEF_NR_RX_DMA_CHANNELS 2
+      else
+        define_int BCM_DEF_NR_RX_DMA_CHANNELS 1
+      fi
+      if [ "$BCM_IUDMA_TX_SPLITTING" = "y" ]; then
+        define_int BCM_DEF_NR_TX_DMA_CHANNELS 2
+      else
+        define_int BCM_DEF_NR_TX_DMA_CHANNELS 1
+      fi
+    fi
+    if [ "$BRCM_63268" = "y" -o "$BRCM_6828" = "y" ]; then
+      define_int BCM_DEF_NR_RX_DMA_CHANNELS 2
+      define_int BCM_DEF_NR_TX_DMA_CHANNELS 2
+    fi
+    if [ "$BRCM_6318" = "y" ]; then
+      define_int BCM_DEF_NR_RX_DMA_CHANNELS 1
+      define_int BCM_DEF_NR_TX_DMA_CHANNELS 1
+    fi
+
+    if [ "$BRCM_DRIVER_ETHERNET" = "y" -o "$BRCM_DRIVER_ETHERNET" = "m" ]; then
+        if [ "$BRCM_63268" = "y" ]; then
+            tristate 'Support for GMAC' BRCM_GMAC
+            if [ "$BRCM_GMAC" = "y" -o "$BRCM_GMAC" = "m" ]; then
+                tristate2 'GMAC Control Utility' BUILD_GMACCTL
+            fi
+        fi
+    fi
+fi
+
+tristate 'VLAN Driver' BRCM_DRIVER_VLAN
+tristate2 'VLAN Control Utility' BUILD_VLANCTL
+if [ "$BUILD_VLANCTL" == "dynamic" -o "$BUILD_VLANCTL" == "static" ]; then
+  bool 'Support LAN Side Vlan' BUILD_LANVLAN
+fi
+
+endmenu
+
+
+
+###################################################################################
+
+mainmenu_option next_comment
+comment 'USB and Storage Options Selection'
+
+tristate 'USB Device' BRCM_DRIVER_USB
+
+dep_bool 'USB Host' LINUX_DRIVER_USB_HOST $BRCM_DRIVER_PCI
+dep_bool '    USB Communication Class Ethernet device support' LINUX_DRIVER_CDCETHER $LINUX_DRIVER_USB_HOST
+dep_bool '    USB Mass Storage Support (experimental)' LINUX_KERNEL_USBMASS $LINUX_DRIVER_USB_HOST
+dep_bool '    USB DeviceFS' LINUX_KERNEL_USB_DEVICEFS $LINUX_DRIVER_USB_HOST
+
+bool 'LIBUSB support' BUILD_LIBUSB
+
+# this is the old way, which links ftpd with storge, will clean up after samba
+tristate2 'Ftp Server' BUILD_FTPD
+if [ "$BUILD_FTPD" == "dynamic" -o "$BUILD_FTPD" == "static" ]; then
+  bool '        Support for storage'  BUILD_FTPD_STORAGE
+else
+  define_string BUILD_FTPD_STORAGE ""
+fi
+
+
+bool 'TR140-Storage Service' BUILD_STORAGESERVICE
+if  [ "$BUILD_STORAGESERVICE" = "y" ]; then
+   bool '       NTFS-3G support' BUILD_NTFS_3G
+   bool '       Samba support' BUILD_SAMBA
+fi
+
+bool 'USB 3G Support' BUILD_USB_3G
+
+endmenu
+
+mainmenu_option next_comment
+comment 'Auxillary flash file system selection'
+
+bool 'JFFS2' BUILD_AUXFS_JFFS2
+if  [ "$BUILD_AUXFS_JFFS2" = "y" ]; then
+    define_string BRCM_KERNEL_AUXFS_JFFS2 "y"
+fi
+endmenu
+
+
+###################################################################################
+
+if [ "$BRCM_6816" = "y" ]; then
+
+    mainmenu_option next_comment
+    comment 'Moca Selection'
+
+    tristate 'MoCA' BRCM_DRIVER_MoCA
+    if [ "$BRCM_DRIVER_MoCA" = "y" -o "$BRCM_DRIVER_MoCA" = "m" ]; then
+       bool 'CTP Candidate' BRCM_DRIVER_MoCA_CTP_CANDIDATE
+       define_string BUILD_MoCACTL "y"
+       bool 'MOCA as WAN'      BUILD_MOCAWAN
+
+       tristate2 'MoCA Daemon' BUILD_MoCAD
+       if [ "$BUILD_MoCAD" = "dynamic" -o "$BUILD_MoCAD" = "static" ]; then
+          define_string BUILD_MoCACTL2 "y"
+       else
+          define_string BUILD_MoCACTL2 ""
+       fi
+       bool 'MoCA software switching'      BRCM_MOCA_SOFT_SWITCHING
+    fi
+
+    endmenu
+
+fi
+
+###################################################################################
+
+if [ "$BRCM_6818" = "y" ]; then
+
+    mainmenu_option next_comment
+    comment 'Moca Selection'
+    
+    bool 'Support 6802 Moca' BUILD_6802_MOCA
+
+    endmenu
+
+fi
+
+
+
+
+###################################################################################
+
+mainmenu_option next_comment
+comment 'WLAN Selection'
+
+if [ "$BRCM_DRIVER_PCI" = "y" ]; then
+    tristate 'WIRELESS Driver' BRCM_DRIVER_WIRELESS
+fi
+
+bool 'Wireless WAPI support' BRCM_WAPI
+
+if [ "$BRCM_DRIVER_WIRELESS" = "y" -o "$BRCM_DRIVER_WIRELESS" = "m" ]; then
+  string 'Wireless Alternate Build' BRCM_WLALTBLD
+fi
+choice 'Wireless brand selection'   \
+       "MEDIA                                       BRCM_WLMEDIA \
+       none                                      WLBRAND_none" none
+
+define_string BRCM_WLBRAND ""
+if [ "$BRCM_WLMEDIA" = "y" ]; then
+  define_string BRCM_WLBRAND "MEDIA"
+fi
+
+comment ' WLAN IMPL selection'
+string "Use IMPL selection" BCM_WLIMPL
+
+tristate2 'Wireless Control Utility' BUILD_WLCTL
+bool 'Wireless HSPOT V2.0' BUILD_WLHSPOT
+
+tristate2 'Wireless Network Authentication Service' BUILD_NAS
+
+choice 'Wireless LAN configuration method'   \
+       "WPS                                       WLSETUP_WPS \
+       none                                      WLSETUP_none" none
+
+if [ "$WLSETUP_WPS" = "y" ]; then
+  define_string BUILD_WPS_BTN "dynamic"
+  define_string BUILD_LLTD    "dynamic"
+  define_string BUILD_WSC     "dynamic"
+else
+  define_string BUILD_WPS_BTN ""
+  define_string BUILD_LLTD    ""
+  define_string BUILD_WSC     ""
+fi
+
+tristate2 'NVRAM emulation' BUILD_NVRAM
+
+if [ "$LINUX_DRIVER_USB_HOST" = "y" -o "$LINUX_DRIVER_USB_HOST" = "m" ]; then
+    dep_tristate '    USB Dongle Wireless'  BRCM_DRIVER_WIRELESS_USBAP $LINUX_KERNEL_USB_DEVICEFS
+fi
+
+endmenu
+
+
+
+###################################################################################
+
+mainmenu_option next_comment
+comment 'Voice/Phone Selection'
+
+tristate 'PHONE' BRCM_DRIVER_PHONE
+
+tristate2 'Voice application' BUILD_VODSL
+if [ "$BUILD_VODSL" = "static" -o "$BUILD_VODSL" = "dynamic" ]; then
+    if [ "$BRCM_DRIVER_BCMPROF" = "m" -o "$BRCM_DRIVER_BCMPROF" = "y" ]; then
+    define_string BRCM_PROFILER_ENABLED "y"
+fi
+choice ' Call signalling protocol'   \
+"SIP                            BRCM_APP_PHONE_SIP  \
+ MGCP                           BRCM_APP_PHONE_MGCP \
+ EPTAPP(NO_CALL_SIGNALLING)     BRCM_APP_PHONE_EPTAPP"
+
+if [ "$BRCM_APP_PHONE_SIP" = "y" ]; then
+    define_string BRCM_APP_PHONE "sip"
+    bool 'G.168 Test Mode' BUILD_G168
+    choice ' SIP CallManager Selection'   \
+    "CallManager_CallControl_1.10.x BRCM_SIP_CMGR_CCTRL  \
+     CallManager_CCTK_2.x           BRCM_SIP_CMGR_CCTK"
+    bool 'SIP TLS Support' BRCM_VODSL_TLS
+    if [ "$BRCM_VODSL_TLS" = "y" ]; then
+       define_string BUILD_CERT "dynamic"
+    fi
+fi
+if [ "$BRCM_APP_PHONE_EPTAPP" = "y" ]; then
+    define_string BRCM_APP_PHONE "eptapp"
+    if [ "$BRCM_6816" = "y" -o "$BRCM_6828" = "y" -o "$BRCM_6818" = "y" ]; then
+      bool 'PBDT CLI Support' BRCM_PBDT_SUPPORT
+      bool 'MLT CLI Support' BRCM_TPD_SUPPORT
+    fi    
+fi
+if [ "$BRCM_APP_PHONE_MGCP" = "y" ]; then
+    define_string BRCM_APP_PHONE "mgcp"
+fi
+
+bool 'HAL Capture Support'                           BRCM_HAL_CAP_SUPPORT
+#
+# List and set LDX application choice.
+#
+#
+# List codec support
+#
+
+if [ "$BRCM_6816" = "y" ]; then
+    choice '6816 app configuration selection'  \
+   "96816UNI                                            BRCM_VOIP_UNI"
+   if [ "$BRCM_SMP_EN" = "y" ]; then
+      define_string BRCM_VOICE_NONDIST "y"
+   else
+      bool 'Non-distributed DSP'                        BRCM_VOICE_NONDIST
+   fi
+fi
+
+
+if [ "$BRCM_6818" = "y" ]; then
+    choice '6818 app configuration selection'  \
+   "96818UNI                                            BRCM_VOIP_UNI"
+   if [ "$BRCM_SMP_EN" = "y" ]; then
+      define_string BRCM_VOICE_NONDIST "y"
+   else
+      bool 'Non-distributed DSP'                        BRCM_VOICE_NONDIST
+   fi
+      bool 'Enable G729 TEST application'                  BRCM_G729_DSPTEST_APP
+fi
+
+
+if [ "$BRCM_6368" = "y" ]; then
+    choice '6368 app configuration selection'  \
+    "96368UNI                                 BRCM_VOIP_UNI            \
+     96368VW_NTR                              BRCM_6368_NTR         "
+   if [ "$BRCM_SMP_EN" = "y" ]; then
+      define_string BRCM_VOICE_NONDIST "y"
+   else
+      bool 'Non-distributed DSP'                       BRCM_VOICE_NONDIST
+   fi
+
+if [ "$BRCM_6368_NTR" = "y" ]; then
+   bool '   Enable NTR'                           BRCM_6368_NTR_SUPPORT
+   bool '   Enable NTR MDM'                       BRCM_6368_NTR_MDM_SUPPORT
+fi
+
+   bool '   Support VOIP to FXO calls' BRCM_VOIP_TO_FXO
+   bool '   Support PSTN lifeline switch' BRCM_VODSL_PSTN_LIFE_LINE_SUPPORT
+   define_string BRCM_PSTN_SUPPORT "y"
+    
+fi
+
+if [ "$BRCM_6362" = "y" ]; then
+   choice '6362 app configuration selection'                        \
+   "96362UNI                                            BRCM_VOIP_UNI"
+   if [ "$BRCM_SMP_EN" = "y" ]; then
+      define_string BRCM_VOICE_NONDIST "y"
+   else
+      bool 'Non-distributed DSP'                        BRCM_VOICE_NONDIST
+   fi
+   bool 'Enable G729 TEST application'                  BRCM_G729_DSPTEST_APP
+
+if [ "$BRCM_VOIP_UNI" = "y" ]; then
+    bool 'DECT Support'                                 BUILD_DECT
+
+fi
+
+if [ "$BUILD_DECT" = "y" ]; then
+    define_string BRCM_DRIVER_DECT "m"
+    define_string BRCM_DRIVER_DECTSHIM "m"
+fi
+
+if [ "$BRCM_VOIP_UNI" = "y" ]; then
+    bool '   Low-level DECT TEST'                       BRCM_6362_DECTTEST
+fi
+
+if [ "$BRCM_VOIP_UNI" = "y" ]; then
+    bool '   Enable NTR'                                BRCM_6362_NTR
+fi
+
+if [ "$BRCM_6362_NTR" = "y" ]; then
+    bool '   Enable NTR MDM (Highly Recommended)'        BRCM_6362_NTR_MDM_SUPPORT
+    choice ' NTR Mode - Required Choice' \
+    "6362Native                                          BRCM_6362_NTR_SUPPORT \
+    6362Compatibility                                    BRCM_6362_NTR_SUPPORT_COMP\
+    6362Internal                                         BRCM_6362_NTR_SUPPORT_INT"
+fi
+
+    bool '   Support VOIP to FXO calls' BRCM_VOIP_TO_FXO
+    bool '   Support PSTN lifeline switch' BRCM_VODSL_PSTN_LIFE_LINE_SUPPORT
+    define_string BRCM_PSTN_SUPPORT "y"
+fi
+
+if [ "$BRCM_63268" = "y" ]; then
+   choice '63268 app configuration selection'                        \
+   "963268UNI                                            BRCM_VOIP_UNI"
+   if [ "$BRCM_SMP_EN" = "y" ]; then
+      define_string BRCM_VOICE_NONDIST "y"
+   else
+      bool 'Non-distributed DSP'                        BRCM_VOICE_NONDIST
+   fi
+   bool 'Enable G729 TEST application'                  BRCM_G729_DSPTEST_APP
+
+if [ "$BRCM_VOIP_UNI" = "y" ]; then
+    bool 'DECT Support'                                 BUILD_DECT
+
+fi
+
+if [ "$BUILD_DECT" = "y" ]; then
+    define_string BRCM_DRIVER_DECT "m"
+    define_string BRCM_DRIVER_DECTSHIM "m"
+fi
+
+if [ "$BRCM_VOIP_UNI" = "y" ]; then
+    bool '   Low-level DECT TEST'                       BRCM_63268_DECTTEST
+fi
+
+if [ "$BRCM_VOIP_UNI" = "y" ]; then
+    bool '   Enable NTR'                                BRCM_63268_NTR
+fi
+
+if [ "$BRCM_63268_NTR" = "y" ]; then
+    bool '   Enable NTR MDM (Highly Recommended)'        BRCM_63268_NTR_MDM_SUPPORT
+    choice ' NTR Mode - Required Choice' \
+    "63268Native                                          BRCM_63268_NTR_SUPPORT \
+    63268Compatibility                                    BRCM_63268_NTR_SUPPORT_COMP\
+    63268Internal                                         BRCM_63268_NTR_SUPPORT_INT\
+    63268Native-Bonding                                   BRCM_63268_NTR_SUPPORT_BONDING\
+    63268Compatibility-Bonding                            BRCM_63268_NTR_SUPPORT_COMP_BONDING\
+    63268Internal-Bonding                                 BRCM_63268_NTR_SUPPORT_INT_BONDING"
+fi
+
+    bool '   Support VOIP to FXO calls' BRCM_VOIP_TO_FXO
+    bool '   Support PSTN lifeline switch' BRCM_VODSL_PSTN_LIFE_LINE_SUPPORT
+    define_string BRCM_PSTN_SUPPORT "y"
+    
+fi
+
+if [ "$BRCM_6828" = "y" ]; then
+   choice '6828 app configuration selection'                        \
+   "96828UNI                                            BRCM_VOIP_UNI"
+   if [ "$BRCM_SMP_EN" = "y" ]; then
+      define_string BRCM_VOICE_NONDIST "y"
+   else
+      bool 'Non-distributed DSP'                        BRCM_VOICE_NONDIST
+   fi
+   bool 'Enable G729 TEST application'                  BRCM_G729_DSPTEST_APP
+
+if [ "$BUILD_DECT" = "y" ]; then
+    define_string BRCM_DRIVER_DECT "m"
+    define_string BRCM_DRIVER_DECTSHIM "m"
+fi
+
+if [ "$BRCM_6828_UNI" = "y" ]; then
+    bool '   Enable NTR'                                BRCM_6828_NTR
+fi
+
+if [ "$BRCM_6828_NTR" = "y" ]; then
+    bool '   Enable NTR MDM (Highly Recommended)'        BRCM_6828_NTR_MDM_SUPPORT
+    choice ' NTR Mode - Required Choice' \
+    "6828Native                                          BRCM_6828_NTR_SUPPORT \
+    6828Compatibility                                    BRCM_6828_NTR_SUPPORT_COMP\
+    6828Internal                                         BRCM_6828_NTR_SUPPORT_INT\
+    6828Native-Bonding                                   BRCM_6828_NTR_SUPPORT_BONDING\
+    6828Compatibility-Bonding                            BRCM_6828_NTR_SUPPORT_COMP_BONDING\
+    6828Internal-Bonding                                 BRCM_6828_NTR_SUPPORT_INT_BONDING"
+fi
+
+    bool '   Support VOIP to FXO calls' BRCM_VOIP_TO_FXO
+    bool '   Support PSTN lifeline switch' BRCM_VODSL_PSTN_LIFE_LINE_SUPPORT
+    define_string BRCM_PSTN_SUPPORT "y"
+fi
+
+if [ "$BRCM_6328" = "y" ]; then
+    choice '6328 app configuration selection'                \
+    "96328UNI                                                BRCM_VOIP_UNI"
+    if [ "$BRCM_SMP_EN" = "y" ]; then
+       define_string BRCM_VOICE_NONDIST "y"
+    else
+    bool 'Non-distributed DSP'                           BRCM_VOICE_NONDIST
+    fi
+    bool 'Enable G729 TEST application'                  BRCM_G729_DSPTEST_APP
+    bool 'Enable NTR'                                    BRCM_6328_NTR
+
+if [ "$BRCM_6328_NTR" = "y" ]; then
+    bool '   Enable NTR MDM (Highly Recommended)'        BRCM_6328_NTR_MDM_SUPPORT
+    choice ' NTR Mode - Required Choice' \
+    "6328Native                                          BRCM_6328_NTR_SUPPORT \
+    6328Compatibility                                    BRCM_6328_NTR_SUPPORT_COMP\
+    6328Internal                                         BRCM_6328_NTR_SUPPORT_INT"
+fi
+
+if [ "$BRCM_VOIP_UNI" = "y" ]; then
+    bool '   Support VOIP to FXO calls' BRCM_VOIP_TO_FXO
+    bool '   Support PSTN lifeline switch' BRCM_VODSL_PSTN_LIFE_LINE_SUPPORT
+    define_string BRCM_PSTN_SUPPORT "y"
+fi
+
+fi
+
+#
+# Features applicable to protocol specific configuration.
+#
+bool '   Support Randomized Port Numbers' BRCM_VODSL_RANDOMP
+bool '   Support Secure RTP' BRCM_VODSL_SRTP
+if [ "$BRCM_APP_PHONE" = "sip" ]; then
+    bool '   Support Voice Announcement' BRCM_VODSL_VOICE_ANNOUNCEMENT
+    bool '   Support Saving Voice Call Feature in Flash' BRCM_VODSL_CALL_FEATURE_PERSIST_STORE_SUPPORT
+fi
+
+#The following lines may be uncommented when provisioning can be dynamic only
+
+#choice ' Voice Profile Selection'   \
+#"Static_and_Dynamic_Profiles    BRCM_VRG_COUNTRY_CFG_STATIC  \
+#Dynamic_Profiles_only           BRCM_VRG_COUNTRY_CFG_NONSTATIC"
+
+#if [ "$BRCM_VRG_COUNTRY_CFG_STATIC" = "y" ]; then
+#    define_string BRCM_VRG_COUNTRY_STATIC_PROFILE "y"
+#fi
+#if [ "$BRCM_VRG_COUNTRY_CFG_NONSTATIC" = "y" ]; then
+#    define_string BRCM_VRG_COUNTRY_STATIC_PROFILE "n"
+#fi
+
+
+choice ' Voice Locale Selection'   \
+"All_Countries    BRCM_VRG_COUNTRY_CFG_ALL_COUNTRIES  \
+Customize           BRCM_VRG_COUNTRY_CFG_CUSTOM"
+
+if [ "$BRCM_VRG_COUNTRY_CFG_CUSTOM" = "y" ]; then
+    bool '   North America' BRCM_VRG_COUNTRY_CFG_NORTH_AMERICA
+    bool '   Australia' BRCM_VRG_COUNTRY_CFG_AUSTRALIA
+    #bool '   Austria' BRCM_VRG_COUNTRY_CFG_AUSTRIA
+    bool '   Belgium' BRCM_VRG_COUNTRY_CFG_BELGIUM
+    bool '   Brazil' BRCM_VRG_COUNTRY_CFG_BRAZIL
+    bool '   Chile' BRCM_VRG_COUNTRY_CFG_CHILE
+    bool '   China' BRCM_VRG_COUNTRY_CFG_CHINA
+    bool '   Czech Republic' BRCM_VRG_COUNTRY_CFG_CZECH
+    bool '   Denmark' BRCM_VRG_COUNTRY_CFG_DENMARK
+    bool '   ETSI' BRCM_VRG_COUNTRY_CFG_ETSI
+    bool '   Finland' BRCM_VRG_COUNTRY_CFG_FINLAND
+    bool '   France' BRCM_VRG_COUNTRY_CFG_FRANCE
+    bool '   Germany' BRCM_VRG_COUNTRY_CFG_GERMANY
+    bool '   Hungary' BRCM_VRG_COUNTRY_CFG_HUNGARY
+    bool '   India' BRCM_VRG_COUNTRY_CFG_INDIA
+    #bool '   Ireland' BRCM_VRG_COUNTRY_CFG_IRELAND
+    bool '   Italy' BRCM_VRG_COUNTRY_CFG_ITALY
+    bool '   Japan' BRCM_VRG_COUNTRY_CFG_JAPAN
+    bool '   Netherlands' BRCM_VRG_COUNTRY_CFG_NETHERLANDS
+    bool '   New Zealand' BRCM_VRG_COUNTRY_CFG_NEW_ZEALAND
+    #bool '   Poland' BRCM_VRG_COUNTRY_CFG_POLAND
+    #bool '   Romania' BRCM_VRG_COUNTRY_CFG_ROMANIA
+    #bool '   Slovak Republic' BRCM_VRG_COUNTRY_CFG_SLOVAKIA
+    #bool '   Republic of Slovenia' BRCM_VRG_COUNTRY_CFG_SLOVENIA
+    bool '   Spain' BRCM_VRG_COUNTRY_CFG_SPAIN
+    bool '   Sweden' BRCM_VRG_COUNTRY_CFG_SWEDEN
+    bool '   Norway' BRCM_VRG_COUNTRY_CFG_NORWAY
+    bool '   Switzerland' BRCM_VRG_COUNTRY_CFG_SWITZERLAND
+    bool '   TR57' BRCM_VRG_COUNTRY_CFG_TR57
+    bool '   United Kingdom' BRCM_VRG_COUNTRY_CFG_UK
+    bool '   Taiwan' BRCM_VRG_COUNTRY_CFG_TAIWAN
+fi
+
+if [ "$BRCM_VRG_COUNTRY_CFG_ALL_COUNTRIES" = "y" ]; then
+    define_string BRCM_VRG_COUNTRY_ALL_PROFILES "y"
+else
+    define_string BRCM_VRG_COUNTRY_ALL_PROFILES "n"
+fi
+
+else
+    unset BRCM_APP_PHONE
+fi
+
+if [ "$BRCM_DRIVER_PHONE" = "m" ]; then
+ if [ "$BRCM_VOICE_NONDIST" != "y" ]; then
+    define_string BRCM_DRIVER_BCMDSP "m"
+ fi
+fi
+
+endmenu
+
+
+
+###################################################################################
+
+mainmenu_option next_comment
+comment 'WAN Protocols and VPN'
+
+tristate2 'PPP Daemon' BUILD_PPPD
+bool 'Turn on Autodisconn in PPP' PPP_AUTODISCONN
+
+#tristate2 '802.1q/802.1p on WAN support'  BUILD_BRCM_VLAN
+bool 'Support Multiple WAN Connections using VLAN ID (VLAN MUX)' BUILD_WANVLANMUX
+
+
+tristate2 'IPSec' BUILD_IPSEC_TOOLS
+
+if [ "$BRCM_63268" = "y" -o "$BRCM_6318" = "y"  -o "$BRCM_6328" = "y"  -o "$BRCM_6362" = "y" -o "$BRCM_6368" = "y" -o "$BRCM_6816" = "y" -o "$BRCM_6818" = "y" ]; then
+    tristate 'SPU Driver' BRCM_DRIVER_SPU
+    bool 'SPU Test' BRCM_DRIVER_SPU_TEST
+    tristate2 'SPUCTL' BUILD_SPUCTL
+fi
+
+
+bool 'Enable L2TP AC tunnel (Client side)' BUILD_L2TPAC
+
+bool 'Enable PPTP AC tunnel (Client side)' BUILD_PPTPAC
+
+
+endmenu
+
+
+
+###################################################################################
+
+mainmenu_option next_comment
+comment 'Firewall, ALGs, and Networking Features'
+
+
+mainmenu_option next_comment
+comment 'Netfilter and firewall selection'
+
+tristate 'Netfilter/firewall/mangling/nat' BRCM_KERNEL_NETFILTER
+
+dep_tristate ' Firewall support' BRCM_KERNEL_NF_FIREWALL $BRCM_KERNEL_NETFILTER
+dep_tristate ' Packet mangling support' BRCM_KERNEL_NF_MANGLE $BRCM_KERNEL_NETFILTER
+dep_tristate ' NAT support' BRCM_KERNEL_NF_NAT $BRCM_KERNEL_NETFILTER
+dep_tristate ' Dynamic DSCP mangling support' BRCM_KERNEL_NF_DYNDSCP $BRCM_KERNEL_NETFILTER
+
+dep_tristate '  FTP ALG'  BRCM_KERNEL_NF_NAT_ALG_FTP  $BRCM_KERNEL_NF_NAT
+dep_tristate '  SIP ALG'  BRCM_KERNEL_NF_NAT_ALG_SIP  $BRCM_KERNEL_NF_NAT
+dep_tristate '  TFTP ALG' BRCM_KERNEL_NF_NAT_ALG_TFTP $BRCM_KERNEL_NF_NAT
+dep_tristate '  H323 ALG' BRCM_KERNEL_NF_NAT_ALG_H323 $BRCM_KERNEL_NF_NAT
+dep_tristate '  H323 ALG-SIGNAL PROXY' BRCM_KERNEL_NF_NAT_ALG_H323_SIGNAL_PROXY $BRCM_KERNEL_NF_NAT_ALG_H323
+dep_tristate '  IRC ALG'  BRCM_KERNEL_NF_NAT_ALG_IRC  $BRCM_KERNEL_NF_NAT
+# NOT USED - dep_tristate '  DIRECTX 8 ALG'  BRCM_KERNEL_NF_NAT_ALG_DTX8  $BRCM_KERNEL_NF_NAT
+dep_tristate '  Windows Media Player ALG'  BRCM_KERNEL_NF_NAT_ALG_WM  $BRCM_KERNEL_NF_NAT
+dep_tristate '  Port Triggering ALG'  BRCM_KERNEL_NF_NAT_ALG_PT  $BRCM_KERNEL_NF_NAT
+dep_tristate '  PPTP ALG' BRCM_KERNEL_NF_NAT_ALG_PPTP $BRCM_KERNEL_NF_NAT
+dep_tristate '  IPSec ALG' BRCM_KERNEL_NF_NAT_ALG_IPSEC $BRCM_KERNEL_NF_NAT
+dep_tristate '  RTSP ALG' BRCM_KERNEL_NF_NAT_ALG_RTSP $BRCM_KERNEL_NF_NAT
+dep_tristate '  SNMP ALG' BRCM_KERNEL_NF_NAT_ALG_SNMP $BRCM_KERNEL_NF_NAT
+dep_tristate '  TALK ALG' BRCM_KERNEL_NF_NAT_ALG_TALK $BRCM_KERNEL_NF_NAT
+
+dep_tristate ' Logging events' BRCM_KERNEL_NF_LOG $BRCM_KERNEL_NETFILTER
+
+dep_tristate ' Remote access support in PPP IP extension' BRCM_KERNEL_NF_PPPREMOTE $BRCM_KERNEL_NETFILTER
+
+endmenu
+
+
+bool      'Conntrack-tools' BUILD_CONNTRACK_TOOLS
+tristate2 'IP Firewall' BUILD_IPTABLES
+tristate2 'Bridge Firewall' BUILD_EBTABLES
+tristate2 'Dynamic ALG Load/Unload Helper' BUILD_DYNAHELPER
+
+tristate2 'Time of Day restrictions' BUILD_TOD
+tristate2 'Url Filtering' BUILD_URLFILTER
+
+tristate2 'Bridge Control Utility' BUILD_BRCTL
+
+
+tristate2 'DHCP(server and client)' BUILD_UDHCP
+if [ "$BUILD_UDHCP" == "dynamic" -o "$BUILD_UDHCP" == "static" ]; then
+  bool '        Support for DHCP relay'  BUILD_UDHCP_RELAY
+fi
+
+
+tristate2 'SNTP support' BUILD_SNTP
+
+
+choice ' DNS Relay'   \
+      "DNS-Probe                                 DRELAY_DNSPROBE \
+       DNS-Proxy                                 DRELAY_DPROXY \
+       DNS-Proxy-with-Probe                      DRELAY_DPROXYWITHPROBE" \
+       DNS-Proxy
+if [ "$DRELAY_DNSPROBE" = "y" ]; then
+  define_string BUILD_DNSPROBE "dynamic"
+  define_string BUILD_DPROXY ""
+else
+  define_string BUILD_DNSPROBE ""
+fi
+
+if [ "$DRELAY_DPROXY" = "y" ]; then
+  define_string BUILD_DPROXY "dynamic"
+else
+  define_string BUILD_DPROXY ""
+fi
+
+if [ "$DRELAY_DPROXYWITHPROBE" = "y" ]; then
+  define_string BUILD_DPROXY "dynamic"
+  define_string BUILD_DPROXYWITHPROBE "dynamic"
+else
+  define_string BUILD_DPROXYWITHPROBE ""
+fi
+
+tristate2 'DNS Redirector' BUILD_DNSSPOOF
+
+tristate2 'Dynamic DNS support' BUILD_DDNSD
+
+
+if [ "$BUILD_VCONFIG" = "static" -o "$BUILD_VCONFIG" = "dynamic" ]; then
+  bool ' Advanced DMZ ' BUILD_SUPERDMZ
+fi
+
+tristate2 'Iproute2 Utility for Policy Routing' BUILD_IPROUTE2
+
+tristate2 'Dynamic Routing Daemon RIP' BUILD_ZEBRA
+
+tristate2 '   Multicast Proxy (mcpd)' BUILD_MCAST_PROXY
+bool      '   Multicast Snooping' BUILD_MCAST_SNOOP
+
+tristate2 'mroute - static multicast routing' BUILD_MROUTE
+
+mainmenu_option next_comment
+comment 'Traffic Control selection'
+
+bool 'Traffic Control' BRCM_KERNEL_NETQOS
+bool '    Rate Limit' BRCM_TC_RATE_LIMIT
+bool '    Policing' BRCM_TC_POLICING
+if [ "$BRCM_TC_RATE_LIMIT" = "y" -o "$BRCM_TC_POLICING" = "y" ]; then
+if [ "$BRCM_KERNEL_NETQOS" = "n" ]; then
+  define_bool BRCM_KERNEL_NETQOS "y"
+fi
+fi
+
+endmenu
+
+endmenu
+
+
+
+###################################################################################
+
+mainmenu_option next_comment
+comment 'Packet Acceleration'
+
+
+tristate 'Packet Flow Accelerator' BRCM_DRIVER_PKTFLOW
+if [ "$BRCM_DRIVER_PKTFLOW" = "y" -o "$BRCM_DRIVER_PKTFLOW" = "m" ]; then
+  bool '    IPv6 Support' BRCM_DRIVER_PKTFLOW_IPV6
+  bool '    Multicast Support' BRCM_DRIVER_PKTFLOW_MCAST
+  bool '    Debug Support' BRCM_DRIVER_PKTFLOW_DEBUG
+  if [ "$BRCM_6816" = "y" -o "$BRCM_6818" = "y" ]; then
+     bool '    Hello Support' BUILD_HELLO
+  fi
+  tristate2 'Flow Cache Control Utility' BUILD_FCCTL
+
+  if [ "$BRCM_63268" = "y" -o "$BRCM_6362" = "y" -o "$BRCM_6828" = "y" -o "$BRCM_6818" = "y" ]; then
+     tristate '    FAP Support' BRCM_DRIVER_FAP
+     if [ "$BRCM_DRIVER_FAP" = "y" -o "$BRCM_DRIVER_FAP" = "m" ]; then
+     	bool '        GSO Support' BRCM_DRIVER_FAP_GSO
+     fi
+  fi
+
+  if [ "$BRCM_DRIVER_FAP" = "y" -o "$BRCM_DRIVER_FAP" = "m" ]; then
+     bool '        FAP Layer 2 Bridge' BRCM_DRIVER_FAP_LAYER2
+  fi
+
+  if [ "$BRCM_63268" = "y" -o "$BRCM_6318" = "y" -o "$BRCM_6362" = "y" -o "$BRCM_6328" = "y" -o "$BRCM_6828" = "y" ]; then
+     tristate '    ARL Support' BRCM_DRIVER_ARL
+  fi
+fi
+
+##### BUILD_CMFVIZ to build the GUI for display of CMF traffic.
+# if [ "$BRCM_6368" = "y" ]; then
+#    tristate2 'Packet CMF Viz Daemon' BUILD_CMFVIZ
+# fi
+if [ "$BRCM_6816" = "y" -o "$BRCM_6818" = "y" ]; then
+    tristate2 'Packet CMF API Library' BUILD_CMFAPI
+fi
+
+if [ "$BUILD_CMFAPI" = "static" -o "$BUILD_CMFAPI" = "dynamic" ]; then
+    tristate2 'Packet CMF Daemon' BUILD_CMFD
+fi
+
+if [ "$BRCM_6368" = "y" -o "$BRCM_6816" = "y" -o "$BRCM_6818" = "y" ]; then
+    tristate2 'Packet CMF Control Utility' BUILD_CMFCTL
+fi
+
+
+endmenu
+
+
+
+###################################################################################
+mainmenu_option next_comment
+comment 'Buffer Pool Manager and Ingress QoS'
+
+tristate 'Buffer Pool Manager (BPM)' BRCM_DRIVER_BPM
+if [ "$BRCM_DRIVER_BPM" = "y" -o "$BRCM_DRIVER_BPM" = "m" ]; then
+    int '    Buffer Memory as % of Total Memory' BRCM_BUF_MEM_PRCNT
+    tristate2 '    BPM Control Utility' BUILD_BPMCTL
+fi
+
+tristate 'Ingress QoS' BRCM_DRIVER_INGQOS
+if [ "$BRCM_DRIVER_INGQOS" = "y" -o "$BRCM_DRIVER_INGQOS" = "m" ]; then
+    tristate2 '    Ingress QoS Control Utility' BUILD_IQCTL
+fi
+
+endmenu
+
+###################################################################################
+mainmenu_option next_comment
+comment 'OSGI/JVM'
+
+bool 'OSGI JVM support (requires R/W ROOTFS, Wget Https in BusyBox)' BUILD_OSGI_JVM
+
+if  [ "$BUILD_OSGI_JVM" = "y" ]; then
+  int 'Initial Heap Size for JVM (in kbytes, 4000=4M)' JVM_MIN_HEAP_SIZE 4000
+  int 'Maximum Heap Size for JVM (in kbytes, 10000=10M)' JVM_MAX_HEAP_SIZE 10000
+  int 'Stack Size of Each Thread (in kbytes, 256=256K)' JVM_STACK_SIZE_PER_THREAD 256
+fi
+
+endmenu
+
+###################################################################################
+
+mainmenu_option next_comment
+comment 'Other Features'
+#
+# Power Management Stuff.
+#
+if [ "$BRCM_6318" = "y" ]; then
+  comment 'PWRMNGT Driver (remains enabled on 6318)'
+  define_tristate BRCM_DRIVER_PWRMNGT "m"
+  tristate2 '   PWRCTL' BUILD_PWRCTL
+  comment '   Adaptive Voltage Scaling (remains enabled on 6318)'
+  define_bool BRCM_AVS_PWRSAVE "y"
+else
+  tristate 'PWRMNGT Driver' BRCM_DRIVER_PWRMNGT
+  if [ "$BRCM_DRIVER_PWRMNGT" = "m" ]; then
+    tristate2 '   PWRCTL' BUILD_PWRCTL
+    if [ "$BRCM_63268" = "y" -o "$BRCM_6362" = "y" -o "$BRCM_6368" = "y" -o "$BRCM_6818" = "y" -o "$BRCM_63268" = "y" ] || [ "$BRCM_6816" = "y" -a "$BUILD_MOCAWAN" != "y" ]; then
+      bool '   Adaptive Voltage Scaling' BRCM_AVS_PWRSAVE
+    fi
+  fi
+fi
+
+bool 'Ethernet Auto Power Down and Sleep' BRCM_ETH_PWRSAVE
+
+if [ "$BRCM_6368" != "y" -o "$BRCM_PHY_BONDING" != "y" ] && [ "$BRCM_6816" != "y" -o "$BRCM_DRIVER_PKTFLOW" = "n" -o "$BRCM_SMP_EN" != "y" ] && [ "$BRCM_6318" != "y" ]; then
+  bool 'Automated MIPS clk divider' BRCM_HOSTMIPS_PWRSAVE
+fi
+
+if [ "$BRCM_6318" != "y" ]; then
+bool 'DDR Self-Refresh Power Saving' BRCM_DDR_SELF_REFRESH_PWRSAVE
+fi
+
+if [ "$BRCM_63268" = "y" -o "$BRCM_6318" = "y" -o "$BRCM_6362" = "y" -o "$BRCM_6328" = "y" -o "$BRCM_6818" = "y" -o "$BRCM_6828" = "y" -o "$BRCM_6318" = "y" ]; then
+  bool 'PCIe L1 Active State Power Management' BUILD_WL_IDLE_PWRSAVE
+fi
+
+if [ "$BRCM_63268" = "y" -o "$BRCM_6318" = "y" ]; then
+    choice 'Shutdown Internal 1.2V Regulator'   \
+      "Auto          BRCM_1V2REG_AUTO_SHUTDOWN \
+       Always        BRCM_1V2REG_ALWAYS_SHUTDOWN \
+       Never         BRCM_1V2REG_NEVER_SHUTDOWN" Auto
+fi
+
+if [ "$BRCM_6362" = "y" -o "$BRCM_6368" = "y" -o "$BRCM_6816" = "y" -o "$BRCM_6818" = "y" ]; then
+    bool 'CPLD Standby Timer' BRCM_STANDBY
+fi
+
+if [ "$BRCM_6816" = "y" -o "$BRCM_6828" = "y" -o "$BRCM_6818" = "y" ]; then
+    bool 'Battery Management Unit' BUILD_BMU
+
+    choice 'Battery Configuration'   \
+      "2-Cell          BUILD_BMU_2CELL \
+       3-Cell          BUILD_BMU_3CELL \
+       none            BUILD_BMU_0CELL" none
+fi
+
+#
+# Trunk Management Support
+#
+bool 'Trunk Management (802.3ah, 802.1ag, Y.1731)' BUILD_TMS
+
+#
+# Hardware Random Number Generator Driver
+#
+if [ "$BRCM_63268" = "y" -o "$BRCM_6362" = "y" -o "$BRCM_6368" = "y" -o "$BRCM_6816" = "y" -o "$BRCM_6828" = "y" -o "$BRCM_6818" = "y" ]; then
+  tristate 'TRNG Driver' BRCM_DRIVER_TRNG
+  tristate2 'RNGD' BUILD_RNGD
+fi
+
+bool 'Enable Connection Auto Detection' BUILD_AUTODETECTION
+
+bool 'LED Control Utility' BUILD_LEDCTL
+
+bool 'Modular Software Update' BUILD_MOD_SW_UPDATE
+
+bool 'Suport Backup Config File ' BUILD_BACKUP_PSI
+bool 'Enable Compressed Config File' COMPRESSED_CONFIG_FILE
+bool 'Enable backward compatibility of CMS Config Files' CMS_CONFIG_COMPAT
+bool 'Ignore unrecognized objects, params, and attrs in CMS Config Files' CMS_CONFIG_IGNORE_UNRECOGNIZED
+
+tristate2 'Internet Printing Protocol support' BUILD_IPPD
+
+bool 'DLNA support' BUILD_DLNA
+
+bool 'IPTV support' BUILD_IPTV
+
+bool 'HomePlug support' BUILD_HOMEPLUG
+
+tristate2 'SSL and Certificate' BUILD_CERT
+
+comment ' Default Configuration'
+string "File Name" BRCM_DEFAULTCFG
+
+if [ "$BUILD_BRCM_INTERNAL" = "y" -a "$BRCM_6328" = "y"  ]; then
+  bool 'Build TST24 Support'  BUILD_TST24_UTILS
+fi
+
+endmenu
+
+
+
+###################################################################################
+
+mainmenu_option next_comment
+comment 'Management Protocols and User Interface Selection'
+
+bool 'SERIAL Port Driver' BRCM_DRIVER_SERIAL
+
+bool 'consoled' BUILD_CONSOLED
+
+bool 'Support Menu Driven Interface' BUILD_CLI_MENU
+bool 'Support Command Line Interface' BUILD_CLI_CMD
+
+if [ "$BRCM_DRIVER_FAP" = "y" -o "$BRCM_DRIVER_FAP" = "m" ]; then
+     bool ' FAP CLI Support' BUILD_FAPCTL
+fi
+
+if [ "$BRCM_DRIVER_ARL" = "y" -o "$BRCM_DRIVER_ARL" = "m" ]; then
+     bool ' ARL CLI Support' BUILD_ARLCTL
+fi
+
+# Hmm, we only ask about telnetd and sshd if CLI is built,
+# but we ask about consoled even when there is no CLI.
+# Should telnetd and sshd also be independent of the CLI?
+if [ "$BUILD_CLI_MENU" = "y" -o "$BUILD_CLI_CMD" = "y" ]; then
+    bool '   Telnet' BUILD_TELNETD
+    bool '   SSHD (Secure Shell Server)' BUILD_SSHD
+    if [ "$BUILD_SSHD" = "y" ]; then
+        bool '      SSHD Key Generation on target' BUILD_SSHD_MIPS_GENKEY
+    fi
+    int '   Maximum Sessions for Telnet and SSH(BSD Pseudo Terminals)' BRCM_MAX_BSD_PTP
+fi
+
+
+choice ' httpd'   \
+      "basic          BUILD_HTTPD \
+       SSL            BUILD_HTTPD_SSL \
+       none           BUILD_HTTPD_none" none
+
+if [ "$BUILD_HTTPD" = "y" -o "$BUILD_HTTPD_SSL" = "y" ]; then
+  bool '       Display HTML page in pop-up window' WEB_POPUP
+fi
+if [ "$BUILD_HTTPD" = "y" -o "$BUILD_HTTPD_SSL" = "y" ] && [ "$BUILD_ATMWAN" = "y" ]; then
+  bool '       Quick Setup' BUILD_QUICKSETUP
+else
+  define_bool BUILD_QUICKSETUP "n"
+fi
+
+mainmenu_option next_comment
+comment 'WebUI language selection'
+
+choice 'Supported language'     \
+      "English                   BRCM_LANG_EN     \
+       Simplified_Chinese        BRCM_LANG_CN     \
+       Traditional_Chinese       BRCM_LANG_TW     \
+       Korean                    BRCM_LANG_KR " English
+if [ "$BRCM_LANG_EN" = "y" ]; then
+    define_string BRCM_WEBUI_LANG "en_US"
+fi
+if [ "$BRCM_LANG_CN" = "y" ]; then
+    define_string BRCM_WEBUI_LANG "zh_CN"
+fi
+if [ "$BRCM_LANG_TW" = "y" ]; then
+    define_string BRCM_WEBUI_LANG "zh_TW"
+fi
+if [ "$BRCM_LANG_KR" = "y" ]; then
+    define_string BRCM_WEBUI_LANG "ko_KR"
+fi
+endmenu
+
+
+choice ' TR69 Management protocol'   \
+      "TR69                                      MGMT_TR69C \
+       TR69_BCM_SSL                              MGMT_TR69C_BCM_SSL \
+       TR69_SSL                                  MGMT_TR69C_SSL \
+       none                                      MGMT_none" none
+
+if [ "$MGMT_TR69C" = "y" ]; then
+  define_string BUILD_TR69C "dynamic"
+else
+  define_string BUILD_TR69C ""
+fi
+
+if [ "$MGMT_TR69C_SSL" = "y" ]; then
+  define_string BUILD_TR69C_SSL "dynamic"
+else
+  define_string BUILD_TR69C_SSL ""
+fi
+
+if [ "$MGMT_TR69C_BCM_SSL" = "y" ]; then
+  define_string BUILD_TR69C_BCM_SSL "dynamic"
+  string "Certificate file" BRCM_CERT_FILE
+else
+  define_string BUILD_TR69C_BCM_SSL ""
+  define_string BRCM_CERT_FILE ""
+fi
+
+if [ "$MGMT_TR69C_SSL" = "y" -o "$MGMT_TR69C" = "y" -o "$MGMT_TR69C_BCM_SSL" = "y" ]; then
+  bool '       BRCM_PROPRIETARY' BUILD_TR69_XBRCM
+  bool '       RPC_UPLOAD' BUILD_TR69_UPLOAD
+  bool '       RPC_QUEUED_TRANSFERS' BUILD_TR69_QUEUED_TRANSFERS
+fi
+
+
+tristate2 ' SNMP Management protocol ' BUILD_SNMP
+  if [ "$BUILD_SNMP" == "dynamic" -o "$BUILD_SNMP" == "static" ]; then
+       bool '       set operation'  BUILD_SNMP_SET
+#       bool '       ADSL mib' BUILD_SNMP_ADSL_MIB
+#       bool '       AT mib' BUILD_SNMP_AT_MIB
+#       bool '       ATM mib' BUILD_SNMP_ATM_MIB
+       bool '       qBridge and pBridge mib' BUILD_SNMP_BRIDGE_MIB
+#       bool '       ICMP mib' BUILD_SNMP_ICMP_MIB
+#       bool '       IP mib' BUILD_SNMP_IP_MIB
+       bool '       SNMP mib' BUILD_SNMP_SNMP_MIB
+       bool '       SYSOR mib' BUILD_SNMP_SYSOR_MIB
+#       bool '       TCP mib' BUILD_SNMP_TCP_MIB
+#       bool '       UDP mib' BUILD_SNMP_UDP_MIB
+       bool '       UDP transport' BUILD_SNMP_UDP
+#       bool '       EOC transport' BUILD_SNMP_EOC
+#       bool '       AAL5 transport' BUILD_SNMP_AAL5
+#       bool '       AUTO transport' BUILD_SNMP_AUTO
+       bool '       CT CPE mib' BUILD_SNMP_CHINA_TELECOM_CPE_MIB
+#       bool '       BRCM CPE mib' BUILD_SNMP_BRCM_CPE_MIB
+#       bool '       SNMP debug' BUILD_SNMP_DEBUG
+       if [ "$BUILD_SNMP_DEBUG" = "y" ]; then
+             bool '       Transport debug' BUILD_SNMP_TRANSPORT_DEBUG
+             bool '       SNMP layer debug' BUILD_SNMP_LAYER_DEBUG
+       fi
+  fi
+
+
+
+bool ' TR64 Application ' BUILD_TR64
+
+if  [ "$BUILD_TR64" = "y" ]; then
+
+  bool '       Layer3Forwarding' BUILD_TR64_LAYER3
+  bool '       DeviceInfo' BUILD_TR64_DEVICEINFO
+  bool '       DeviceConfig' BUILD_TR64_DEVICECONFIG
+  bool '       ManagementServer' BUILD_TR64_MANAGEMENTSERVER
+  bool '       Time' BUILD_TR64_TIME
+  bool '       QueueManagement' BUILD_TR64_QUEUEMANAGEMENT
+  bool '       Layer2Bridging' BUILD_TR64_LAYER2BRIDGE
+  bool '       LANHostConfigMgmt' BUILD_TR64_LANHOSTCONFIGMGMT
+  bool '       LANEthInterfaceConfig' BUILD_TR64_LANETHINTERFACECONFIG
+  bool '       WLANConfig' BUILD_TR64_WLANCONFIG
+  bool '       USBInterfaceConfig' BUILD_TR64_LANUSBINTERFACECONFIG
+  bool '       LANHosts' BUILD_TR64_LANHOSTS
+  bool '       WANCommonInterface' BUILD_TR64_WANCOMMONINTERFACE
+  bool '       WANDslInterface' BUILD_TR64_WANDSLINTERFACE
+#  bool '       WANEthernetConfig' BUILD_TR64_WANETHERNETCONFIG
+  bool '       WANDslConnectionMgmt' BUILD_TR64_WANDSLCONNECTIONMGMT
+  bool '       WANDslDiagnostics' BUILD_TR64_WANDSLDIAGNOSTICS
+  bool '       WANDslLinkConfig' BUILD_TR64_WANDSLLINKCONFIG
+  bool '       WANCableLinkConfig' BUILD_TR64_WANCABLELINKCONFIG
+#  bool '       WANEthernetLinkConfig' BUILD_TR64_WANETHERNETLINKCONFIG
+  bool '       WANIPConnection' BUILD_TR64_WANIPCONNECTION
+  bool '       WANPPPConnection' BUILD_TR64_WANPPPCONNECTION
+  bool '       IPPingDiagnostics' BUILD_TR64_IPPINGDIAG
+  bool '       WANATMF5LoopbackDiagnostics' BUILD_TR64_WANATMF5LOOPBACKDIAG
+
+fi
+
+
+tristate2 'UPNP' BUILD_UPNP
+
+bool 'Hashed Passwords' BUILD_HASHED_PASSWORDS
+
+endmenu
+
+###################################################################################
+
+mainmenu_option next_comment
+comment 'Debug selection'
+
+
+bool 'Enable PMANPMON: Poor Mans Performance Monitor' BRCM_PMON
+if [ "$BRCM_PMON" = "y" ]; then
+   define_string BUILD_PMON "y"
+   define_string BRCM_KTOOLS "y"
+fi
+
+bool 'Enable BOUNCE: kernel function call tracing' BRCM_BOUNCE
+if [ "$BRCM_BOUNCE" = "y" ]; then
+   bool '  Enable function exit tracing, indentation' BRCM_BOUNCE_EXIT
+   bool '  Enable data path subsystems tracing' BRCM_BOUNCE_DATAPATH
+   define_string BUILD_BOUNCE "y"
+   define_string BRCM_KTOOLS "y"
+fi
+
+bool 'Enable kernel tracing' BRCM_KERNEL_FTRACE
+if [ "$BRCM_KERNEL_FTRACE" = "y" ]; then
+   bool '  Enable preemption and irqs off tracing (additional overhead)' BRCM_KERNEL_PREEMPTIRQSOFF_TRACE
+fi
+if [ "$BRCM_KERNEL_FTRACE" = "y" ]; then
+   bool '  Enable function tracing (additional overhead)' BRCM_KERNEL_FUNCTION_TRACE
+fi
+
+tristate 'Broadcom Kernel Logging Driver' BRCM_DRIVER_LOG
+bool 'Enable KALLSYMS in kernel' BRCM_KERNEL_KALLSYMS
+bool 'Support GDB in kernel' BRCM_KERNEL_DEBUG
+tristate2 'Network Transmit/Receive Utility (TTCP)' BUILD_EPITTCP
+bool 'Enable Kernel Debugging via JTAG' JTAG_KERNEL_DEBUG
+bool 'Enable Kernel CONFIG_PRINTK and CONFIG_BUG' ENABLE_PRINTK_AND_BUG
+if [ "$ENABLE_PRINTK_AND_BUG" = "y" ]; then
+    int '  Default console printk level' BCM_DEFAULT_CONSOLE_LOGLEVEL
+    bool '  Include timestamp in printk' BCM_PRINTK_TIME
+fi
+bool 'Enable Colorized Prints' BCM_COLORIZE_PRINTS
+bool 'Enable Asserts' BCM_ASSERTS
+if [ "$BCM_ASSERTS" = "y" ]; then
+    bool '  Enable Fatal Asserts' BCM_FATAL_ASSERTS
+fi
+bool 'Enable Linux Kernel Hacking/Debug Features' BCM_KERNEL_HACKING
+if [ "$BCM_KERNEL_HACKING" = "y" ]; then
+    bool '  Enable Spinlock Debug' BCM_DEBUG_SPINLOCK
+    bool '  Enable Mutex Debug' BCM_DEBUG_MUTEXES
+    bool '  Enable RCU Stall Detector' BCM_RCU_CPU_STALL_DETECTOR
+    bool '  Enable Preemption Debugging' BCM_DEBUG_PREEMPT
+    bool '  Enable Scheduler Stats' BCM_SCHEDSTATS
+    bool '  Enable Scheduler Debug' BCM_SCHED_DEBUG
+fi
+bool 'Enable BCM Scheduler Audit' BCM_BCM_SCHEDAUDIT
+bool 'Enable Magic SysRq' BCM_MAGIC_SYSRQ
+
+bool 'Enable Memory Diagnostic Tools in Kernel' BRCM_KERNEL_VMTOOLS
+bool 'Enable Cache Stats Tool in Kernel' BRCM_KERNEL_CSTAT
+bool 'Build for IKOS simulation (experimental)' BRCM_IKOS
+tristate 'Broadcom PROF Driver' BRCM_DRIVER_BCMPROF
+bool 'Enable Debug Tools' BUILD_DEBUG_TOOLS
+bool 'Build GDBserver for application debugging' BUILD_GDBSERVER
+bool 'Enable application core dumps' ENABLE_APP_COREDUMPS
+bool 'Enable CMS Security Logging' CMS_SECURITY_LOG
+bool 'Enable CMS Debug Logging' CMS_LOG_DEBUG
+if [ "$CMS_LOG_DEBUG" = "y" ]; then
+   choice ' Debug Log level' \
+       "1  CMS_LOG_LEVEL_1 \
+        2  CMS_LOG_LEVEL_2" 2
+bool 'Enable CMS Startup Debug' CMS_STARTUP_DEBUG
+fi
+bool 'Enable CMS Memory Boundary Checking' CMS_MEM_BOUNDARY_CHECK
+bool 'Enable CMS Memory Poison Allocs and Frees' CMS_MEM_POISON_ALLOC_FREE
+bool 'Enable CMS Memory Leak Tracing' CMS_MEM_LEAK_TRACING
+bool 'Enable CMS Asserts' CMS_FATAL_ASSERT
+bool 'Bypass CMS Login' CMS_BYPASS_LOGIN
+
+# it should be tristate in the future
+bool 'Soap server' BUILD_SOAP
+if [ "$BUILD_SOAP" = "y" ]; then
+   choice ' Soap server version' \
+       "3.0  BRCM_APP_SOAP_V3 \
+        2.0  BRCM_APP_SOAP_V2 \
+        1.5  BRCM_APP_SOAP_V1" 3.0
+   if [ "$BRCM_APP_SOAP_V1" = "y" ]; then
+      define_int BUILD_SOAP_VER 1
+   fi
+   if [ "$BRCM_APP_SOAP_V2" = "y" ]; then
+      define_int BUILD_SOAP_VER 2
+   fi
+   if [ "$BRCM_APP_SOAP_V3" = "y" ]; then
+      define_int BUILD_SOAP_VER 3
+   fi
+fi
+
+tristate2 'Chip Diagnostic Utility' BUILD_DIAGAPP
+
+bool 'Enable OpenSSL speed and multi-process Dhrystone (for SMP profiling)' BENCHMARKS_SMP
+bool 'Build SYSSTAT family of utilities (mpstat, iostat, pidstat, sar, etc)' BUILD_SYSSTAT
+bool 'Build Stress app and scripts' BUILD_STRESS
+bool 'Build tcpdump (implies libpcap)' BUILD_TCPDUMP
+bool 'Build sendpackets raw packet generator (implies libpcap)' BUILD_SENDPACKETS
+bool 'Build Iperf traffic generator ' BUILD_IPERF
+
+choice ' Restrict memory available for use ' \
+       "   AUTO              BRCM_MEMORY_RESTRICTION_OFF \
+           16M                BRCM_MEMORY_RESTRICTION_16M \
+           32M                BRCM_MEMORY_RESTRICTION_32M \
+           64M                BRCM_MEMORY_RESTRICTION_64M "
+
+bool 'Enable spictl SPI SLAVE DEVICE TEST' BUILD_SPICTL
+
+endmenu
+

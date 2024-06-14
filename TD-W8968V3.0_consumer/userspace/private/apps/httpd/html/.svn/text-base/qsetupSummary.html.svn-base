@@ -1,0 +1,399 @@
+<html>
+   <head>
+      <meta HTTP-EQUIV='Pragma' CONTENT='no-cache'>
+      <link rel="stylesheet" href='stylemain.css' type='text/css'>
+         <link rel="stylesheet" href='colors.css' type='text/css'>
+         <script language="javascript" src="3g.js"></script>
+            <script language="javascript">
+
+var wanSkip = '<%ejGet(qsWanSkip)%>';
+var wanParse = '<%ejGet(qsWanParse)%>';
+var wifiSkip = '<%ejGet(qsWifiSkip)%>';
+var wifiParse = '<%ejGet(qsWifiParse)%>';
+var ssid = '<%ejGetWl(wlSsid_wl0v0)%>';
+var mode = '<%ejGetWl(wlAuthMode)%>';
+var wpaPskKey = '<%ejGetWl(wlWpaPsk)%>';
+var wlan_enbl ='<%ejGetWl(wlEnbl_wl0v0)%>';
+
+var build3g = '<%ejGetOther(sysInfo, buildUsb3G)%>';
+var enbl3gBackup = '<%ejGet(usb3gBackup)%>';
+var usb3gBackupSkip = '<%ejGet(qs3gBackUpSkip)%>';
+var qs3gBackupParse = '<%ejGet(qs3gBackUpParse)%>';
+
+
+/*EJ_PLACEHOLDER*/
+if (qSetupInfo === undefined) {
+	var sessionKey = '123456789';
+	var qSetupInfo = [
+		['ppp0.1',''],
+		['eth0.2','00:11:22:33:44:55']
+	]
+}
+// added by pj for 3g 
+function showLocation(locationIdx)
+{
+    var name = "location" + locationIdx;
+    return w3gisp_js[name]["location_name"];
+}
+
+function showIsp(locationIdx, ispIdx)
+{
+    var loc_name = "location" + locationIdx;
+    var isp_name = "isp" + ispIdx;
+    return w3gisp_js[loc_name][isp_name]["isp_name"];
+}
+// end adding
+
+function btnConfirm()
+{
+	var loc ='qsetupcfg.cmd?&q_step=Confirm';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+function btnCancel()
+{
+	var loc ='quicksetupview.cmd?';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+function btnBack()
+{
+	if (wifiSkip == '0')
+	{
+		var loc = 'wlqsetup.html';
+		var code = 'location="' + loc + '"';
+		eval(code);
+		return;
+	}
+	else if (wanSkip == "0")
+	{
+		var loc = 'qsetupWan.html';
+		var code = 'location="' + loc + '"';
+		eval(code);
+		return;
+	}
+	else
+	{
+		var loc ='quicksetupview.cmd?';
+		var code = 'location="' + loc + '"';
+		eval(code);
+	}
+}
+
+</script>
+	</head>
+	<body>
+	<center>
+	<form>
+		<table>
+		<tr><td class=h1>Quick Setup - Summary</td><tr>
+		<tr><td class=blue></td></tr>
+		<tr><td>
+            &nbsp;<!--<P><B>Test the connection to your Internet service provider</B>-->
+        </td></tr>
+		</table>
+		<script language="javascript">
+			// WAN Configurations
+			document.write('<table><tr><td width=200px class=h3>WAN Configurations</td>');
+			if (wanSkip == '1')
+			{
+				document.write('<td class=yellowText>Skiped</td></tr></table>');
+			}
+			else if (wanParse != '1')
+				document.write('<td class=redText>Parsing WAN Config is failed!</td></tr></table>');
+			else
+			{
+				var wanInfo = '<%ejGetOther(sysInfo, qsetupWanSummary)%>';
+				var info = wanInfo.split('\x01');
+				var index = 0;
+				//ADSL|8/35|LLC/SNAP-BRIDGING|PPPoE|t|t|1480
+				//ADSL|8/35|VC/MUX|PPPoA|t|t|1480
+				//ADSL|8/35|LLC/SNAP-BRIDGING|IPoE|Dynamic|Dynamic
+				//ADSL|8/35|LLC/SNAP-BRIDGING|IPoE|static|10.0.0.55|255.255.255.0|10.0.0.100|static|8.8.8.8|0.0.0.0
+				//ADSL|8/35|LLC/SNAP-BRIDGING|IPoE|Dynamic|static|8.8.8.8|0.0.0.0
+				//ADSL|8/35|LLC/SNAP-ROUTING|IPoA|static|10.0.0.58|255.255.255.0|0.0.0.0|static|1.1.1.1|0.0.0.0
+				//ADSL|8/35|LLC/SNAP-BRIDGING|Bridge
+				//Ethernet|LAN4/WAN|PPPoE|tt|t|1400
+				document.write('<td></td></tr></table>');
+				
+				document.write('<table border="1" cellpadding="3" cellspacing="0">');
+				//document.write('<tr><td class=item>All Information:</td><td>' + wanInfo +'</td></tr>');
+				document.write('<tr><td class=item>WAN Type:</td><td>' + info[index] + ' WAN</td></tr>');
+				if (info[index] == 'ADSL')
+				{
+					document.write('<tr><td class=item>Layer2 Information:</td><td>' + info[index+1] + '<br>' + info[index+2] + '</td></tr>');
+					index += 3;
+				}
+				else if (info[index] == 'Ethernet')
+				{
+					document.write('<tr><td class=item>Layer2 Information:</td><td>' + info[index+1] + '</td></tr>');
+					index += 2;
+				}
+				// added by pj for 3g WAN
+				else if(info[index] == '3G')
+				{
+					var locationName ;
+					var ispName;
+					var APN = info[index+5];
+					var dialNum =  info[index+6];
+					
+					//location
+					locationName = showLocation(info[index+3]);
+					//isp
+					ispName = showIsp(info[index+3], info[index+4]);
+					
+					if(locationName == '')
+					{
+						locationName = 'undefined';
+					}
+					if(ispName == '')
+					{
+						ispName = 'undefined';
+					}
+					if(APN == '')
+					{
+						APN = 'undefined';
+					}
+					if(dialNum == '')
+					{
+						dialNum = 'undefined';
+					}
+
+					if(info[index+2] == '1')
+					{
+						document.write('<tr><td class=item>Automatically fill ISP Information:</td><td>Enable</td></tr>');
+						document.write('<tr><td class=item>Location:</td><td>' + locationName + '</td></tr>');					
+						document.write('<tr><td class=item>ISP:</td><td>' + ispName + '</td></tr>');
+					}
+					else
+					{
+						document.write('<tr><td class=item>Automatically fill ISP Information:</td><td>Disable</td></tr>');
+					}					
+					
+					document.write('<tr><td class=item>APN:</td><td>' + APN + '</td></tr>');
+					document.write('<tr><td class=item>Dial Number:</td><td>' + dialNum + '</td></tr>');
+					index += 7;
+				}
+				
+				document.write('<tr><td class=item>WAN Link Type:</td><td>' + info[index] + '</td></tr>');
+				
+				if ((info[index] != "Bridge") && (info[index] != "PPPoE") && (info[index] != "PPPoA"))
+				{
+					if (info[index+1] == "Dynamic")
+					{
+						document.write('<tr><td class=item>WAN IP Setting:</td><td>Dynamic IP</td></tr>');
+						index += 2;
+					}
+					else
+					{
+						document.write('<tr><td class=item>WAN IP Address:</td><td>' + info[index+2] + '/' + info[index+3] + '</td></tr>');
+						if (info[index+4] != "0.0.0.0")
+						{
+							document.write('<tr><td class=item>Gateway IP:</td><td>' + info[index+4] + '</td></tr>');
+						}
+						index += 5;
+					}
+					
+					if (info[index] == "Dynamic")
+					{
+						//Obtain Automatically
+						document.write('<tr><td class=item>DNS Setting:</td><td>Obtain Automatically</td></tr>');
+					}
+					else
+					{
+						document.write('<tr><td class=item>Primary DNS:</td><td>' + info[index+1] +'</td></tr>');
+						if (info[index+2] != "0.0.0.0")
+							document.write('<tr><td class=item>Secondary DNS:</td><td>' + info[index+2] +'</td></tr>');
+					}
+				}
+				else if ((info[index] == "PPPoE") || (info[index] == "PPPoA"))
+				{
+					document.write('<tr><td class=item>PPP Username:</td><td>' + info[index+1] +'</td></tr>');
+					document.write('<tr><td class=item>PPP Password:</td><td>' + info[index+2] +'</td></tr>');
+					document.write('<tr><td class=item>PPP MTU:</td><td>' + info[index+3] +'</td></tr>');
+				}
+				
+				document.write('</table>');
+				
+				document.write('<table><tr><td><font class="redColor">Note1:</font> Some WAN Connection(s) or Layer2 interface(s) may be replaced by new one!</td></tr></table>');
+				document.write('<table><tr><td><font class="redColor">Note2:</font> The Virtual Server Rules of some WAN Connection(s) may be deleted!</td></tr></table>');
+			}
+			// added by pj : add 3g back up summary
+			
+			if(enbl3gBackup == '1')
+			{
+				// added by pj for 3g backup
+				var autoISPInfo = '<%ejGet(usb3gAutoIspInfo)%>';
+				var usb3glocationIdx = '<%ejGet(usb3gLocationIdx)%>';
+				var usb3gispIdx= '<%ejGet(usb3gIspIdx)%>';
+				var usb3gAPN = '<%ejGet(usb3gAPN)%>';
+				var usb3gdialNumber = '<%ejGet(usb3gDialNumber)%>';
+				var usb3gusername = '<%ejGet(usb3gUserName)%>';
+				var usb3gPassWd = '<%ejGet(usb3gPassWd)%>';
+				var usb3gmtu = '<%ejGet(usb3gBackUpMtu)%>';				
+				var locationName;
+				var ispName;
+ 
+				if(usb3gusername == '')
+				{
+					usb3gusername = 'undefined';
+				}
+
+				if(usb3gPassWd == '')
+				{
+					usb3gPassWd= 'undefined';
+				}
+
+				if(usb3gAPN == '')
+				{
+					usb3gAPN= 'undefined';
+				}
+
+				if(usb3gdialNumber == '')
+				{
+					usb3gdialNumber= 'undefined';
+				}
+ 
+				document.write('<table><tr><td width=200px class=h3>3G Backup</td>');
+				if(usb3gBackupSkip == '1')
+				{
+					document.write('<td class=yellowText>Skiped</td></tr></table>');
+				}
+				else if(qs3gBackupParse != '1')
+				{
+					document.write('<td class=redText>Parsing 3G Backup Config is failed!</td></tr></table>');
+				}
+				else
+				{
+					document.write('<td></td></tr></table>');
+					document.write('<table border="1" cellpadding="3" cellspacing="0">');
+					if(autoISPInfo == '1')
+					{
+						document.write('<tr><td class=item>Automatically fill ISP Information:</td><td>Enable</td></tr>');
+					locationName = showLocation(usb3glocationIdx);
+						ispName = showIsp(usb3glocationIdx, usb3gispIdx);
+						
+					if(locationName == '')
+					{
+						locationName= 'undefined';
+					}
+						
+					if(ispName == '')
+					{
+						ispName= 'undefined';
+					}
+
+						document.write('<tr><td class=item>Location:</td><td>'+ locationName + ' ' +'</td></tr>');
+					document.write('<tr><td class=item>ISP:</td><td>'+ ispName +'</td></tr>');
+					}
+					else
+					{
+						document.write('<tr><td class=item>Automatically fill ISP Information:</td><td>Disable</td></tr>');
+					}
+					
+					document.write('<tr><td class=item>APN:</td><td>'+ usb3gAPN +'</td></tr>');
+					document.write('<tr><td class=item>Dial Number:</td><td>'+ usb3gdialNumber +'</td></tr>');
+					document.write('<tr><td class=item>WAN Link Type:</td><td>PPPoE</td></tr>');
+					document.write('<tr><td class=item>PPP Username:</td><td>'+ usb3gusername  +'</td></tr>');
+					document.write('<tr><td class=item>PPP Password:</td><td>'+ usb3gPassWd  +'</td></tr>');
+					document.write('<tr><td class=item>PPP MTU:</td><td>'+ usb3gmtu  +'</td></tr></table>');
+				}
+			}
+			// end adding
+			// Wi-Fi Configurations
+			document.write('<table><tr><td width=200px class=h3>Wi-Fi Configurations</td>');
+			if (wifiSkip == '1')
+				document.write('<td class=yellowText>Skiped</td></tr></table>');
+			else if (wifiParse != '1')
+				document.write('<td class=redText>Parsing Wi-Fi Config is failed!</td></tr></table>');
+			else if(wlan_enbl != '1')
+				document.write('<td class=redText>Wi-Fi is disabled</td></tr></table>');
+			else
+			{
+				document.write('<td></td></tr></table>');
+				document.write('<table border="1" cellpadding="3" cellspacing="0">');
+				document.write('<tr><td class=item>Wireless Network Name:</td><td>' + ssid + '</td></tr>');
+				if (mode=='open')
+				{
+					document.write('<tr><td class=item>Network Authentication:</td><td>Open&nbsp;(insecurity)</td></tr>');
+				}
+				else if (mode == 'psk')
+				{
+					document.write('<tr><td class=item>Network Authentication:</td><td>WPA-Personal</td></tr>');
+					document.write('<tr><td class=item>Wireless NetWork Key:</td><td>' + wpaPskKey + '</td></tr>');
+				}
+				else if (mode == 'psk2')
+				{
+					document.write('<tr><td class=item>Network Authentication:</td><td>WPA2-Personal</td></tr>');
+					document.write('<tr><td class=item>Wireless NetWork Key:</td><td>' + wpaPskKey + '</td></tr>');
+				}
+				else
+				{
+					document.write('<tr><td class=item>Network Authentication:</td><td>Mixed WPA2/WPA-PSK Personal</td></tr>');
+					document.write('<tr><td class=item>Wireless NetWork Key:</td><td>' + wpaPskKey + '</td></tr>');
+				}
+				document.write('</table>');
+			}	
+		</script>
+		
+		<!--<tr><td class=h2 colspan=2>
+				Congratulations! The Router is now connecting you to the Internet. For detail settings, please click other menus if necessary.
+			</td></tr>
+			<TR><TD style = "padding-left: 5%"><FONT color=#FF0000>The change of wireless config will not take effect until the Router reboot.</br>Click the button below to reboot the router.</FONT> </TD></TR>-->
+			<table>
+		<tr><td class=blue></td></tr></table>
+	<p align="center">
+	<script language="javascript">
+	if(build3g == '1' && enbl3gBackup == '1')
+	{
+		if ((wifiSkip == "1") && (wanSkip == "1") && (usb3gBackupSkip == "1"))
+			document.write('<input type=\'button\' onClick=\'btnCancel()\' value=\'Cancel\' class=\'buttonL\' disabled>&nbsp;&nbsp;');
+		else
+			document.write('<input type=\'button\' onClick=\'btnCancel()\' value=\'Cancel\' class=\'buttonL\'>&nbsp;&nbsp;');
+	}
+	else
+	{
+	if ((wifiSkip == "1") && (wanSkip == "1"))
+		document.write('<input type=\'button\' onClick=\'btnCancel()\' value=\'Cancel\' class=\'buttonL\' disabled>&nbsp;&nbsp;');
+	else
+		document.write('<input type=\'button\' onClick=\'btnCancel()\' value=\'Cancel\' class=\'buttonL\'>&nbsp;&nbsp;');
+	}
+	</script>
+	<input type='button' onClick='btnBack()' value='Back' class='buttonL'>&nbsp;&nbsp;
+	<script language="javascript">
+		if(build3g == '1' && enbl3gBackup == '1')
+		{
+			if (((wanSkip == "1") || ((wanSkip == "0") && (wanParse == "1")))
+				&& ((wifiSkip == "1") || ((wifiSkip == "0") && (wifiParse == "1")))
+				&& ((usb3gBackupSkip == "1") || ((usb3gBackupSkip == "0") && (qs3gBackupParse == "1")))				
+				&& !((wifiSkip == "1") && (wanSkip == "1") && (usb3gBackupSkip == "1")))
+			{
+				document.write('<input type=\'button\' onClick=\'btnConfirm()\' value=\'Confirm\' class=\'buttonL\'>');
+			}
+			else
+			{
+				document.write('<input type=\'button\' onClick=\'btnConfirm()\' value=\'Confirm\' class=\'buttonL\' disabled>');
+			}
+		}
+		else
+		{
+		if (((wanSkip == "1") || ((wanSkip == "0") && (wanParse == "1")))
+			&& ((wifiSkip == "1") || ((wifiSkip == "0") && (wifiParse == "1")))
+			&& !((wifiSkip == "1") && (wanSkip == "1")))
+		{
+			document.write('<input type=\'button\' onClick=\'btnConfirm()\' value=\'Confirm\' class=\'buttonL\'>');
+		}
+		else
+		{
+			document.write('<input type=\'button\' onClick=\'btnConfirm()\' value=\'Confirm\' class=\'buttonL\' disabled>');
+		}
+		}
+	</script>
+	<br>
+	</p>
+	
+	</center>
+	</body>
+</html>

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/BA/BCM4/!svn/ver/411/branches/W8960N_5.0/userspace/public/apps/ppp/chat
+END
+chat.c
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/chat/chat.c
+END
+chat.8
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/chat/chat.8
+END
+Makefile.sunos4
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/chat/Makefile.sunos4
+END
+Makefile.linux
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/chat/Makefile.linux
+END
+Makefile.sol2
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/BA/BCM4/!svn/ver/338/branches/W8960N_5.0/userspace/public/apps/ppp/chat/Makefile.sol2
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/BA/BCM4/!svn/ver/411/branches/W8960N_5.0/userspace/public/apps/ppp/chat/Makefile
+END
